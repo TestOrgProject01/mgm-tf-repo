@@ -44,7 +44,7 @@ jobs:
           JF_URL: ${{env.JF_RT_URL}}
           JFROG_CLI_RELEASES_REPO: '${{ env.JF_RT_URL }}/artifactory/${{ env.RT_REPO_VIRTUAL}}'
           JFROG_CLI_EXTRACTORS_REMOTE: '${{ env.JF_RT_URL }}/artifactory/${{ env.RT_REPO_VIRTUAL}}'
-          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JF_GIT_TOKEN: ${{ secrets.JF_TK}}
  
  
     - name: Upload all Terraform modules
