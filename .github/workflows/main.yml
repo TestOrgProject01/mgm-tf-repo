@@ -30,16 +30,31 @@ jobs:
     steps:
     - name: Checkout source code
       uses: actions/checkout@v3
- 
-    - name: Setup JFrog CLI
-      uses: jfrog/setup-jfrog-cli@v4
-      id: setup-cli
+
+    - name: Set up JFrog CLI
+      uses: jfrog/setup-jfrog-cli@v3
       with:
-          version: 2.72.2
-          oidc-provider-name: ${{env.OIDC_PROVIDER_NAME}}
-          # comment oidc-provider-name when you test locally on codespace with act, getting an error for "ACTION_*" variable,
-          # and uncomment when you test on gitub runner
-          disable-job-summary: false
+          version: latest
+
+    - name: Configure JFrog CLI with access token
+      env:
+          JF_RT_URL: ${{ env.JF_RT_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_TK }}
+      run: |
+          jf config add mmgresorts \
+            --url="$JF_RT_URL" \
+            --access-token="$JF_ACCESS_TOKEN" \
+            --interactive=false
+ 
+    # - name: Setup JFrog CLI
+    #   uses: jfrog/setup-jfrog-cli@v4
+    #   id: setup-cli
+    #   with:
+    #       version: 2.72.2
+    #       oidc-provider-name: ${{env.OIDC_PROVIDER_NAME}}
+    #       # comment oidc-provider-name when you test locally on codespace with act, getting an error for "ACTION_*" variable,
+    #       # and uncomment when you test on gitub runner
+    #       disable-job-summary: false
       env:
           JF_URL: ${{env.JF_RT_URL}}
           JFROG_CLI_RELEASES_REPO: '${{ env.JF_RT_URL }}/artifactory/${{ env.RT_REPO_VIRTUAL}}'
