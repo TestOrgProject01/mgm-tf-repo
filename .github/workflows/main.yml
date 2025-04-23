@@ -6,7 +6,7 @@ on:
     branches:
       - main
 env:
-  JF_RT_URL: https://mgmresorts.jfrog.io
+  JF_URL: https://mgmresorts.jfrog.io
   JFROG_USERNAME: 'arana@mgmresorts.com'
   RT_REPO_VIRTUAL: 'gaming-hospitality-iac-terraform-dev-virtual'
   JFROG_CLI_LOG_LEVEL: 'DEBUG' # DEBUG, INFO, WARN, ERROR
@@ -37,12 +37,12 @@ jobs:
           version: 2.72.2
           oidc-provider-name: ${{env.OIDC_PROVIDER_NAME}}
       env:
-          JF_RT_URL: ${{ env.JF_RT_URL }}
+          JF_URL: ${{ env.JF_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JF_TK }}
           
     - name: Configure JFrog CLI with access token
       env:
-          JF_RT_URL: ${{ env.JF_RT_URL }}
+          JF_URL: ${{ env.JF_RT_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JF_TK }}
       run: |
           jf config add mmgresorts \
