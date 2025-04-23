@@ -45,7 +45,10 @@ jobs:
             --url="$JF_RT_URL" \
             --access-token="$JF_ACCESS_TOKEN" \
             --interactive=false
- 
+    - name: Xray Scan
+      run: |
+          jf scan . --extended-table=true
+          
     # - name: Setup JFrog CLI
     #   uses: jfrog/setup-jfrog-cli@v4
     #   id: setup-cli
