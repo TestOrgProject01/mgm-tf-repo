@@ -49,5 +49,5 @@ jobs:
  
     - name: Upload all Terraform modules
       run: |
-        jfrog rt u "modules/(**/*)" "$RT_REPO_VIRTUAL/"
+        jfrog rt u "test-app/**" "$RT_REPO_VIRTUAL/"
  
