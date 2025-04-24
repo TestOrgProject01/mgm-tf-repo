@@ -49,9 +49,14 @@ jobs:
             --url="$JF_RT_URL" \
             --access-token="$JF_ACCESS_TOKEN" \
             --interactive=false
-    - name: Xray Scan
+
+    - name: Xray Audit  # ref: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-security/scan-your-source-code
       run: |
-          jf scan . --extended-table=true
+         cd /home/runner/work/mgm-tf-repo
+         jf audit  --iac=true --format=table --extended-table=true --sca=true --sast=true --secrets=true --licenses=true --fail=true
+    # - name: Xray Scan
+    #   run: |
+    #       jf scan . --extended-table=true
           
     # - name: Setup JFrog CLI
     #   uses: jfrog/setup-jfrog-cli@v4
