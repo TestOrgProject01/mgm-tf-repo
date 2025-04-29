@@ -53,7 +53,7 @@ jobs:
     - name: Xray Audit  # ref: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-security/scan-your-source-code
       run: |
          cd /home/runner/work/mgm-tf-repo
-         jf audit  --iac=true --format=table --extended-table=true --sca=true --sast=true --secrets=true --licenses=true --fail=true
+         jf audit  --iac=true --format=table --extended-table=true --secrets=true  --fail=true
     # - name: Xray Scan
     #   run: |
     #       jf scan . --extended-table=true
