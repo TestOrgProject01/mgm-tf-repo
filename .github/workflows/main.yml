@@ -54,6 +54,13 @@ jobs:
       run: |
          cd /home/runner/work/mgm-tf-repo
          jf audit  --iac=true --format=table --extended-table=true --secrets=true  --fail=true
+         
+    - name: Upload SARIF scan results as artifact
+      uses: actions/upload-artifact@v4
+      with:
+       name: jfrog-scan-results
+       path: /tmp/jfrog.cli.temp.-1745933637-67974656/IaC_1745933645/results.sarif
+       
     # - name: Xray Scan
     #   run: |
     #       jf scan . --extended-table=true
