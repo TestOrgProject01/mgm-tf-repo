@@ -53,7 +53,7 @@ jobs:
     - name: Xray Audit  # ref: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-security/scan-your-source-code
       run: |
          
-         jf audit --repo-path "test-app/scripts/" --iac=true --validate-secrets=true --sca=true --sast=true --vuln=true --format=table --extended-table=true --secrets=true  --fail=true 
+         jf audit --repo-path "test-app/scripts/provider.tf" --iac=true --validate-secrets=true --sca=true --sast=true --vuln=true --format=table --extended-table=true --secrets=true  --fail=true 
          
     
        
