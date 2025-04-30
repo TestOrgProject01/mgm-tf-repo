@@ -8,7 +8,7 @@ on:
 env:
   JF_URL: https://mgmresorts.jfrog.io
   JFROG_USERNAME: 'arana@mgmresorts.com'
-  RT_REPO_VIRTUAL: 'gaming-hospitality-iac-terraform-dev-virtual'
+  RT_REPO_VIRTUAL: 'gaming-hospitality-iac-terraform-provider-dev-local'
   JFROG_CLI_LOG_LEVEL: 'DEBUG' # DEBUG, INFO, WARN, ERROR
   RBv2_SIGNING_KEY: 'mgmkey'
   PACKAGE_SCOPE: '@mgmresorts'
@@ -52,8 +52,8 @@ jobs:
 
     - name: Xray Audit  # ref: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-security/scan-your-source-code
       run: |
-         cd /home/runner/work/mgm-tf-repo
-         jf audit  --iac=true --format=table --extended-table=true --secrets=true  --fail=true --include="/test-app/scripts/*"
+         
+         jf audit --repo-path "test-app/scripts/" --iac=true --format=table --extended-table=true --secrets=true  --fail=true --include="/test-app/scripts/*"
          
     
        
@@ -77,7 +77,7 @@ jobs:
       #     JF_GIT_TOKEN: ${{ secrets.JF_TK}}
  
  
-    - name: Upload all Terraform modules
-      run: |
-        jfrog rt u "test-app/**" "$RT_REPO_VIRTUAL/"
+    # - name: Upload all Terraform modules
+    #   run: |
+    #     jfrog rt u "test-app/**" "$RT_REPO_VIRTUAL/"
  
