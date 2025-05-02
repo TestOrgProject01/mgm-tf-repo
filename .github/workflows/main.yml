@@ -49,7 +49,12 @@ jobs:
             --url="$JF_RT_URL" \
             --access-token="$JF_ACCESS_TOKEN" \
             --interactive=false
-
+    - name: Publish script
+      run: |
+        sudo chmod 777 ./scripts/tf-publish.sh
+        bash -x ./scripts/tf-publish.sh
+        
+        
     - name: Xray Audit  # ref: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-security/scan-your-source-code
       run: |
          
