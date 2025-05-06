@@ -8,6 +8,7 @@ module "globals" {
   department  = "it"
   environment = var.environment
   project     = "${var.project_prefix}-${var.project_suffix}"
+  secret_token  = "rjtjrbnjrbfjrbgjgbjgbjbnfjgbfjbgjfgb"
 
   ### OVERRIDE INPUT VARIABLES ###
   # azure_subscription = data.azurerm_client_config.default.subscription_id This can be set after module list is updated
