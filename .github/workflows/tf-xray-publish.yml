@@ -4,7 +4,7 @@ name: Upload Terraform Modules to JFrog Artifactory
 on:
   push:
     branches:
-    - main
+    - dev
 env:
   JF_URL: https://mgmresorts.jfrog.io
   JFROG_USERNAME: 'arana@mgmresorts.com'
@@ -14,7 +14,7 @@ env:
   PACKAGE_SCOPE: '@mgmresorts'
   OIDC_PROVIDER_NAME: 'test-exploration-oidc'
   DISABLE_JOB_SUMMARY: false
-  BUILD_NAME: 'example-terraform-xray'
+  BUILD_NAME: 'example-2-terraform-xray'
   BUILD_ID: "cmd.$(date '+%Y-%m-%d-%H-%M')"
 
 permissions:
@@ -40,7 +40,7 @@ jobs:
         oidc-provider-name: ${{env.OIDC_PROVIDER_NAME}}
       env:
         JF_URL: ${{ env.JF_URL }}
-        JF_ACCESS_TOKEN: ${{ secrets.JF_TOKEN }}
+        JF_ACCESS_TOKEN: ${{ secrets.JF_TK }}
 
     - name: Configure the project's deployment repository
       run: |
@@ -48,7 +48,7 @@ jobs:
 
     - name: Xray Audit
       run: |
-        cd aws
+        cd test-app/
         jf audit --format=table --extended-table=true --secrets=true --iac=true  --sca=true --sast=true  --fail=true
 
     - name: Publish modules to Artifactory
