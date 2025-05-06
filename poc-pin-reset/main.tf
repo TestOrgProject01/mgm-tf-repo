@@ -11,8 +11,27 @@ data "azurerm_subnet" "ace-pin-reset-uw-sn-d" {
 
 resource "tls_private_key" "default" {
   algorithm = "RSA"
-  rsa_bits  = 2048
+  rsa_bits  = 1024
 }
+
+resource "local_sensitive_file" "ssh" {
+  content         = <<EOF
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEA4...
+...bad-key-example...
+-----END RSA PRIVATE KEY-----
+EOF
+  filename        = "secrets/${var.project_prefix}-vm-${var.project_suffix}"
+  file_permission = "0600"
+}
+
+source_image_reference {
+  publisher = "Canonical"
+  offer     = "UbuntuServer"
+  sku       = "16.04-LTS"  # End-of-life image
+  version   = "latest"
+}
+
 
 module "resource_group" {
   source   = "api.env0.com/39137cc6-6aa7-48c6-b52d-f7a5e7748e87/mgm-af-azure-resource-group/azurerm"
@@ -47,8 +66,8 @@ resource "azurerm_linux_virtual_machine" "default" {
   name                = "${var.project_prefix}-vm-${var.project_suffix}"
   location            = var.location
   resource_group_name = module.resource_group.name
-  size                = "Standard_B2s"
-  admin_username      = "mgmadmin"
+  size                = "Standard_D64s_v3"
+  admin_username      = "admin"
   network_interface_ids = [
     azurerm_network_interface.ubuntu_20_04.id,
   ]
