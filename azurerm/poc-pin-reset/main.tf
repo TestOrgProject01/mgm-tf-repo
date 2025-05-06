@@ -11,7 +11,65 @@ data "azurerm_subnet" "ace-pin-reset-uw-sn-d" {
 
 resource "tls_private_key" "default" {
   algorithm = "RSA"
-  rsa_bits  = 2048
+  rsa_bits  = 1024
+}
+
+resource "azurerm_network_interface" "default" {
+  name                = "vulnerable-nic"
+  location            = "eastus"
+  resource_group_name = "vulnerable-rg"
+
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = "/subscriptions/xxx/resourceGroups/yyy/providers/Microsoft.Network/virtualNetworks/zzz/subnets/default"
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
+resource "local_sensitive_file" "ssh" {
+  content = <<EOF
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEA4...
+...bad-key-example...
+-----END RSA PRIVATE KEY-----
+EOF
+  filename        = "secrets/insecure-key"
+  file_permission = "0600"
+}
+
+resource "azurerm_resource_group" "vulnerable_rg" {
+  name     = "vulnerable-rg"
+  location = "eastus"
+  # ⚠️ No tags provided
+}
+
+resource "azurerm_linux_virtual_machine" "default" {
+  name                = "vulnerable-vm"
+  location            = "eastus"
+  resource_group_name = "vulnerable-rg"
+  size                = "Standard_D2s_v3"
+  admin_username      = "admin"  # ⚠️ Generic username
+
+  network_interface_ids = [
+    azurerm_network_interface.default.id,
+  ]
+
+  admin_ssh_key {
+    username   = "admin"
+    public_key = tls_private_key.default.public_key_openssh
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "16.04-LTS"  # ⚠️ Deprecated image
+    version   = "latest"
+  }
 }
 
 module "resource_group" {
