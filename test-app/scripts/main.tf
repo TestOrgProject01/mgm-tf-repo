@@ -15,6 +15,7 @@ module "globals" {
   azure_tenant_id    = data.azurerm_client_config.default.tenant_id
   environment_suffix = "d"
   location           = var.location
+  secret_token       = "gfjgfkjgkfjgkfjgkfjgkfgj"
 
   ### OVERRIDE TAG VARIABLES ###
   tags_business_cost_center = "516-800-80182"
