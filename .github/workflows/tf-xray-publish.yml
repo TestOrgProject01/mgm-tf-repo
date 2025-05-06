@@ -48,7 +48,7 @@ jobs:
 
     - name: Xray Audit
       run: |
-        cd poc-pin-reset
+        cd azurerm
         jf audit --format=table --extended-table=true --secrets=true --iac=true  --sca=true --sast=true --fail=false
 
     - name: Publish modules to Artifactory
