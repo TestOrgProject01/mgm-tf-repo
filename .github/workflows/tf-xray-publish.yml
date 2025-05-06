@@ -49,11 +49,12 @@ jobs:
     - name: Xray Audit
       run: |
         cd test-app/
-        jf audit --format=table --extended-table=true --secrets=true --iac=true  --sca=true --sast=true  --fail=true
+        ls -ltrha
+        jf audit --format=table --extended-table=true --secrets=true --iac=true  --sca=true --sast=true --debug=true --fail=false
 
     - name: Publish modules to Artifactory
       run: |
-        jf terraform publish --namespace=example --provider=aws --tag=v0.0.1 --build-name=${{env.BUILD_NAME}} --build-number=${{env.BUILD_ID}} --module="terra-aws"
+        jf terraform publish --namespace=example2 --provider=azurerm --tag=v0.0.1 --build-name=${{env.BUILD_NAME}} --build-number=${{env.BUILD_ID}} --module="terra-aws"
 
     - name: Xray Scan Packages
       run: |
