@@ -43,6 +43,92 @@ resource "azurerm_resource_group" "vulnerable_rg" {
   # ⚠️ No tags provided
 }
 
+resource "azurerm_resource_group" "insecure_rg" {
+  name     = "insecure-vm-rg"
+  location = "East US"
+}
+
+resource "azurerm_virtual_network" "insecure_vnet" {
+  name                = "insecure-vnet"
+  address_space       = ["10.0.0.0/16"]
+  location            = azurerm_resource_group.insecure_rg.location
+  resource_group_name = azurerm_resource_group.insecure_rg.name
+}
+
+resource "azurerm_subnet" "insecure_subnet" {
+  name                 = "insecure-subnet"
+  resource_group_name  = azurerm_resource_group.insecure_rg.name
+  virtual_network_name = azurerm_virtual_network.insecure_vnet.name
+  address_prefixes     = ["10.0.1.0/24"]
+}
+
+resource "azurerm_network_security_group" "open_nsg" {
+  name                = "allow-all-nsg"
+  location            = azurerm_resource_group.insecure_rg.location
+  resource_group_name = azurerm_resource_group.insecure_rg.name
+
+  security_rule {
+    name                       = "AllowAllInbound"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_public_ip" "insecure_public_ip" {
+  name                = "insecure-public-ip"
+  location            = azurerm_resource_group.insecure_rg.location
+  resource_group_name = azurerm_resource_group.insecure_rg.name
+  allocation_method   = "Static"
+  sku                 = "Basic"
+}
+
+resource "azurerm_network_interface" "insecure_nic" {
+  name                = "insecure-nic"
+  location            = azurerm_resource_group.insecure_rg.location
+  resource_group_name = azurerm_resource_group.insecure_rg.name
+
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = azurerm_subnet.insecure_subnet.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.insecure_public_ip.id
+  }
+
+  network_security_group_id = azurerm_network_security_group.open_nsg.id
+}
+
+resource "azurerm_linux_virtual_machine" "insecure_vm" {
+  name                = "insecure-vm"
+  location            = azurerm_resource_group.insecure_rg.location
+  resource_group_name = azurerm_resource_group.insecure_rg.name
+  size                = "Standard_B1s"
+  admin_username      = "azureuser"
+  network_interface_ids = [
+    azurerm_network_interface.insecure_nic.id,
+  ]
+
+  admin_password = "Password1234!"
+  disable_password_authentication = false
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "18.04-LTS"
+    version   = "latest"
+  }
+}
+
 resource "azurerm_linux_virtual_machine" "default" {
   name                = "vulnerable-vm"
   location            = "eastus"
