@@ -72,6 +72,6 @@ jobs:
       run: |
         jf rt bp ${{env.BUILD_NAME}} ${{env.BUILD_ID}} --detailed-summary=true
 
-    - name: Build Scan
-      run: |
-        jf bs ${{env.BUILD_NAME}} ${{env.BUILD_ID}} --rescan=true --format=table --extended-table=true --vuln=true --fail=false
+    # - name: Build Scan
+    #   run: |
+    #     jf bs ${{env.BUILD_NAME}} ${{env.BUILD_ID}} --rescan=true --format=table --extended-table=true --vuln=true --fail=false
