@@ -9,6 +9,45 @@ data "azurerm_subnet" "ace-pin-reset-uw-sn-d" {
   resource_group_name  = "gaminghospitalityvnets-uw-rg-d"
 }
 
+resource "azurerm_storage_account" "insecure_storage" {
+  name                     = "insecurestorageacct"
+  resource_group_name      = "myResourceGroup"
+  location                 = "East US"
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+
+  # Insecure: Allow public access
+  allow_blob_public_access = true
+}
+
+resource "azurerm_key_vault" "insecure_kv" {
+  name                        = "insecurekeyvault"
+  location                    = "East US"
+  resource_group_name         = "myResourceGroup"
+  tenant_id                   = "00000000-0000-0000-0000-000000000000"
+  sku_name                    = "standard"
+  purge_protection_enabled    = false  # Insecure: should be true
+  soft_delete_retention_days  = 7
+  soft_delete_enabled         = true   # okay, but with purge off it's vulnerable
+
+  access_policy {
+    tenant_id = "00000000-0000-0000-0000-000000000000"
+    object_id = "11111111-1111-1111-1111-111111111111"
+
+    key_permissions = [
+      "get",
+      "list",
+      "delete",  # Excessive permission
+    ]
+
+    secret_permissions = [
+      "get",
+      "list",
+      "delete",
+    ]
+  }
+}
+
 resource "tls_private_key" "default" {
   algorithm = "RSA"
   rsa_bits  = 1024
