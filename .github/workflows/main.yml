@@ -1,33 +1,29 @@
-# gaming-hospitality-iac
-name: Upload Terraform Modules to JFrog Artifactory
- 
+#ms-dynamics repo scanning with Xray
+name: Jfrog Xray audit
+
 on:
-  workflow_dispatch:
-  # push:
-  #   branches:
-  #     # - main
+  push:
+    branches:
+    - main
 env:
   JF_URL: https://mgmresorts.jfrog.io
   JFROG_USERNAME: 'arana@mgmresorts.com'
-  RT_REPO_VIRTUAL: 'gaming-hospitality-iac-terraform-provider-dev-local'
   JFROG_CLI_LOG_LEVEL: 'DEBUG' # DEBUG, INFO, WARN, ERROR
-  RBv2_SIGNING_KEY: 'mgmkey'
-  PACKAGE_SCOPE: '@mgmresorts'
-  OIDC_PROVIDER_NAME: 'test-exploration-oidc'
-  DISABLE_JOB_SUMMARY: false;
-  
+  OIDC_PROVIDER_NAME: ''
+  DISABLE_JOB_SUMMARY: false
+
 permissions:
   actions: read # for detecting the Github Actions environment.
   id-token: write # for creating OIDC tokens for signing.
   packages: write # for uploading attestations.
   contents: write # to push updates while version bump and publish to repo, read is fine if there is just read operation​
   security-events: write # Required for uploading code scanning.
-  issues: read 
-  
+  issues: read
+
 jobs:
-  upload-to-jfrog:
+  buildPublish:
     runs-on: ubuntu-latest
- 
+
     steps:
     - name: Checkout source code
       uses: actions/checkout@v3
@@ -35,55 +31,18 @@ jobs:
     - name: Set up JFrog CLI
       uses: jfrog/setup-jfrog-cli@v4
       with:
-          version: 2.72.2
-          oidc-provider-name: ${{env.OIDC_PROVIDER_NAME}}
+        version: 2.72.2
+        oidc-provider-name: ${{env.OIDC_PROVIDER_NAME}}
       env:
-          JF_URL: ${{ env.JF_URL }}
-          JF_ACCESS_TOKEN: ${{ secrets.JF_TK }}
-          
-    - name: Configure JFrog CLI with access token
-      env:
-          JF_URL: ${{ env.JF_RT_URL }}
-          JF_ACCESS_TOKEN: ${{ secrets.JF_TK }}
-      run: |
-          jf config add mmgresorts \
-            --url="$JF_RT_URL" \
-            --access-token="$JF_ACCESS_TOKEN" \
-            --interactive=false
-    - name: Publish script
-      run: |
-        sudo chmod 777 ./scripts/tf-publish.sh
-        bash -x ./scripts/tf-publish.sh
-        
-        
-    - name: Xray Audit  # ref: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-security/scan-your-source-code
-      run: |
-         
-         jf audit --repo-path "test-app/scripts/provider.tf" --iac=true --validate-secrets=true --sca=true --sast=true --vuln=true --format=table --extended-table=true --secrets=true  --fail=true 
-         
-    
-       
-    # - name: Xray Scan
+        JF_URL: ${{ env.JF_URL }}
+        JF_ACCESS_TOKEN: ${{ secrets.JF_TK }}
+
+    # - name: Configure the project's deployment repository
     #   run: |
-    #       jf scan . --extended-table=true
-          
-    # - name: Setup JFrog CLI
-    #   uses: jfrog/setup-jfrog-cli@v4
-    #   id: setup-cli
-    #   with:
-    #       version: 2.72.2
-    #       oidc-provider-name: ${{env.OIDC_PROVIDER_NAME}}
-    #       # comment oidc-provider-name when you test locally on codespace with act, getting an error for "ACTION_*" variable,
-    #       # and uncomment when you test on gitub runner
-    #       disable-job-summary: false
-      # env:
-      #     JF_URL: ${{env.JF_RT_URL}}
-      #     JFROG_CLI_RELEASES_REPO: '${{ env.JF_RT_URL }}/artifactory/${{ env.RT_REPO_VIRTUAL}}'
-      #     JFROG_CLI_EXTRACTORS_REMOTE: '${{ env.JF_RT_URL }}/artifactory/${{ env.RT_REPO_VIRTUAL}}'
-      #     JF_GIT_TOKEN: ${{ secrets.JF_TK}}
- 
- 
-    # - name: Upload all Terraform modules
-    #   run: |
-    #     jfrog rt u "test-app/**" "$RT_REPO_VIRTUAL/"
- 
+    #     jf terraform-config --repo-deploy=${{env.RT_REPO_VIRTUAL}}
+
+    - name: Xray Audit
+      run: |
+        cd ms-dynamics
+        jf audit --format=table --extended-table=true --secrets=true --iac=true  --sca=true --sast=true --fail=false
+
