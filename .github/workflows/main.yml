@@ -9,7 +9,7 @@ env:
   JF_URL: https://mgmresorts.jfrog.io
   JFROG_USERNAME: 'arana@mgmresorts.com'
   JFROG_CLI_LOG_LEVEL: 'DEBUG' # DEBUG, INFO, WARN, ERROR
-  OIDC_PROVIDER_NAME: ''
+  OIDC_PROVIDER_NAME: 'test-exploration-oidc'
   DISABLE_JOB_SUMMARY: false
 
 permissions:
@@ -41,8 +41,26 @@ jobs:
     #   run: |
     #     jf terraform-config --repo-deploy=${{env.RT_REPO_VIRTUAL}}
 
+    - name: Install .NET 8.0 SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Install Mono (for running nuget.exe)
+      run: |
+          sudo apt update
+          sudo apt install -y mono-complete
+  
+    - name: Download NuGet CLI
+      run: |
+          wget https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+        
+    - name: Restore NuGet packages
+      run: |
+          mono nuget.exe restore ""
+
     - name: Xray Audit
       run: |
-        cd ms-dynamics
+        sleep 120
         jf audit --format=table --extended-table=true --secrets=true --iac=true  --sca=true --sast=true --fail=false
 
