@@ -21,7 +21,7 @@ permissions:
   issues: read
 
 jobs:
-  buildPublish:
+  xray-nuget-audit:
     runs-on: ubuntu-latest
 
     steps:
@@ -57,7 +57,7 @@ jobs:
         
     - name: Restore NuGet packages
       run: |
-          mono nuget.exe restore ""
+          mono nuget.exe restore "gso-dynamics-plugin-main/MGMRI Sales/MGMRI Sales.sln"
 
     - name: Xray Audit
       run: |
