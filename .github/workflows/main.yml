@@ -63,7 +63,7 @@ jobs:
         
     - name: Restore NuGet packages
       run: |
-          mono nuget.exe restore "gso-dynamics-plugin-main/MGMRI Sales/MGMRI Sales.sln"
+          mono /home/runner/nuget/nuget.exe restore "gso-dynamics-plugin-main/MGMRI Sales/MGMRI Sales.sln"
 
     # - name: Xray Audit
     #   run: |
