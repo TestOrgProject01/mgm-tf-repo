@@ -37,39 +37,25 @@ jobs:
         JF_URL: ${{ env.JF_URL }}
         JF_ACCESS_TOKEN: ${{ secrets.JF_TK }}
 
-   
-
-    # - name: Install .NET 8.0 SDK
-    #   uses: actions/setup-dotnet@v4
-    #   with:
-    #     dotnet-version: '8.0.x'
-
-    # - name: Install Mono (for running nuget.exe)
-    #   run: |
-    #       sudo apt update
-    #       sudo apt install -y mono-complete
+    - name: Install Mono (for running nuget.exe)
+      run: |
+          sudo apt update
+          sudo apt install -y mono-complete
   
-    # - name: Download NuGet CLI
-    #   run: |
-    #     mkdir -p $HOME/nuget
-    #     wget -O $HOME/nuget/nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-    #     echo "export PATH=$HOME/nuget:$PATH" >> $GITHUB_ENV
-
-    # - name: Check nuget.exe is in PATH
-    #   run: which nuget.exe || echo "nuget.exe not found in PATH"
+    - name: Download NuGet CLI
+      run: |
+        mkdir -p $HOME/nuget
+        wget -O $HOME/nuget/nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+        echo "export PATH=$HOME/nuget:$PATH" >> $GITHUB_ENV
 
         
-    # - name: Restore NuGet packages
-    #   run: |
-    #       mono /home/runner/nuget/nuget.exe restore "gso-dynamics-plugin-main/MGMRI Sales/MGMRI Sales.sln"
+    - name: Restore NuGet packages
+      run: |
+          mono /home/runner/nuget/nuget.exe restore "gso-dynamics-plugin-main/MGMRI Sales/MGMRI Sales.sln"
 
-    # - name: Xray Audit
-    #   run: |
-    #     sleep 120
-    #     jf audit --format=table --extended-table=true --secrets=true --iac=true  --sca=true --sast=true --fail=false 
+    
 
     - name: Run JFrog Xray Audit and Save Output
-      continue-on-error: true
       run: |
         jf audit --nuget=true --format=table --extended-table=true \
         --secrets=true --sast=true --sca=true --licenses=true --fail=false \
