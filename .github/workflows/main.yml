@@ -7,8 +7,8 @@ on:
     - main
 env:
   JF_URL: https://mgmresorts.jfrog.io
-  JFROG_USERNAME: 'arana@mgmresorts.com'
-  JFROG_CLI_LOG_LEVEL: 'ERROR' # DEBUG, INFO, WARN, ERROR
+
+  JFROG_CLI_LOG_LEVEL: 'DEBUG' # DEBUG, INFO, WARN, ERROR
   OIDC_PROVIDER_NAME: 'test-exploration-oidc'
   DISABLE_JOB_SUMMARY: false
 
@@ -37,33 +37,31 @@ jobs:
         JF_URL: ${{ env.JF_URL }}
         JF_ACCESS_TOKEN: ${{ secrets.JF_TK }}
 
-    # - name: Configure the project's deployment repository
+   
+
+    # - name: Install .NET 8.0 SDK
+    #   uses: actions/setup-dotnet@v4
+    #   with:
+    #     dotnet-version: '8.0.x'
+
+    # - name: Install Mono (for running nuget.exe)
     #   run: |
-    #     jf terraform-config --repo-deploy=${{env.RT_REPO_VIRTUAL}}
-
-    - name: Install .NET 8.0 SDK
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
-
-    - name: Install Mono (for running nuget.exe)
-      run: |
-          sudo apt update
-          sudo apt install -y mono-complete
+    #       sudo apt update
+    #       sudo apt install -y mono-complete
   
-    - name: Download NuGet CLI
-      run: |
-        mkdir -p $HOME/nuget
-        wget -O $HOME/nuget/nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-        echo "export PATH=$HOME/nuget:$PATH" >> $GITHUB_ENV
+    # - name: Download NuGet CLI
+    #   run: |
+    #     mkdir -p $HOME/nuget
+    #     wget -O $HOME/nuget/nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+    #     echo "export PATH=$HOME/nuget:$PATH" >> $GITHUB_ENV
 
-    - name: Check nuget.exe is in PATH
-      run: which nuget.exe || echo "nuget.exe not found in PATH"
+    # - name: Check nuget.exe is in PATH
+    #   run: which nuget.exe || echo "nuget.exe not found in PATH"
 
         
-    - name: Restore NuGet packages
-      run: |
-          mono /home/runner/nuget/nuget.exe restore "gso-dynamics-plugin-main/MGMRI Sales/MGMRI Sales.sln"
+    # - name: Restore NuGet packages
+    #   run: |
+    #       mono /home/runner/nuget/nuget.exe restore "gso-dynamics-plugin-main/MGMRI Sales/MGMRI Sales.sln"
 
     # - name: Xray Audit
     #   run: |
