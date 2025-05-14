@@ -40,6 +40,9 @@ jobs:
       continue-on-error: true
       run: |
         jf audit --format=table --extended-table=true --nuget=true --secrets=true --sast=true --sca=true --licenses=true --fail=false >> xray-audit-report.txt
+
+    - name: Job Summary
+      run: |
         cat xray-audit-report.txt >> $GITHUB_STEP_SUMMARY
 
     - name: Upload Xray Audit Report
