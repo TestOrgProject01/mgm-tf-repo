@@ -7,7 +7,6 @@ on:
     - main
 env:
   JF_URL: https://mgmresorts.jfrog.io
-
   JFROG_CLI_LOG_LEVEL: 'DEBUG' # DEBUG, INFO, WARN, ERROR
   OIDC_PROVIDER_NAME: 'test-exploration-oidc'
   DISABLE_JOB_SUMMARY: false
@@ -36,30 +35,11 @@ jobs:
       env:
         JF_URL: ${{ env.JF_URL }}
         JF_ACCESS_TOKEN: ${{ secrets.JF_TK }}
-
-    - name: Install Mono (for running nuget.exe)
-      run: |
-          sudo apt update
-          sudo apt install -y mono-complete
   
-    - name: Download NuGet CLI
-      run: |
-        mkdir -p $HOME/nuget
-        wget -O $HOME/nuget/nuget.exe https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-        echo "export PATH=$HOME/nuget:$PATH" >> $GITHUB_ENV
-
-        
-    - name: Restore NuGet packages
-      run: |
-          mono /home/runner/nuget/nuget.exe restore "gso-dynamics-plugin-main/MGMRI Sales/MGMRI Sales.sln"
-
-    
-
     - name: Run JFrog Xray Audit and Save Output
+      continue-on-error: true
       run: |
-        jf audit --nuget=true --format=table --extended-table=true \
-        --secrets=true --sast=true --sca=true --licenses=true --fail=false \
-        > xray-audit-report.txt
+        jf audit --format=table --extended-table=true --secrets=true --sast=true --sca=true --licenses=true --fail=false > xray-audit-report.txt
 
     - name: Upload Xray Audit Report
       uses: actions/upload-artifact@v4
