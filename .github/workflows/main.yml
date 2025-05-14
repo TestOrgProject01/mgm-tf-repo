@@ -39,11 +39,13 @@ jobs:
     - name: Run JFrog Xray Audit and Save Output
       continue-on-error: true
       run: |
-        jf audit --format=table --extended-table=true --nuget=true --secrets=true --sast=true --sca=true --licenses=true --fail=false >> xray-audit-report.txt
+        jf audit --format=table --extended-table=true --nuget=true --secrets=true --sast=true --sca=true --vuln=true --licenses=true --fail=false >> xray-audit-report.txt
 
     - name: Job Summary
       run: |
+        echo '```' >> $GITHUB_STEP_SUMMARY
         cat xray-audit-report.txt >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
 
     - name: Upload Xray Audit Report
       uses: actions/upload-artifact@v4
