@@ -45,7 +45,7 @@ jobs:
       run: |
           sleep 15
           # jf s "*.zip" --repo-path "${{ env.JF_RT_REPO_VIRTUAL }}/${{ inputs.version }}/"
-          jf scan ./artifacts/*.zip --format=table --sync=true --extended-table=true   --watches=event-infrastructure --detailed-summary=true --vuln=true | tee -a $GITHUB_STEP_SUMMARY   
+          jf scan ./*.zip --format=table --sync=true --extended-table=true   --watches=event-infrastructure --detailed-summary=true --vuln=true | tee -a $GITHUB_STEP_SUMMARY   
     - name: Job Summary
       run: |
         echo '```' >> $GITHUB_STEP_SUMMARY
