@@ -36,11 +36,15 @@ jobs:
         JF_URL: ${{ env.JF_URL }}
         JF_ACCESS_TOKEN: ${{ secrets.JF_TK }}
   
-    - name: Run JFrog Xray Audit and Save Output
-      continue-on-error: true
+    # - name: Run JFrog Xray Audit and Save Output
+    #   continue-on-error: true
+    #   run: |
+    #     jf audit gso-dynamics-plugin-main/* --format=table --extended-table=true --nuget=true --secrets=true --sast=true --sca=true --vuln=true --licenses=true --fail=false >> xray-audit-report.txt
+    - name: Scan Artifacts
       run: |
-        jf audit gso-dynamics-plugin-main/* --format=table --extended-table=true --nuget=true --secrets=true --sast=true --sca=true --vuln=true --licenses=true --fail=false >> xray-audit-report.txt
-
+          sleep 15
+          # jf s "*.zip" --repo-path "${{ env.JF_RT_REPO_VIRTUAL }}/${{ inputs.version }}/"
+          jf scan . --format=table --sync=true --extended-table=true --watches=event-infrastructure --detailed-summary=true --vuln=true | tee -a $GITHUB_STEP_SUMMARY
     - name: Job Summary
       run: |
         echo '```' >> $GITHUB_STEP_SUMMARY
