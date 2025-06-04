@@ -1,0 +1,185 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "value": "pd-audit-trail-q"
+        },
+        "location": {
+            "value": "West US"
+        },
+        "ftpsState": {
+            "value": "FtpsOnly"
+        },
+        "storageAccountName": {
+            "value": "audittrailstorageqa"
+        },
+        "use32BitWorkerProcess": {
+            "value": true
+        },
+        "javaVersion": {
+            "value": "17"
+        },
+        "netFrameworkVersion": {
+            "value": "v6.0"
+        },
+        "hostingPlanName": {
+            "value": "paymentdiversity-uw-asp-q"
+        },
+        "serverFarmResourceGroup": {
+            "value": "payment-diversity-uw-rg-q"
+        },
+		"vnetResourceGroup": {
+            "value": "paymentvnets-uw-rg-d"
+        },
+		"vnet": {
+            "value": "payment-uw-vnet-d"
+        },
+		"subnet": {
+            "value": "pd-uw-sn-q"
+        },
+        "alwaysOn": {
+            "value": true
+        },
+		"incomingIPRestrictions": {
+			"type": "array",
+			"value": [
+				{
+					"ipAddress": "136.226.0.0/16",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 112,
+					"name": "Zscaler",
+					"description": "136.226.0.0/16"
+				},
+				{
+					"ipAddress": "69.162.0.0/23",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 112,
+					"name": "Onprem",
+					"description": "69.162.0.0/23"
+				},
+				{
+					"ipAddress": "69.162.0.240/29",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 113,
+					"name": "IPs for Microsoft Peering",
+					"description": "69.162.0.240/29"
+				},
+				{
+					"ipAddress": "40.81.13.246/32",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 114,
+					"name": "IPs for Azure Pri PAN nic0",
+					"description": "40.81.13.246/32"
+				},
+				{
+					"ipAddress": "40.81.14.21/32",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 115,
+					"name": "IPs for Azure Pri PAN nic1",
+					"description": "40.81.14.21/32"
+				},
+				{
+					"ipAddress": "40.81.14.22/32",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 116,
+					"name": "IPs for Azure Sec PAN nic0",
+					"description": "40.81.14.22/32"
+				},
+				{
+					"ipAddress": "40.81.14.184/32",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 117,
+					"name": "IPs for Azure Sec PAN nic1",
+					"description": "40.81.14.184/32"
+				},
+				{
+					"ipAddress": "35.237.211.44/32",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 119,
+					"name": "US East Apigee Edge IP Address",
+					"description": "35.237.211.44/32"
+				},
+				{
+					"ipAddress": "35.190.186.218/32",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 120,
+					"name": "US East Apigee Edge IP Address",
+					"description": "35.190.186.218/32"
+				},
+				{
+					"ipAddress": "35.233.217.232/32",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 121,
+					"name": "US West Apigee Edge IP Address",
+					"description": "35.233.217.232/32"
+				},
+				{
+					"ipAddress": "34.83.84.50/32",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 122,
+					"name": "US West Apigee Edge IP Address",
+					"description": "34.83.84.50/32"
+				},
+				{
+					"ipAddress": "34.86.217.136/32",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 123,
+					"name": "US-E ApigeeX IP Address NonProd",
+					"description": "34.86.217.136/32"
+				},
+				{
+					"ipAddress": "34.125.255.198/32",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 124,
+					"name": "US-W ApigeeX IP Address NonProd",
+					"description": "34.125.255.198/32"
+				},
+				{
+					"ipAddress": "34.86.102.35/32",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 125,
+					"name": "US-E ApigeeX IP Address Prod",
+					"description": "34.86.102.35/32"
+				},
+				{
+					"ipAddress": "34.102.59.159/32",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 126,
+					"name": "US-W ApigeeX IP Address Prod",
+					"description": "34.102.59.159/32"
+				},
+				{
+					"ipAddress": "34.125.49.249/32",
+					"action": "Allow",
+					"tag": "Default",
+					"priority": 127,
+					"name": "US-W ApigeeX IP Address Prod",
+					"description": "34.125.49.249/32"
+				},
+				{
+					"ipAddress": "Any",
+					"action": "Deny",
+					"priority": 2147483647,
+					"name": "Deny all",
+					"description": "Deny all access"
+				}
+			]
+		}
+    }
+}

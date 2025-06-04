@@ -1,0 +1,204 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscriptionId": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string"
+        },
+        "use32BitWorkerProcess": {
+            "type": "bool"
+        },
+        "ftpsState": {
+            "type": "string"
+        },
+        "storageAccountName": {
+            "type": "string"
+        },
+        "javaVersion": {
+            "type": "string"
+        },
+		"ClientId": {
+            "type": "string"
+        },
+		"Environment": {
+            "type": "string"
+        },
+        "ClientKey": {
+            "type": "string"
+        },
+        "TenantId": {
+            "type": "string"
+        },
+        "netFrameworkVersion": {
+            "type": "string"
+        },
+        "hostingPlanName": {
+            "type": "string"
+        },
+        "serverFarmResourceGroup": {
+            "type": "string"
+        },
+        "alwaysOn": {
+            "type": "bool"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "apiVersion": "2018-11-01",
+            "name": "[parameters('name')]",
+            "type": "Microsoft.Web/sites",
+            "kind": "functionapp",
+            "location": "[parameters('location')]",
+            "tags": {
+				"hidden-link: /app-insights-resource-id": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Insights/components/', parameters('name'))]"
+			},
+            "dependsOn": [
+				"[concat('microsoft.insights/components/', parameters('name'))]"
+			],
+            "properties": {
+                "name": "[parameters('name')]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~4"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "java"
+                        },
+						{
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                            "value": "[reference(concat('microsoft.insights/components/', parameters('name')), '2015-05-01').ConnectionString]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_ENABLE_AGENT",
+                            "value": "true"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('46c08b84-f5cc-4e15-baf0-619d34117086','payment-diversity-uw-rg-q','Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                        },
+						{
+							"name": "WEBSITE_HTTPLOGGING_RETENTION_DAYS",
+							"value": "0"
+						},
+						{
+							"name": "WEBSITE_RUN_FROM_PACKAGE",
+							"value": "1"
+						},
+						{
+							"name": "AZURE_STORAGE",
+							"value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('46c08b84-f5cc-4e15-baf0-619d34117086','payment-diversity-uw-rg-q','Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+						},					
+						{
+							"name": "AZURE_STORAGE_ACCOUNT_KEY",
+							"value": "[listKeys(resourceId('46c08b84-f5cc-4e15-baf0-619d34117086','payment-diversity-uw-rg-q','Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value]"
+						},
+						{
+							"name": "AZURE_STORAGE_ACCOUNT_NAME",
+							"value": "[parameters('storageAccountName')]"
+						},
+						{
+							"name": "AZURE_STORAGE_CONNECTION_STRING",
+							"value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('46c08b84-f5cc-4e15-baf0-619d34117086','payment-diversity-uw-rg-q','Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+						},
+						{
+							"name": "AZURE_STORAGE_RESOURCE_GROUP",
+							"value": "payment-diversity-uw-rg-q"
+						},
+						{
+							"name": "AZURE_STORAGE_SUBSCRIPTION_ID",
+							"value": "[parameters('subscriptionId')]"
+						},
+						{
+							"name": "AzureWebJobs.AuditTrailQueueTrigger.Disabled",
+							"value": "0"
+						},
+						{
+							"name": "Environment",
+							"value": "[parameters('Environment')]"
+						},
+						{
+							"name": "ClientId",
+							"value": "[parameters('ClientId')]"
+						},
+						{
+							"name": "ClientKey",
+							"value": "[parameters('ClientKey')]"
+						},
+						{
+							"name": "TenantId",
+							"value": "[parameters('TenantId')]"
+						},
+						{
+							"name": "MAIN_CLASS",
+							"value": "com.mgm.payments.audittrail.AuditTrailApplication"
+						}
+                    ],
+                    "cors": {
+                        "allowedOrigins": [
+                            "https://portal.azure.com"
+                        ]
+                    },
+                    "use32BitWorkerProcess": "[parameters('use32BitWorkerProcess')]",
+                    "ftpsState": "[parameters('ftpsState')]",
+                    "alwaysOn": "[parameters('alwaysOn')]",
+                    "javaVersion": "[parameters('javaVersion')]",
+                    "netFrameworkVersion": "[parameters('netFrameworkVersion')]"
+                },
+                "clientAffinityEnabled": false,
+                "virtualNetworkSubnetId": null,
+                "publicNetworkAccess": "Enabled",
+                "httpsOnly": true,
+                "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+            },
+			"resources": [
+                {
+                    "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+                    "apiVersion": "2022-09-01",
+                    "name": "[concat(parameters('name'), '/scm')]",
+                    "properties": {
+                        "allow": false
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/Sites', parameters('name'))]"
+                    ]
+                },
+                {
+                    "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+                    "apiVersion": "2022-09-01",
+                    "name": "[concat(parameters('name'), '/ftp')]",
+                    "properties": {
+                        "allow": false
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/Sites', parameters('name'))]"
+                    ]
+                }
+            ]
+        },
+		{
+            "apiVersion": "2020-02-02-preview",
+            "name": "[parameters('name')]",
+            "type": "microsoft.insights/components",
+            "location": "westus",
+            "tags": {},
+            "dependsOn": [],
+            "properties": {
+                "ApplicationId": "[parameters('name')]",
+                "Request_Source": "IbizaWebAppExtensionCreate",
+                "Flow_Type": "Redfield",
+                "Application_Type": "web",
+                "WorkspaceResourceId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/DefaultResourceGroup-WUS/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-', parameters('subscriptionId'), '-WUS')]"
+            }
+        }
+    ]
+}

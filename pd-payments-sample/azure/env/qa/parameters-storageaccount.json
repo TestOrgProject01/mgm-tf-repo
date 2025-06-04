@@ -1,0 +1,94 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westus"
+        },
+        "storageAccountName": {
+            "value": "audittrailstorageqa"
+        },
+        "accountType": {
+            "value": "Standard_RAGRS"
+        },
+        "kind": {
+            "value": "StorageV2"
+        },
+        "minimumTlsVersion": {
+            "value": "TLS1_2"
+        },
+        "supportsHttpsTrafficOnly": {
+            "value": true
+        },
+        "allowBlobPublicAccess": {
+            "value": false
+        },
+        "allowSharedKeyAccess": {
+            "value": true
+        },
+        "defaultOAuth": {
+            "value": false
+        },
+        "accessTier": {
+            "value": "Hot"
+        },
+        "publicNetworkAccess": {
+            "value": "Enabled"
+        },
+        "allowCrossTenantReplication": {
+            "value": false
+        },
+        "networkAclsBypass": {
+            "value": "AzureServices"
+        },
+        "networkAclsDefaultAction": {
+            "value": "Deny"
+        },
+		"networkAclsIpRules": {
+            "value": []
+        },
+        "networkAclsVirtualNetworkRules": {
+            "value": [
+                {
+                    "id": "/subscriptions/46c08b84-f5cc-4e15-baf0-619d34117086/resourceGroups/paymentvnets-uw-rg-d/providers/Microsoft.Network/virtualNetworks/payment-uw-vnet-d/subnets/pd-uw-sn-q"
+                }
+            ]
+        },
+        "dnsEndpointType": {
+            "value": "Standard"
+        },
+        "largeFileSharesState": {
+            "value": "Enabled"
+        },
+        "keySource": {
+            "value": "Microsoft.Storage"
+        },
+        "encryptionEnabled": {
+            "value": true
+        },
+        "keyTypeForTableAndQueueEncryption": {
+            "value": "Account"
+        },
+        "infrastructureEncryptionEnabled": {
+            "value": false
+        },
+        "isBlobSoftDeleteEnabled": {
+            "value": true
+        },
+        "blobSoftDeleteRetentionDays": {
+            "value": 7
+        },
+        "isContainerSoftDeleteEnabled": {
+            "value": true
+        },
+        "containerSoftDeleteRetentionDays": {
+            "value": 7
+        },
+        "isShareSoftDeleteEnabled": {
+            "value": true
+        },
+        "shareSoftDeleteRetentionDays": {
+            "value": 7
+        }
+    }
+}

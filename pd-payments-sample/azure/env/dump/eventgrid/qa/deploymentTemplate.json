@@ -1,0 +1,104 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "topics_pd_audit_trail_topic_q_name": {
+            "defaultValue": "pd-audit-trail-topic-q",
+            "type": "String"
+        },
+        "storageAccounts_audittrailstorageqa_externalid": {
+            "defaultValue": "/subscriptions/46c08b84-f5cc-4e15-baf0-619d34117086/resourceGroups/payment-diversity-uw-rg-q/providers/Microsoft.Storage/storageAccounts/audittrailstorageqa",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.EventGrid/topics",
+            "apiVersion": "2023-12-15-preview",
+            "name": "[parameters('topics_pd_audit_trail_topic_q_name')]",
+            "location": "westus",
+            "tags": {
+                "BusinessCostCenter": "516-800-80182",
+                "BusinessSponsor": "Digital Engineering - Michel Langlois",
+                "compliance": "Unknown",
+                "CreatedDateTime": "2023-08-10T21:41:44.7483275Z",
+                "Environment": "Development",
+                "ExpiredBy": "9999-01-01T00:00:00.001Z",
+                "GroupEmail": "Unknown",
+                "LastUpdatedDateTime": "2023-08-17T06:07:50.7343198Z",
+                "ProductName": "Payments",
+                "ProjectLead": "Michel Langlois",
+                "ServiceName": "Unknown",
+                "Uptime": "Unknown"
+            },
+            "sku": {
+                "name": "Basic"
+            },
+            "kind": "Azure",
+            "identity": {
+                "type": "None"
+            },
+            "properties": {
+                "minimumTlsVersionAllowed": "1.0",
+                "inputSchema": "CustomEventSchema",
+                "inputSchemaMapping": {
+                    "properties": {
+                        "id": {
+                            "sourceField": "id"
+                        },
+                        "topic": {},
+                        "eventTime": {
+                            "sourceField": "eventTime"
+                        },
+                        "eventType": {
+                            "sourceField": "eventType",
+                            "defaultValue": "mgm.payments.audittrail"
+                        },
+                        "subject": {
+                            "sourceField": "subject"
+                        },
+                        "dataVersion": {
+                            "sourceField": "dataVersion"
+                        }
+                    },
+                    "inputSchemaMappingType": "Json"
+                },
+                "publicNetworkAccess": "Enabled",
+                "inboundIpRules": [],
+                "disableLocalAuth": false,
+                "dataResidencyBoundary": "WithinGeopair"
+            }
+        },
+        {
+            "type": "Microsoft.EventGrid/topics/eventSubscriptions",
+            "apiVersion": "2023-12-15-preview",
+            "name": "[concat(parameters('topics_pd_audit_trail_topic_q_name'), '/auditTrailStorageQueueSubscription')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventGrid/topics', parameters('topics_pd_audit_trail_topic_q_name'))]"
+            ],
+            "properties": {
+                "destination": {
+                    "properties": {
+                        "resourceId": "[parameters('storageAccounts_audittrailstorageqa_externalid')]",
+                        "queueName": "audittrailstoragequeue",
+                        "queueMessageTimeToLiveInSeconds": 604800
+                    },
+                    "endpointType": "StorageQueue"
+                },
+                "filter": {
+                    "includedEventTypes": [
+                        "mgm.payments.audittrail"
+                    ],
+                    "enableAdvancedFilteringOnArrays": true
+                },
+                "labels": [],
+                "eventDeliverySchema": "CustomInputSchema",
+                "retryPolicy": {
+                    "maxDeliveryAttempts": 30,
+                    "eventTimeToLiveInMinutes": 1440
+                }
+            }
+        }
+    ]
+}

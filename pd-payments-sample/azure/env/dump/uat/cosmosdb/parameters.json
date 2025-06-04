@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "value": "pd-payments-audit-uw-db-u"
+        },
+		"dbName": {
+            "value": "payments-audit-trail"
+        },
+		"containerName": {
+            "value": "payments-audit-trail"
+        },
+        "location": {
+            "value": "westus"
+        },
+        "locationName": {
+            "value": "West US"
+        },
+        "defaultExperience": {
+            "value": "Core (SQL)"
+        },
+        "isZoneRedundant": {
+            "value": "false"
+        },
+        "pairedLocation": {
+            "value": "eastus"
+        },
+        "pairedLocationName": {
+            "value": "East US"
+        }
+    }
+}

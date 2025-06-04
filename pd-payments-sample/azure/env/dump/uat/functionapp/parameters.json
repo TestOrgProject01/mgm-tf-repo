@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscriptionId": {
+            "value": "46c08b84-f5cc-4e15-baf0-619d34117086"
+        },
+        "name": {
+            "value": "pd-audit-trail-u"
+        },
+        "location": {
+            "value": "West US"
+        },
+        "ftpsState": {
+            "value": "FtpsOnly"
+        },
+        "storageAccountName": {
+            "value": "audittrailstorageuat"
+        },
+        "use32BitWorkerProcess": {
+            "value": true
+        },
+        "javaVersion": {
+            "value": "17"
+        },
+        "netFrameworkVersion": {
+            "value": "v6.0"
+        },
+        "hostingPlanName": {
+            "value": "pd-audit-uw-asp-u"
+        },
+        "serverFarmResourceGroup": {
+            "value": "pd-audit-uw-rg-u"
+        },
+        "alwaysOn": {
+            "value": true
+        }
+    }
+}

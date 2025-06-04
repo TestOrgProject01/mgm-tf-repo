@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "eventGridTopicName": {
+      "value": "pd-audit-trail-uw-egt-p"
+    },
+    "eventGridSubscriptionName": {
+      "value": "pd-audit-trail-uw-saqs-p"
+    },
+	"eventTypes": {
+      "value": "mgm.payments.audittrail"
+    },
+	"storageId": {
+      "value": "/subscriptions/920ae812-052d-4985-b11c-8f8b82bc2734/resourceGroups/pd-uw-rg-p/providers/Microsoft.Storage/storageAccounts/pduwsaauditp"
+    },
+	"storageQueue": {
+      "value": "audittrailstoragequeue"
+    },
+    "location": {
+      "value": "West US"
+    }
+  }
+}

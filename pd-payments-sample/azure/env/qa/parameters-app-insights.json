@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "type": {
+            "value": "web"
+        },
+        "name": {
+            "value": "pd-audit-trail-q"
+        },
+        "regionId": {
+            "value": "westus"
+        },
+        "tagsArray": {
+            "value": {}
+        },
+        "requestSource": {
+            "value": "IbizaAIExtension"
+        },
+        "workspaceResourceId": {
+            "value": "/subscriptions/46c08b84-f5cc-4e15-baf0-619d34117086/resourcegroups/payment-diversity-uw-rg-q/providers/Microsoft.OperationalInsights/workspaces/pd-uw-auditlaw-q"
+        }
+    }
+}

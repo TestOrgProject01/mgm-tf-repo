@@ -1,0 +1,252 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"name": {
+			"type": "string"
+		},
+		"location": {
+			"type": "string"
+		},
+		"use32BitWorkerProcess": {
+			"type": "bool"
+		},
+		"ftpsState": {
+			"type": "string"
+		},
+		"storageAccountName": {
+			"type": "string"
+		},
+		"javaVersion": {
+			"type": "string"
+		},
+		"netFrameworkVersion": {
+			"type": "string"
+		},
+		"hostingPlanName": {
+			"type": "string"
+		},
+		"serverFarmResourceGroup": {
+			"type": "string"
+		},
+		"vnetResourceGroup": {
+			"type": "string"
+		},
+		"vnet": {
+			"type": "string"
+		},
+		"subnet": {
+			"type": "string"
+		},
+		"alwaysOn": {
+			"type": "bool"
+		},
+		"ClientId": {
+			"type": "string"
+		},
+		"Environment": {
+			"type": "string"
+		},
+		"ClientKey": {
+			"type": "string"
+		},
+		"TenantId": {
+			"type": "string"
+		},
+		"incomingIPRestrictions": {
+			"type": "array"
+		}
+	},
+	"variables": {
+		"storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]",
+		"virtualNetworkSubnetId": "[resourceId(parameters('vnetResourceGroup') ,'Microsoft.Network/virtualNetworks/subnets',parameters('vnet'),parameters('subnet'))]",
+		"serverFarmId": "[concat('/subscriptions/', resourceGroup().id,'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+	},
+	"resources": [
+		{
+			"apiVersion": "2022-03-01",
+			"name": "[parameters('name')]",
+			"type": "Microsoft.Web/sites",
+			"kind": "functionapp",
+			"location": "[parameters('location')]",
+			"tags": {},
+			"dependsOn": [],
+			"properties": {
+				"name": "[parameters('name')]",
+				"siteConfig": {
+					"appSettings": [
+						{
+							"name": "FUNCTIONS_EXTENSION_VERSION",
+							"value": "~4"
+						},
+						{
+							"name": "FUNCTIONS_WORKER_RUNTIME",
+							"value": "java"
+						},
+						{
+							"name": "AzureWebJobsStorage",
+							"value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+						},
+						{
+							"name": "WEBSITE_HTTPLOGGING_RETENTION_DAYS",
+							"value": "0"
+						},
+						{
+							"name": "WEBSITE_RUN_FROM_PACKAGE",
+							"value": "1"
+						},
+						{
+							"name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+							"value": "[reference(concat('microsoft.insights/components/', parameters('name')), '2015-05-01').ConnectionString]"
+						},
+						{
+							"name": "APPLICATIONINSIGHTS_ENABLE_AGENT",
+							"value": "true"
+						},
+						{
+							"name": "Environment",
+							"value": "[parameters('Environment')]"
+						},
+						{
+							"name": "ClientId",
+							"value": "[parameters('ClientId')]"
+						},
+						{
+							"name": "ClientKey",
+							"value": "[parameters('ClientKey')]"
+						},
+						{
+							"name": "TenantId",
+							"value": "[parameters('TenantId')]"
+						},
+						{
+							"name": "MAIN_CLASS",
+							"value": "com.mgm.payments.audittrail.AuditTrailApplication"
+						}
+					],
+					"cors": {
+						"allowedOrigins": [
+							"https://portal.azure.com"
+						]
+					},
+					"ipSecurityRestrictions": "[parameters('incomingIPRestrictions')]",
+					"use32BitWorkerProcess": "[parameters('use32BitWorkerProcess')]",
+					"ftpsState": "[parameters('ftpsState')]",
+					"alwaysOn": "[parameters('alwaysOn')]",
+					"javaVersion": "[parameters('javaVersion')]",
+					"netFrameworkVersion": "[parameters('netFrameworkVersion')]"
+				},
+				"clientAffinityEnabled": false,
+				"virtualNetworkSubnetId": "[variables('virtualNetworkSubnetId')]",
+				"vnetRouteAllEnabled": true,
+				"httpsOnly": true,
+				"serverFarmId": "[variables('serverFarmId')]"
+			},
+			"resources": [
+				{
+					"type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+					"apiVersion": "2022-09-01",
+					"name": "[concat(parameters('name'), '/scm')]",
+					"properties": {
+						"allow": true
+					},
+					"dependsOn": [
+						"[resourceId('Microsoft.Web/Sites', parameters('name'))]"
+					]
+				},
+				{
+					"type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+					"apiVersion": "2022-09-01",
+					"name": "[concat(parameters('name'), '/ftp')]",
+					"properties": {
+						"allow": true
+					},
+					"dependsOn": [
+						"[resourceId('Microsoft.Web/Sites', parameters('name'))]"
+					]
+				}
+			]
+		},
+		{
+			"apiVersion": "2022-03-01",
+			"type": "Microsoft.Web/sites/slots",
+			"name": "[concat(parameters('name'), '/', 'staging')]",
+			"location": "[parameters('location')]",
+			"comments": "This specifies the staging slot.",
+			"tags": {},
+			"dependsOn": [
+				"[resourceId('Microsoft.Web/Sites', parameters('name'))]"
+			],
+			"properties": {
+				"siteConfig": {
+					"appSettings": [
+						{
+							"name": "FUNCTIONS_EXTENSION_VERSION",
+							"value": "~4"
+						},
+						{
+							"name": "FUNCTIONS_WORKER_RUNTIME",
+							"value": "java"
+						},
+						{
+							"name": "AzureWebJobsStorage",
+							"value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountid'),'2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+						},
+						{
+							"name": "WEBSITE_HTTPLOGGING_RETENTION_DAYS",
+							"value": "0"
+						},
+						{
+							"name": "WEBSITE_RUN_FROM_PACKAGE",
+							"value": "1"
+						},
+						{
+							"name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+							"value": "[reference(concat('microsoft.insights/components/', parameters('name')), '2015-05-01').ConnectionString]"
+						},
+						{
+							"name": "APPLICATIONINSIGHTS_ENABLE_AGENT",
+							"value": "true"
+						},
+						{
+							"name": "Environment",
+							"value": "[parameters('Environment')]"
+						},
+						{
+							"name": "ClientId",
+							"value": "[parameters('ClientId')]"
+						},
+						{
+							"name": "ClientKey",
+							"value": "[parameters('ClientKey')]"
+						},
+						{
+							"name": "TenantId",
+							"value": "[parameters('TenantId')]"
+						},
+						{
+							"name": "MAIN_CLASS",
+							"value": "com.mgm.payments.audittrail.AuditTrailApplication"
+						}
+					],
+					"cors": {
+						"allowedOrigins": [
+							"https://portal.azure.com"
+						]
+					},
+					"ipSecurityRestrictions": "[parameters('incomingIPRestrictions')]",
+					"use32BitWorkerProcess": "[parameters('use32BitWorkerProcess')]",
+					"ftpsState": "[parameters('ftpsState')]",
+					"alwaysOn": "[parameters('alwaysOn')]",
+					"javaVersion": "[parameters('javaVersion')]",
+					"netFrameworkVersion": "[parameters('netFrameworkVersion')]"
+				},
+				"clientAffinityEnabled": false,
+				"virtualNetworkSubnetId": "[variables('virtualNetworkSubnetId')]",
+				"vnetRouteAllEnabled": true,
+				"httpsOnly": true,
+				"serverFarmId": "[variables('serverFarmId')]"
+			}
+		}
+	]
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "svcPlanName": {
+      "value": "pd-audit-uw-asp-u"
+    },
+    "sku": {
+      "value": "PremiumV3"
+    },
+    "svcPlanSize": {
+      "value": "P2V3"
+    },
+    "minimumCapacity": {
+      "value": 1
+    },
+    "maximumCapacity": {
+      "value": 5
+    },
+    "defaultCapacity": {
+      "value": 5
+    },
+    "metricThresholdToScaleOut": {
+      "value": 60
+    },
+    "metricThresholdToScaleIn": {
+      "value": 20
+    },
+    "changePercentScaleOut": {
+      "value": 5
+    },
+    "changePercentScaleIn": {
+      "value": 1
+    },
+    "autoscaleEnabled": {
+      "value": true
+    },
+    "location": {
+      "value": "West US"
+    }
+  }
+}

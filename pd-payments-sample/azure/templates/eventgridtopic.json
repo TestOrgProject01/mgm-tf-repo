@@ -1,0 +1,108 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "eventGridTopicName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the Event Grid custom topic."
+      }
+    },
+    "eventGridSubscriptionName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the Event Grid custom topic's subscription."
+      }
+    },
+	"eventTypes": {
+      "type": "string"
+    },
+	"storageId": {
+      "type": "string"
+    },
+	"storageQueue": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "The location in which the Event Grid should be deployed."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.EventGrid/topics",
+      "apiVersion": "2024-06-01-preview",
+      "name": "[parameters('eventGridTopicName')]",
+      "location": "[parameters('location')]",
+	  "sku": {
+                "name": "Basic"
+            },
+            "kind": "Azure",
+            "identity": {
+                "type": "None"
+            },
+            "properties": {
+                "minimumTlsVersionAllowed": "1.0",
+                "inputSchema": "CustomEventSchema",
+                "inputSchemaMapping": {
+                    "properties": {
+                        "id": {
+                            "sourceField": "id"
+                        },
+                        "topic": {},
+                        "eventTime": {
+                            "sourceField": "eventTime"
+                        },
+                        "eventType": {
+                            "sourceField": "eventType",
+                            "defaultValue": "[parameters('eventTypes')]"
+                        },
+                        "subject": {
+                            "sourceField": "subject"
+                        },
+                        "dataVersion": {
+                            "sourceField": "dataVersion"
+                        }
+                    },
+                    "inputSchemaMappingType": "Json"
+                },
+                "publicNetworkAccess": "Enabled",
+                "inboundIpRules": [],
+                "disableLocalAuth": false,
+                "dataResidencyBoundary": "WithinGeopair"
+            }
+    },
+    {
+      "type": "Microsoft.EventGrid/topics/eventSubscriptions",
+      "apiVersion": "2023-12-15-preview",
+      "name": "[concat(parameters('eventGridTopicName'), '/auditTrailStorageQueueSubscription')]",
+	  "dependsOn": [
+        "[resourceId('Microsoft.EventGrid/topics', parameters('eventGridTopicName'))]"
+      ],
+      "properties": {
+                "destination": {
+                    "properties": {
+                        "resourceId": "[parameters('storageId')]",
+                        "queueName": "[parameters('storageQueue')]",
+                        "queueMessageTimeToLiveInSeconds": 604800
+                    },
+                    "endpointType": "StorageQueue"
+                },
+                "filter": {
+                    "includedEventTypes": [
+                        "[parameters('eventTypes')]"
+                    ],
+                    "enableAdvancedFilteringOnArrays": true
+                },
+                "labels": [],
+                "eventDeliverySchema": "CustomInputSchema",
+                "retryPolicy": {
+                    "maxDeliveryAttempts": 30,
+                    "eventTimeToLiveInMinutes": 1440
+                }
+            }  
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "topics_pd_audit_trail_topic_name": {
+            "value": "pd-audit-trail-topic-u"
+        },
+        "storageAccounts_audittrailstorage_externalid": {
+            "value": "/subscriptions/46c08b84-f5cc-4e15-baf0-619d34117086/resourceGroups/pd-audit-uw-rg-u/providers/Microsoft.Storage/storageAccounts/audittrailstorageuat"
+        }
+    }
+}

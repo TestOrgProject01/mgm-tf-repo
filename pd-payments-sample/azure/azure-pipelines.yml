@@ -1,0 +1,53 @@
+trigger:
+  branches:
+    include:
+    - feature/*
+    - develop
+    - main
+  paths:
+    exclude:
+    - infrastructure-templates/*
+    
+pr: none
+    
+pool:
+  vmImage: "windows-latest"
+
+variables:
+  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
+  MAVEN_OPTS: "-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER) -Xmx3072m"
+
+steps:
+ - task: JavaToolInstaller@0
+   inputs:
+     versionSpec: '17'
+     jdkArchitectureOption: 'x64'
+     jdkSourceOption: 'PreInstalled'
+
+
+ - script: |
+      mvn clean package
+      mvn azure-functions:package
+   displayName: 'Maven Build'
+
+ - task: CopyFiles@2
+   inputs:
+    SourceFolder: '$(Build.SourcesDirectory)/'
+    Contents: |
+      azure/**
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+ - task: ArchiveFiles@2
+   inputs:
+     rootFolderOrFile: '$(Build.SourcesDirectory)/target/azure-functions/pd-payments-audit-trail/'
+     includeRootFolder: false
+     archiveType: 'zip'
+     archiveFile: '$(Build.ArtifactStagingDirectory)/functionapp.zip'
+     replaceExistingArchive: true
+
+ - task: PublishPipelineArtifact@1
+   displayName: 'Publish audit artifact'
+   inputs:
+      artifact: "$(Build.BuildId)-Audit"
+      targetPath: $(Build.ArtifactStagingDirectory)
+  
