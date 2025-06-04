@@ -45,7 +45,7 @@ jobs:
       RT_REPO_MVN_VIRTUAL: 'auditrail-mvn-virtual'
       RT_REPO_MVN_QA_LOCAL: 'audit-trail-mvn-qa-local'
       JOB_SUMMARY: false
-      JFROG_CLI_LOG_LEVEL: DEBUG # DEBUG, INFO, WARN, ERROR
+      JFROG_CLI_LOG_LEVEL: ERROR # DEBUG, INFO, WARN, ERROR
       BUILD_NAME: 'pd-payments-audit-trail-ssdlc'
       RBv2_SIGNING_KEY: mgmkey
       BUILD_ID: "ga-mvn-xray-${{ github.run_number }}" # ref: https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#github-context
@@ -129,8 +129,11 @@ jobs:
         run: |
           # cd /home/runner/work/pd-payments-sample/pd-payments-sample
           pwd
-          jf audit --mvn=true --format=table --extended-table=true --secrets=true --sast=true --sca=true --licenses=true --fail=true # >> $GITHUB_STEP_SUMMARY
-
+          jf audit --mvn=true --format=table --extended-table=true --secrets=true --sast=true --sca=true --licenses=true --fail=true
+      
+      - name: Exit  # ref: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-security/scan-your-source-code
+        run: |
+          echo "Scan Completed"
 
 #       - name: Create Build
 #         run: |
