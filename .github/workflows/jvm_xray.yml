@@ -127,7 +127,8 @@ jobs:
 
       - name: Xray Audit  # ref: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-security/scan-your-source-code
         run: |
-          cd /home/runner/work/pd-payments-sample/pd-payments-sample
+          # cd /home/runner/work/pd-payments-sample/pd-payments-sample
+          pwd
           jf audit --mvn=true --format=table --extended-table=true --secrets=true --sast=true --sca=true --licenses=true --fail=true # >> $GITHUB_STEP_SUMMARY
 
 
