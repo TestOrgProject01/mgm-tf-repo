@@ -1,0 +1,294 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: JF-CLI with Maven with Xray Referecen Implementation
+on:
+  push:
+    branches: 
+    #  - nobuildonpush
+      - maven-test-audit
+    paths-ignore: # When the below folders are checked-in, the GitHub Actions job will not start.
+    #  - '.github/**'
+      - 'target/**'
+      - 'gradle/**'
+      - '.mvn/**'
+      - '.devcontainer/**'
+      - '.jfrog/**'
+#   pull_request:
+#     branches: [ main ]
+# issue_comment triggers this action on each comment on issues and pull requests
+  # issue_comment:
+  #   types: [created]
+  # pull_request_target:
+  #   types: [opened, synchronize]
+permissions:
+  actions: read # for detecting the Github Actions environment.
+  id-token: write # for creating OIDC tokens for signing.
+  packages: write # for uploading attestations.
+  contents: read
+  security-events: write # Required for uploading code scanning.
+jobs:
+  mvnPackage:
+    name: MVN Package
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        java: [17 ]
+        # include:
+        #   - language: ['java-kotlin']
+        #     build-mode: none
+    env:  
+      JAVA_PROVIDER: 'zulu'
+      JAVA_VERSION: '17'
+      JF_RT_URL: https://mgmresorts.jfrog.io
+      RT_REPO_MVN_VIRTUAL: 'auditrail-mvn-virtual'
+      RT_REPO_MVN_QA_LOCAL: 'audit-trail-mvn-qa-local'
+      JOB_SUMMARY: false
+      JFROG_CLI_LOG_LEVEL: DEBUG # DEBUG, INFO, WARN, ERROR
+      BUILD_NAME: 'pd-payments-audit-trail-ssdlc'
+      RBv2_SIGNING_KEY: mgmkey
+      BUILD_ID: "ga-mvn-xray-${{ github.run_number }}" # ref: https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#github-context
+    runs-on: ${{ matrix.os }}
+    steps:
+      # Use the specific setup-cli branch. Ref https://github.com/marketplace/actions/setup-jfrog-cli
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v4
+        id: setup-cli
+        with:
+          version: 2.74.1
+          oidc-provider-name: mgmri-commerce-oidc
+          disable-job-summary: ${{env.JOB_SUMMARY}}
+        env:
+          JF_URL: ${{env.JF_RT_URL}}
+          JFROG_CLI_RELEASES_REPO: '${{ env.JF_RT_URL }}/artifactory/${{ env.RT_REPO_MVN_VIRTUAL}}' 
+          JFROG_CLI_EXTRACTORS_REMOTE: '${{ env.JF_RT_URL }}/artifactory/${{ env.RT_REPO_MVN_VIRTUAL}}'
+          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Clone VCS
+        uses: actions/checkout@v4 # ref: https://github.com/actions/checkout
+
+      - name: Java provider = ${{ env.JAVA_PROVIDER }} with ver = ${{ env.JAVA_VERSION }} 
+        uses: actions/setup-java@v4   # ref https://github.com/actions/setup-java
+        with:
+          distribution: ${{ env.JAVA_PROVIDER }} # zulu
+          java-version: ${{ env.JAVA_VERSION }}  # 17
+          cache: 'maven'
+          cache-dependency-path: 'pom.xml'
+
+      # - name: Software version
+      #   run: |
+      #     # JFrog CLI version
+      #     jf --version
+      #     # Ping the server
+      #     jf rt ping
+      #     # Java
+      #     java -version
+      #     # MVN
+      #     mvn -version
+      #     # Docker
+      #     docker -v
+      #     # Python
+      #     python3 -V
+      #     pip3 -V
+      #     # jf config
+      #     jf config show
+
+      # - name: Config jf with mvn repos
+      #   run: |
+      #     export JFROG_CLI_LOG_LEVEL=${{ env.JFROG_CLI_LOG_LEVEL }}
+      #     export JFROG_CLI_LOG_TIMESTAMP=DATE_AND_TIME
+
+      #     jf mvnc --repo-resolve-releases ${{ env.RT_REPO_MVN_VIRTUAL}} --repo-resolve-snapshots ${{ env.RT_REPO_MVN_VIRTUAL}} --repo-deploy-releases ${{ env.RT_REPO_MVN_QA_LOCAL}} --repo-deploy-snapshots ${{ env.RT_REPO_MVN_QA_LOCAL}}
+
+      # - name: list folder
+      #   run: |
+      #     pwd
+      #     ls -lrta /home/runner/work/pd-payments-audit-trail/pd-payments-audit-trail
+
+      #     # echo "OIDC_PROVIDER_NAME = ${{ vars.JF_OIDC_PROVIDER_NAME }}"
+      #     echo "GITHUB_REPOSITORY = $GITHUB_REPOSITORY"
+      #     echo "GITHUB_SHA = $GITHUB_SHA"
+      #     echo "GITHUB_REPOSITORY_ID = $GITHUB_REPOSITORY_ID"
+
+         # cd /home/runner/work/pd-payments-audit-trail/pd-payments-audit-trail
+
+      # - name: prestep-summary
+      #   run: |
+      #     jfcliv=`jf --version`
+      #     echo "# :frog: Prestep Summary :pushpin:" >> $GITHUB_STEP_SUMMARY
+      #     echo " " >> $GITHUB_STEP_SUMMARY
+      #     echo " " >> $GITHUB_STEP_SUMMARY
+      #     echo " - Installed JFrog CLI [${jfcliv}](https://jfrog.com/getcli/) and Java [${{ env.JAVA_PROVIDER }}](https://github.com/actions/setup-java) v${{ env.JAVA_VERSION }} " >> $GITHUB_STEP_SUMMARY
+      #     echo " - Configured the JFrog Cli with SaaS Artifactory OIDC integration  " >> $GITHUB_STEP_SUMMARY
+# Package
+
+      - name: Xray Audit  # ref: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-security/scan-your-source-code
+        run: |
+          cd /home/runner/work/pd-payments-sample/pd-payments-sample
+          jf audit --mvn=true --format=table --extended-table=true --secrets=true --sast=true --sca=true --licenses=true --fail=true # >> $GITHUB_STEP_SUMMARY
+
+
+#       - name: Create Build
+#         run: |
+#           jf mvn clean install -DskipTests=true --build-name=${{ env.BUILD_NAME}} --build-number=${{ env.BUILD_ID}} --detailed-summary=true 
+
+#       - name: Xray Scan  # ref: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-security/scan-your-binaries
+#         run: |
+#           jf scan . --extended-table=true 
+ 
+#       - name: build publish env vars   # These properties were captured in Builds >> pd-payments-audit-trail-ssdlc >> version >> Environment tab
+#         run: |
+#           export e_env="e_demo" e_org="e_ps" e_team="e_arch" e_build="maven" e_job="github-action" e_product="artifactory" e_features="package,buildinfo"
+
+#  # Build Info
+#     # Executive Order: 
+#     #       https://www.whitehouse.gov/briefing-room/presidential-actions/2021/05/12/executive-order-on-improving-the-nations-cybersecurity/
+#     #       https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity
+#     # US Dept of Commerce: https://www.ntia.gov/page/software-bill-materials
+#     # US Cyber Defence Agency: https://www.cisa.gov/sbom
+#     # NIST: https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/software-security-supply-chains-software-1
+#       - name: Collect env
+#         run: jf rt bce ${{ env.BUILD_NAME}} ${{ env.BUILD_ID}} 
+ 
+#       - name: Add VCS info
+#         run: jf rt bag ${{ env.BUILD_NAME}} ${{ env.BUILD_ID}} 
+
+#       - name: Build Publish
+#         run: jf rt bp ${{ env.BUILD_NAME}} ${{ env.BUILD_ID}} --detailed-summary=true
+
+#       - name: Build Scan  # ref: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-security/scan-published-builds
+#         run: jf bs ${{ env.BUILD_NAME}} ${{ env.BUILD_ID}} --rescan=true --format=table --extended-table=true --vuln=true --fail=false 
+
+
+# # Set properties      
+#       - name: Set properties # These properties were captured Artifacts >> repo path 'pd-payments-audit-trail-ssdlc.---.jar' >> Properties
+#         run: |
+#           ts="cmd.$(date '+%Y-%m-%d-%H-%M')" 
+#           jf rt sp "job=github-action;env=demo;org=ps;team=arch;pack_cat=webapp;build=maven;product=artifactory;features=package,buildinfo;ts=ts-${BUILD_ID}" --build="${{ env.BUILD_NAME}}/${{ env.BUILD_ID}}"
+# # Release Bundle v2
+#       - name: RBv2 spec - create
+#         run: |
+#           echo "{ \"files\": [ {\"build\": \"${{ env.BUILD_NAME}}/${{ env.BUILD_ID }}\" } ] }"  > RBv2-SPEC-${{ env.BUILD_ID }}.json
+#       - name: RBv2 spec - print
+#         run: | 
+#           cat RBv2-SPEC-${{ env.BUILD_ID }}.json
+#       - name: RBv2 Create NEW
+#         run: |
+#           jf rbc ${{ env.BUILD_NAME}} ${{ env.BUILD_ID }} --sync="true" --signing-key=${{env.RBv2_SIGNING_KEY}} --spec=RBv2-SPEC-${{ env.BUILD_ID }}.json
+#       - name: RBv2 promote DEV
+#         run: |
+#           jf rbp ${{ env.BUILD_NAME}} ${{ env.BUILD_ID }} DEV --sync="true" --signing-key=${{env.RBv2_SIGNING_KEY}}  
+#       - name: RBv2 promote QA
+#         run: |
+#           jf rbp ${{ env.BUILD_NAME}} ${{ env.BUILD_ID }} QA --sync="true" --signing-key=${{env.RBv2_SIGNING_KEY}}  
+
+#       - name: rbv2-summary
+#         run: |
+#           echo "# :frog: Release Bundle v2 Summary :rocket: " >> $GITHUB_STEP_SUMMARY
+#           echo " " >> $GITHUB_STEP_SUMMARY
+#           echo " " >> $GITHUB_STEP_SUMMARY
+#           # echo "<details><summary>The RBv2 artifacts has elevated to the subsequent stages</summary>" >> $GITHUB_STEP_SUMMARY
+#           echo "The Build Artifacts has elevated to the subsequent stages" >> $GITHUB_STEP_SUMMARY
+#           RB2_STATUS_RESP=$(curl -v -G ${JF_RT_URL}/lifecycle/api/v2/promotion/records/${BUILD_NAME}/${BUILD_ID}?async=false -H 'Content-Type:  application/json' -H "Authorization: Bearer ${{ steps.setup-cli.outputs.oidc-token }}")
+#           echo $RB2_STATUS_RESP > RBv2_STATUS-${{env.BUILD_ID}}.json
+#           cat RBv2_STATUS-${{env.BUILD_ID}}.json 
+#           # export RB2_STATUS=$(echo $RB2_STATUS_RESP | jq -r '.promotions[0].environment')
+#           items=$(echo "$RB2_STATUS_RESP" | jq -c -r '.promotions[]')
+#           for item in ${items[@]}; do
+#             # {"status":"COMPLETED","repository_key":"release-bundles-v2","release_bundle_name":"spring-petclinic-ga","release_bundle_version":"58","environment":"QA","service_id":"s","created_by":"token:***","created":"2024-09-21T00:53:57.326Z","created_millis":1726880037326,"xray_retrieval_status":"RECEIVED"}
+#             envVal=$(echo $item | jq -r '.environment')
+#             crtVal=$(echo $item | jq -r '.created')
+#             echo " - ${envVal} on ${crtVal} " >> $GITHUB_STEP_SUMMARY
+#           done
+#           echo " " >> $GITHUB_STEP_SUMMARY
+#   analyze:
+#     # needs: mvnPackage
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         include:
+#         - language: java-kotlin
+#           build-mode: none # This mode only analyzes Java. Set this to 'autobuild' or 'manual' to analyze Kotlin too.
+#         # CodeQL supports the following values keywords for 'language': 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'swift'
+#         # Use `c-cpp` to analyze code written in C, C++ or both
+#         # Use 'java-kotlin' to analyze code written in Java, Kotlin or both
+#         # Use 'javascript-typescript' to analyze code written in JavaScript, TypeScript or both
+#         # To learn more about changing the languages that are analyzed or customizing the build mode for your analysis,
+#         # see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning.
+#         # If you are analyzing a compiled language, you can modify the 'build-mode' for that language to customize how
+#         # your codebase is analyzed, see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/codeql-code-scanning-for-compiled-languages
+#     name: Analyze (${{ matrix.language }})
+#     # Runner size impacts CodeQL analysis time. To learn more, please see:
+#     #   - https://gh.io/recommended-hardware-resources-for-running-codeql
+#     #   - https://gh.io/supported-runners-and-hardware-resources
+#     #   - https://gh.io/using-larger-runners (GitHub.com only)
+#     # Consider using larger runners or machines with greater resources for possible analysis time improvements.
+#     # runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+#     runs-on: ubuntu-latest
+#     # needs: 
+#     #   - releasebundlev2 
+#     permissions:
+#       # required for all workflows
+#       security-events: write
+
+#       # required to fetch internal or private CodeQL packs
+#       packages: read
+
+#       # only required for workflows in private repositories
+#       actions: read
+#       contents: read
+
+    
+#     steps:
+#     - name: Checkout repository
+#       uses: actions/checkout@v4
+
+#     # Initializes the CodeQL tools for scanning.
+#     - name: Initialize CodeQL
+#       uses: github/codeql-action/init@v3
+#       with:
+#         languages: ${{ matrix.language }}
+#         build-mode: ${{ matrix.build-mode }}
+#         # If you wish to specify custom queries, you can do so here or in a config file.
+#         # By default, queries listed here will override any specified in a config file.
+#         # Prefix the list here with "+" to use these queries and those in the config file.
+
+#         # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
+#         # queries: security-extended,security-and-quality
+
+#     # If the analyze step fails for one of the languages you are analyzing with
+#     # "We were unable to automatically build your code", modify the matrix above
+#     # to set the build mode to "manual" for that language. Then modify this step
+#     # to build your code.
+#     # ℹ️ Command-line programs to run using the OS shell.
+#     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
+#     - if: matrix.build-mode == 'manual'
+#       shell: bash
+#       run: |
+#         echo 'If you are using a "manual" build mode for one or more of the' \
+#           'languages you are analyzing, replace this with the commands to build' \
+#           'your code, for example:'
+#         echo '  make bootstrap'
+#         echo '  make release'
+#         exit 1
+
+#     - name: Perform CodeQL Analysis
+#       uses: github/codeql-action/analyze@v3
+#       with:
+#         category: "language:${{matrix.language}}"
+#         upload: false
+#         output: "./codeql-results"
+        
+#     - name: Verify SARIF File Exists
+#       run: |
+#         ls -al ./codeql-results/
+#         cat ./codeql-results/java.sarif
+
+#       # Step 5: Upload SARIF File as Artifact
+#     - name: Upload SARIF Artifact
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: codeql-results-sarif
+#         path: ./codeql-results/java.sarif
+        
