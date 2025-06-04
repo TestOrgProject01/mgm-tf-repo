@@ -57,7 +57,7 @@ jobs:
         id: setup-cli
         with:
           version: 2.74.1
-          oidc-provider-name: mgmri-commerce-oidc
+          oidc-provider-name: test-exploration-oidc
           disable-job-summary: ${{env.JOB_SUMMARY}}
         env:
           JF_URL: ${{env.JF_RT_URL}}
