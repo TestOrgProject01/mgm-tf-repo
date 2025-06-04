@@ -70,13 +70,13 @@ jobs:
         with:
           ref: maven-test-audit
 
-      - name: Java provider = ${{ env.JAVA_PROVIDER }} with ver = ${{ env.JAVA_VERSION }} 
-        uses: actions/setup-java@v4   # ref https://github.com/actions/setup-java
-        with:
-          distribution: ${{ env.JAVA_PROVIDER }} # zulu
-          java-version: ${{ env.JAVA_VERSION }}  # 17
-          cache: 'maven'
-          cache-dependency-path: 'pom.xml'
+      # - name: Java provider = ${{ env.JAVA_PROVIDER }} with ver = ${{ env.JAVA_VERSION }} 
+      #   uses: actions/setup-java@v4   # ref https://github.com/actions/setup-java
+      #   with:
+      #     distribution: ${{ env.JAVA_PROVIDER }} # zulu
+      #     java-version: ${{ env.JAVA_VERSION }}  # 17
+      #     cache: 'maven'
+      #     cache-dependency-path: 'pom.xml'
 
       # - name: Software version
       #   run: |
