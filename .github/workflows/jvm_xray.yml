@@ -66,7 +66,9 @@ jobs:
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Clone VCS
-        uses: actions/checkout@v4 # ref: https://github.com/actions/checkout
+        uses: actions/checkout@v4
+        with:
+          ref: maven-test-audit
 
       - name: Java provider = ${{ env.JAVA_PROVIDER }} with ver = ${{ env.JAVA_VERSION }} 
         uses: actions/setup-java@v4   # ref https://github.com/actions/setup-java
