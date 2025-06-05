@@ -1,0 +1,232 @@
+name: 'Deployment Prod'
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: write
+
+env:
+  AZURE_OIDC: ${{ vars.SRE_AZURE_OIDC_PROD }}
+  AZURE_FUNCTIONAPP_NAME: sre-egp-uw-fa-p
+  RESOURCE_GROUP: sre-uw-rg-p
+  SLOT_NAME: staging
+  PROJECT_PATH: ${{ github.workspace }}/EventGridProxy/EventGridProxy/EventGridProxy.csproj
+  ARTIFACT_PATH: ${{ github.workspace }}/EventGridProxy/EventGridProxy/artifact
+  JF_OIDC: 'mgmri-enterprise-oidc'
+  JF_URL : https://mgmresorts.jfrog.io
+  JF_REPO : shared-sre-services-eventGridProxy-virtual
+  DOTNET_VERSION: 8.0.x
+  BUILD_NAME: sre-services-eventGridProxy
+  JF_PROJECT: shared
+  RELEASE_SIGNING_KEY: "mgmkey"
+  RELEASE_STAGE: PROD
+
+jobs:
+  jfrog:
+    name: JFrog Build/Scan/Publish
+    runs-on: mgm-runner
+    outputs:
+      BUILD_ID: ${{ steps.set-build-id.outputs.BUILD_ID }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set BUILD_ID
+        id: set-build-id
+        run: |
+          BUILD_ID="${{ env.BUILD_NAME }}.$(date '+%Y-%m-%d-%H-%M')"
+          echo "BUILD_ID=$BUILD_ID" >> $GITHUB_ENV
+          echo "::set-output name=BUILD_ID::$BUILD_ID"
+
+      - name: Setup DotNet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{env.DOTNET_VERSION}}
+          
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@ff5cb544114ffc152db9cea1cd3d5978d5074946
+        id: setup-cli
+        env:
+          JF_URL: ${{ env.JF_URL }}
+        with:
+          oidc-provider-name: ${{ env.JF_OIDC }}
+
+      - name: Config Nuget
+        run: jf dotnet-config --repo-resolve=${{ env.JF_REPO }}
+
+      - name: Restore Nuget Packages
+        run: jf dotnet restore ${{ env.PROJECT_PATH }}
+        
+      - name: Xray Audit Report
+        run: jf audit --nuget=true --format=table --extended-table=true --secrets=true --sast=true --sca=true --licenses=true --fail=true >> ${{ github.workspace }}/xray-audit-report.txt
+
+      - name: Xray Audit Report Upload 
+        uses: actions/upload-artifact@v4
+        with:
+          name: xray-audit-report
+          path: ${{ github.workspace }}/xray-audit-report.txt
+
+      - name: Build Project
+        run: jf dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
+
+      - name: Publish Project
+        run: dotnet publish ${{ env.PROJECT_PATH }} --configuration Release --no-build --no-dependencies --no-restore --property:PublishDir='${{ env.ARTIFACT_PATH }}'
+
+      - name: ZIP Project
+        run: |
+          cd ${{ env.ARTIFACT_PATH }}
+          zip -r ${{ github.workspace }}/${{ env.BUILD_ID }}.zip .
+
+      - name: Xray Scan Report
+        run: jf scan . --extended-table=true >> ${{ github.workspace }}/xray-scan-report.txt
+
+      - name: Xray Scan Report Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: xray-scan-report
+          path: ${{ github.workspace }}/xray-scan-report.txt
+
+      - name: Upload Build to JFrog
+        run: |
+          jf rt u "${{ env.BUILD_ID }}.zip" ${{ env.JF_REPO }}/${{ env.BUILD_NAME }}/ --project=${{ env.JF_PROJECT }} --build-name=${{ env.BUILD_NAME }} --build-number=${{ env.BUILD_ID }}
+
+      - name: Build Info -> Collect Build Environment
+        run: jf rt bce ${{ env.BUILD_NAME }} ${{ env.BUILD_ID }} --project=${{ env.JF_PROJECT }}
+
+      - name: Build Info -> Git Add Build
+        run: jf rt bag ${{ env.BUILD_NAME }} ${{ env.BUILD_ID }} --project=${{ env.JF_PROJECT }}
+
+      - name: Build Publish
+        run: jf rt bp ${{ env.BUILD_NAME }} ${{ env.BUILD_ID }} --project=${{ env.JF_PROJECT }} --detailed-summary=true
+
+      - name: Build Scan
+        run: |
+          ATTEMPTS=0
+          MAX_ATTEMPTS=10
+          SLEEP_SECONDS=10
+          
+          until jf bs ${{ env.BUILD_NAME }} ${{ env.BUILD_ID }} --project=${{ env.JF_PROJECT }} --rescan=true --format=table --extended-table=true --vuln=true --fail=true; do
+            ATTEMPTS=$((ATTEMPTS + 1))
+            if [ $ATTEMPTS -ge $MAX_ATTEMPTS ]; then
+              echo "Failed to run jf bs after $ATTEMPTS attempts. Exiting."
+              exit 1
+            fi
+            echo "Build not indexed yet. Waiting $SLEEP_SECONDS seconds before retry..."
+            sleep $SLEEP_SECONDS
+          done          
+
+      - name: Release Create Spec
+        run: |
+          echo "{ \"files\": [ {\"build\": \"${{ env.BUILD_NAME }}/${{ env.BUILD_ID }}\" } ] }"  > RBv2-SPEC-${{ env.BUILD_ID }}.json
+
+      - name: Release Deploy
+        run: |
+          jf rbc --build-name=${{ env.BUILD_NAME }} --build-number=${{ env.BUILD_ID }} --project=${{ env.JF_PROJECT }} --signing-key=${{ env.RELEASE_SIGNING_KEY }} --sync ${{ env.BUILD_NAME }} ${{ env.BUILD_ID }}
+
+      - name: Release Promote
+        run: |
+          jf rbp ${{ env.BUILD_NAME }} ${{ env.BUILD_ID }} --project=${{ env.JF_PROJECT }} ${{ env.RELEASE_STAGE }} --sync="true" --signing-key=${{ env.RELEASE_SIGNING_KEY }} --include-repos=${{ env.JF_REPO }}
+ 
+  codeql:
+    name: CodeQL
+    runs-on: mgm-runner
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: csharp
+            build-mode: none
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL for ${{ matrix.dir }}
+        uses: github/codeql-action/init@15bce5bb14748fcfd6fe32738ca1cba36e5f218f
+        with:
+         languages: ${{ matrix.language }}
+         build-mode: ${{ matrix.build-mode }}
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@15bce5bb14748fcfd6fe32738ca1cba36e5f218f
+        with:
+         category: "language:${{matrix.language}}"
+         upload: false
+         output: "./codeql-results"
+
+      - name: Verify SARIF File Exists
+        run: |
+          ls -al ./codeql-results/
+          cat ./codeql-results/csharp.sarif
+
+      - name: Upload SARIF Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: codeql-results-sarif
+          path: ./codeql-results/csharp.sarif
+
+  azure:
+    name: Azure Function
+    needs:
+      - jfrog
+      - codeql
+    runs-on: mgm-runner
+    steps:
+      - name: Extract OIDC Credentials
+        run: |
+          echo '${{ env.AZURE_OIDC }}' > azure.json
+          
+          CLIENT_ID=$(jq -r '.clientId' azure.json)
+          TENANT_ID=$(jq -r '.tenantId' azure.json)
+          SUBSCRIPTION_ID=$(jq -r '.subscriptionId' azure.json)
+
+          echo "CLIENT_ID=$CLIENT_ID" >> $GITHUB_ENV
+          echo "TENANT_ID=$TENANT_ID" >> $GITHUB_ENV
+          echo "SUBSCRIPTION_ID=$SUBSCRIPTION_ID" >> $GITHUB_ENV
+      
+      - name: Login to Azure
+        uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5
+        with:
+          client-id: ${{ env.CLIENT_ID }}
+          tenant-id: ${{ env.TENANT_ID }}
+          subscription-id: ${{ env.SUBSCRIPTION_ID }}
+
+      - name: Setup DotNet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{env.DOTNET_VERSION}}
+          
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@ff5cb544114ffc152db9cea1cd3d5978d5074946
+        id: setup-cli
+        env:
+          JF_URL: ${{ env.JF_URL }}
+        with:
+          oidc-provider-name: ${{ env.JF_OIDC }}
+
+      - name: Download Artifacts from JFrog Release Bundle
+        run: |
+          jf rt dl --bundle="${{ env.BUILD_NAME }}/${{ needs.jfrog.outputs.BUILD_ID }}" --project=${{ env.JF_PROJECT }}
+          unzip -q "${{ env.BUILD_NAME }}/${{ needs.jfrog.outputs.BUILD_ID }}/artifacts/nuget/${{ env.BUILD_NAME }}/${{ needs.jfrog.outputs.BUILD_ID }}.zip" -d output/
+  
+      - name: Start Slot
+        run: az webapp start --name ${{ env.AZURE_FUNCTIONAPP_NAME }} --resource-group ${{ env.RESOURCE_GROUP }} --slot ${{ env.SLOT_NAME }}
+
+      - name: Deploy to Azure
+        uses: azure/webapps-deploy@de617f46172a906d0617bb0e50d81e9e3aec24c8
+        with:
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          package: ./output
+          slot-name: ${{ env.SLOT_NAME }}
+
+      - name: Swap Slot
+        run: az webapp deployment slot swap --name ${{ env.AZURE_FUNCTIONAPP_NAME }} --resource-group ${{ env.RESOURCE_GROUP }} --slot ${{ env.SLOT_NAME }}
+
+      - name: Stop Slot
+        run: az webapp stop --name ${{ env.AZURE_FUNCTIONAPP_NAME }} --resource-group ${{ env.RESOURCE_GROUP }} --slot ${{ env.SLOT_NAME }}
+
+      - name: Log off Azure
+        run: az logout
