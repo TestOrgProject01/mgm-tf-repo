@@ -1,0 +1,9 @@
+﻿{
+  "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
+  "settings": {
+    "documentationRules": {
+      "companyName": "MGM Resorts International",
+      "copyrightText": "Copyright (c) 2021 MGM Resorts International. All rights reserved."
+    }
+  }
+}
