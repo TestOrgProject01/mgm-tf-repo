@@ -8,7 +8,7 @@ on:
 env:
   JF_RT_URL: https://mgmresorts.jfrog.io
   RT_REPO_VIRTUAL: 'dge-consumepackages-npm-dev-virtual'
-  JFROG_CLI_LOG_LEVEL: 'ERROR' # DEBUG, INFO, WARN, ERROR
+  JFROG_CLI_LOG_LEVEL: 'DEBUG' # DEBUG, INFO, WARN, ERROR
   BUILD_NAME: 'vuln-med-npm'
   BUILD_ID: "vuln-med-$(date '+%Y-%m-%d')-${{ github.run_number}}"
   RBv2_SIGNING_KEY: 'mgmkey'
