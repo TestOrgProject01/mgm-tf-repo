@@ -3,7 +3,7 @@ name: Jfrog Install Audit Publish Scan
 on:
   push:
     branches:
-    - test-medium-vuln-audit
+    - medium-vul-test-audit
 
 env:
   JF_RT_URL: https://mgmresorts.jfrog.io
