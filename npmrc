@@ -1,7 +1,0 @@
-@mgmresorts:registry=https://mgmresorts.jfrog.io/artifactory/api/npm/dge-consumepackages-npm-dev-virtual/
-//mgmresorts.jfrog.io/artifactory/api/npm/dge-consumepackages-npm-dev-virtual/:_authToken=${JFROG_TOKEN}
-//mgmresorts.jfrog.io/artifactory/api/npm/dge-consumepackages-npm-dev-virtual/:email=arana@mgmresorts.com
-//mgmresorts.jfrog.io/artifactory/api/npm/dge-consumepackages-npm-dev-virtual/:always-auth=true
-
-
-
