@@ -1,0 +1,83 @@
+name: Jfrog Install Audit Publish Scan
+
+on:
+  push:
+    branches:
+    - test-medium-vuln-audit
+
+env:
+  JF_RT_URL: https://mgmresorts.jfrog.io
+  RT_REPO_VIRTUAL: 'dge-consumepackages-npm-dev-virtual'
+  JFROG_CLI_LOG_LEVEL: 'ERROR' # DEBUG, INFO, WARN, ERROR
+  BUILD_NAME: 'vuln-med-npm'
+  BUILD_ID: "vuln-med-$(date '+%Y-%m-%d')-${{ github.run_number}}"
+  RBv2_SIGNING_KEY: 'mgmkey'
+  PACKAGE_SCOPE: '@mgmresorts'
+  OIDC_PROVIDER_NAME: 'test-exploration-oidc'
+  DISABLE_JOB_SUMMARY: false
+  JF_PROJECT: dge # organisation name
+
+permissions:
+  actions: read # for detecting the Github Actions environment.
+  id-token: write # for creating OIDC tokens for signing.
+  packages: write # for uploading attestations.
+  contents: write # to push updates while version bump and publish to repo, read is fine if there is just read operation​
+  security-events: write # Required for uploading code scanning.
+  issues: read
+
+jobs:
+  jf-audit-publish-scan:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Print ENV Vars
+      run: |-
+        echo "JF_RT_URL= ${{env.JF_RT_URL}}"
+        echo "RT_REPO_VIRTUAL= ${{env.RT_REPO_VIRTUAL}}"
+        echo "BUILD_NAME= ${{env.BUILD_NAME}}"
+        echo "BUILD_ID= ${{env.BUILD_ID}}"
+        echo "JFROG_CLI_LOG_LEVEL= ${{env.JFROG_CLI_LOG_LEVEL}}"
+        echo "PACKAGE_SCOPE= ${{env.PACKAGE_SCOPE}}"
+        echo "OIDC_PROVIDER_NAME= ${{env.OIDC_PROVIDER_NAME}}"
+        echo "DISABLE_JOB_SUMMARY= ${{env.DISABLE_JOB_SUMMARY}}"
+
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup JFrog CLI
+      uses: jfrog/setup-jfrog-cli@v4
+      id: setup-cli
+      with:
+        version: 2.74.1
+        oidc-provider-name: ${{env.OIDC_PROVIDER_NAME}}
+        disable-job-summary: false
+      env:
+        JF_URL: ${{env.JF_RT_URL}}
+
+    - name: Config - Artifactory info
+      run: jf npmc --global --repo-resolve ${{env.RT_REPO_VIRTUAL}} --repo-deploy ${{env.RT_REPO_VIRTUAL}}
+
+    - name: Install Dependencies
+      run: jf npm install  --legacy-peer-deps --build-name=${{env.BUILD_NAME}} --build-number=${{env.BUILD_ID}}
+
+    - name: Jfrog Xray Audit
+      run: jf audit --npm=true --format=table --extended-table=true --secrets=true --sca=true --sast=true --licenses=true
+      continue-on-error: true
+
+    - name: Jfrog Xray Scan
+      run: jf scan . --extended-table=true
+
+    - name: Jfrog NPM Publish
+      run: jf npm publish --build-name=${{ env.BUILD_NAME }} --build-number=${{ env.BUILD_ID }} --project=${{ env.JF_PROJECT }}
+
+    - name: Collect env
+      run: jf rt bce ${{ env.BUILD_NAME }} ${{ env.BUILD_ID }} --project=${{ env.JF_PROJECT }}
+
+    - name: Add VCS info
+      run: jf rt bag ${{ env.BUILD_NAME }} ${{ env.BUILD_ID }} --project=${{ env.JF_PROJECT }}
+
+    - name: Build Publish
+      run: jf rt bp ${{ env.BUILD_NAME }} ${{ env.BUILD_ID }} --detailed-summary=true --project=${{ env.JF_PROJECT }}
+
+    - name: Build Scan # ref: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-security/scan-published-builds
+      run: jf bs ${{ env.BUILD_NAME }} ${{ env.BUILD_ID }} --rescan=true --format=table --extended-table=true --vuln=true --fail=true --project=${{ env.JF_PROJECT }}
