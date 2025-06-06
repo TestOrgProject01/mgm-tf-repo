@@ -1,0 +1,870 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="CDP API snippets" id="CDP-API-snippets" is-library="true">
+
+    <snippet id="api-prerequisite">
+        <tip title="Prerequisite">
+            <p>
+                API access requires valid access token. Click <a href="Authentication.topic"/>
+                for more details.
+            </p>
+        </tip>
+    </snippet>
+
+    <var name="graphql_endpoint_title" value="CDP API GraphQL endpoints"/>
+    <var name="graphql_endpoint_id" value=""/>
+    <snippet id="cdp-api-graphql-endpoints">
+        <chapter title="%graphql_endpoint_title%" id="%graphql_endpoint_id%" collapsible="true" default-state="expanded"
+                 caps="title">
+            <table>
+                <tr>
+                    <td width="150"><b>Environment</b></td>
+                    <td><b>Endpoint</b></td>
+                </tr>
+                <tr>
+                    <td><b>QA (Apigee X)</b></td>
+                    <td><code>https://qa4-api.devtest.vegas/graphql</code></td>
+                </tr>
+                <tr>
+                    <td><b>QA (Apigee X)</b></td>
+                    <td><code>https://preprod-api.devtest.vegas/graphql</code></td>
+                </tr>
+                <tr>
+                    <td><b>Prod (Apigee X)</b></td>
+                    <td><code>https://api.mgmresorts.com/graphql</code></td>
+                </tr>
+            </table>
+        </chapter>
+    </snippet>
+
+    <var name="cdpapi_endpoint_title" value="CDP REST API endpoints"/>
+    <var name="cdpapi_endpoint_id" value=""/>
+    <snippet id="cdp-api-rest-endpoints">
+        <chapter title="%cdpapi_endpoint_title%" id="%cdpapi_endpoint_id%" collapsible="true" default-state="expanded"
+                 caps="title">
+            <p>
+                Below are the base URL(s) (<code>base-url</code>) for %cdpapi_endpoint_title%. In most cases, additional
+                path information will be required to complete the URL. Consult the appropriate API section for details.
+            </p>
+            <table>
+                <tr>
+                    <td width="150"><b>Environment</b></td>
+                    <td><b>Endpoint</b></td>
+                </tr>
+                <tr>
+                    <td><b>QA</b></td>
+                    <td><code>https://qa2-api.apigee.devtest.vegas/c360/v2</code></td>
+                </tr>
+                <tr>
+                    <td><b>Prod</b></td>
+                    <td><code>https://api.apigee.mgmresorts.com/c360/v2</code></td>
+                </tr>
+            </table>
+        </chapter>
+    </snippet>
+
+    <snippet id="graphql-header">
+        <code-block>
+            Authorization: Bearer eyJra……
+            apollographql-client-name: {{client_id}}
+            Content-Type: application/json
+        </code-block>
+    </snippet>
+
+    <snippet id="rest-header">
+        <code-block>
+            Authorization: Bearer eyJra……
+            apollographql-client-name: {{client_id}}
+            Content-Type: application/json
+        </code-block>
+    </snippet>
+
+    <snippet id="property-codes">
+        <table>
+            <tr>
+                <td><code>propertyCd</code></td>
+                <td>Property Name</td>
+            </tr>
+            <tr>
+                <td><code>ARI</code></td>
+                <td>Aria</td>
+            </tr>
+            <tr>
+                <td><code>BEA</code></td>
+                <td>Beau Rivage</td>
+            </tr>
+            <tr>
+                <td><code>BEL</code></td>
+                <td>Bellagio</td>
+            </tr>
+            <tr>
+                <td><code>BET</code></td>
+                <td>BetMGM</td>
+            </tr>
+            <tr>
+                <td><code>BOR</code></td>
+                <td>Borgata</td>
+            </tr>
+            <tr>
+                <td><code>BWC</code></td>
+                <td>Borgata, The Water Club</td>
+            </tr>
+            <tr>
+                <td><code>CCL</code></td>
+                <td>Circus Circus Las Vegas</td>
+            </tr>
+            <tr>
+                <td><code>DEL</code></td>
+                <td>Delano Las Vegas</td>
+            </tr>
+            <tr>
+                <td><code>EMP</code></td>
+                <td>Empire City</td>
+            </tr>
+            <tr>
+                <td><code>ENT</code></td>
+                <td>Enterprise Default</td>
+            </tr>
+            <tr>
+                <td><code>EXC</code></td>
+                <td>Excalibur</td>
+            </tr>
+            <tr>
+                <td><code>GNL</code></td>
+                <td>Golden Nugget Las Vegas</td>
+            </tr>
+            <tr>
+                <td><code>GTU</code></td>
+                <td>Gold Strike Tunica</td>
+            </tr>
+            <tr>
+                <td><code>LUX</code></td>
+                <td>Luxor</td>
+            </tr>
+            <tr>
+                <td><code>MAN</code></td>
+                <td>Mandalay Bay</td>
+            </tr>
+            <tr>
+                <td><code>MDE</code></td>
+                <td>MGM Grand Detroit</td>
+            </tr>
+            <tr>
+                <td><code>MGR</code></td>
+                <td>MGM Grand Las Vegas</td>
+            </tr>
+            <tr>
+                <td><code>MIR</code></td>
+                <td>Mirage</td>
+            </tr>
+            <tr>
+                <td><code>MNH</code></td>
+                <td>MGM National Harbor</td>
+            </tr>
+            <tr>
+                <td><code>MNP</code></td>
+                <td>MGM Northfield Park</td>
+            </tr>
+            <tr>
+                <td><code>MSP</code></td>
+                <td>MGM Springfield</td>
+            </tr>
+            <tr>
+                <td><code>NOM</code></td>
+                <td>NoMad</td>
+            </tr>
+            <tr>
+                <td><code>NON</code></td>
+                <td>Non MGM properties</td>
+            </tr>
+            <tr>
+                <td><code>NYN</code></td>
+                <td>New York New York</td>
+            </tr>
+            <tr>
+                <td><code>PMG</code></td>
+                <td>Park MGM</td>
+            </tr>
+            <tr>
+                <td><code>SIG</code></td>
+                <td>The Signature</td>
+            </tr>
+            <tr>
+                <td><code>THT</code></td>
+                <td>THE hotel at Mandalay Bay</td>
+            </tr>
+            <tr>
+                <td><code>TIS</code></td>
+                <td>Treasure Island</td>
+            </tr>
+            <tr>
+                <td><code>TMB</code></td>
+                <td>T-Mobile</td>
+            </tr>
+            <tr>
+                <td><code>TST</code></td>
+                <td>Test Location</td>
+            </tr>
+            <tr>
+                <td><code>UNK</code></td>
+                <td>Unidentified Location (Reprocessing)</td>
+            </tr>
+            <tr>
+                <td><code>VDA</code></td>
+                <td>Vdara</td>
+            </tr>
+        </table>
+    </snippet>
+
+    <snippet id="source-codes">
+        <var name="source-codes-columns" value="1"/>
+        <list columns="%source-codes-columns%">
+            <li><code>amperity</code></li>
+            <li><code>archtics</code></li>
+            <li><code>betmgm</code></li>
+            <li><code>guest</code></li>
+            <li><code>mLifeId</code></li>
+            <li><code>okta</code></li>
+            <li><code>onetrust</code></li>
+            <li><code>opera</code></li>
+            <li><code>patron</code></li>
+            <li><code>sevenrooms</code></li>
+            <li><code>tcolv_patron</code></li>
+            <li><code>tcolv_lms</code></li>
+        </list>
+    </snippet>
+
+    <var name="glossary-collapsed-state" value="expanded"/>
+    <snippet id="glossary">
+        <var name="source-codes-columns" value="1"/>
+        <chapter title="Glossary" id="glossary-chapter" collapsible="true" default-state="%glossary-collapsed-state%"
+                 caps="title">
+            <table>
+                <tr>
+                    <td width="150">Context</td>
+                    <td>Term</td>
+                    <td>Description</td>
+                    <td>Value Type</td>
+                </tr>
+                <tr>
+                    <td>Authorization</td>
+                    <td>token_type</td>
+                    <td>Bearer token</td>
+                    <td><code>"Bearer"</code></td>
+                </tr>
+                <tr>
+                    <td>Authorization</td>
+                    <td>expires_in</td>
+                    <td>Time in seconds</td>
+                    <td>Long</td>
+                </tr>
+                <tr>
+                    <td>Authorization</td>
+                    <td>access_token</td>
+                    <td>JWT that needs to be passed to MGM services</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Authorization</td>
+                    <td>grant_type</td>
+                    <td>constant</td>
+                    <td><code>"client_credentials"</code></td>
+                </tr>
+                <tr>
+                    <td>Authorization</td>
+                    <td>client_id</td>
+                    <td>The Client ID to access CDP API</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Authorization</td>
+                    <td>client_secret</td>
+                    <td>Password for said Client Id</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>mLifeId</td>
+                    <td>Guest’s mLife ID</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>firstName</td>
+                    <td>Guest’s first name</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>lastName</td>
+                    <td>Guest’s last name</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>dateOfBirth</td>
+                    <td>
+                        <p>Guest’s birth date</p>
+                        <code>(YYYY-MM-DD)</code>
+                    </td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>emailAddress</td>
+                    <td>The email address of a guest</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>phoneNumber</td>
+                    <td>The phone number of a guest</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>addressLineOne</td>
+                    <td>Address line 1 of a guest</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>city</td>
+                    <td>The city name for a guest</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>stateCd</td>
+                    <td>The 2-letter state code</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>postalCd</td>
+                    <td>Postal/Zip code</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>countryCd</td>
+                    <td>2-letter country code</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>guestId</td>
+                    <td>Unique identifier of a Guest</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>resultCount</td>
+                    <td>Search result count; likely 0 or 1</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>accountType</td>
+                    <td>The account type to search</td>
+                    <td>
+                        <p>One of the following:</p>
+                        <include from="CDP-API-snippets.topic" element-id="source-codes"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>accountId</td>
+                    <td>The account ID to search</td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td>Customer Search</td>
+                    <td>sortBy</td>
+                    <td>
+                        <p>
+                            Allow to sort the result in ascending or descending order. For example,<br/>
+                            <code>"sortBy": "stateCd,city desc"</code>
+                        </p>
+                        <p>
+                            <b>Sort fields:</b><br/>
+                            <code>firstName</code>, <code>lastName</code>, <code>dateOfBirth</code>,
+                            <code>gender</code>,<code>emailAddress</code>, <code>phoneNumber</code>,
+                            <code>addressLineOne</code>, <code>city</code>, <code>stateCd</code>,
+                            <code>postalCd</code>, <code>countryCd</code>,<code>mgmRewardsTierCurrent</code>
+                        </p>
+                        <p>
+                            <b>Sort direction:</b><br/>
+                            <code>asc</code> (default), <code>desc</code>
+                        </p>
+                    </td>
+                    <td>String</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        Customer Insights<br/>
+                        <format style="bold">insightAttributes</format>
+                        <p>
+                            A variety of customer insights represented in the key-value pair format, where the key is
+                            the insight name (often prefixed by its corresponding category name) and the value is the
+                            insight value.
+                        </p>
+                        <p>
+                            The following are the available insights (the insight name is in bold):
+                        </p>
+                        <deflist type="medium">
+                            <def title="Activity:5 Year Entertainment Activity">
+                                <p>The 5-Year Entertainment Activity indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Activity:BetMGM Enrollment">
+                                <p>The BetMGM Enrollment indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Activity:5 Year BetMGM Activity">
+                                <p>The 5-Year BetMGM Activity indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Activity:BetMGM Wager">
+                                <p>The BetMGM Wager indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Activity:BetMGM Customer">
+                                <p>Is this guest a BetMGM Customer? (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Activity:BetMGM Exclusion">
+                                <p>Is this guest excluded from BetMGM? (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Activity:BetMGM MultiState Customer">
+                                <p>Is this guest a BetMGM MultiState Customer? (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Activity:5 Year Linked Account Gaming Activity">
+                                <p>The 5-Year Linked Account Gaming Activity indicator
+                                    (<code>Yes</code> or <code>No</code>)
+                                </p>
+                            </def>
+                            <def title="Activity:5 Year Loyalty Activity">
+                                <p>The 5-Year Loyalty Activity indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Activity:5 Year Hotel Activity">
+                                <p>The 5-Year Hotel Activity indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Activity:5 Year Marketing Opt In">
+                                <p>The 5-Year Marketing Opt In indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Activity:18 Month Patron Enrollment">
+                                <p>The 18-Month Patron Enrollment indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Activity:5 Year Gaming Activity">
+                                <p>The 5-Year Gaming Activity indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+
+                            <def title="Customer Details:Age">The age of this guest</def>
+                            <def title="Customer Details:Amperity Id">The Amperity ID of this guest</def>
+                            <def title="Customer Details:Area Code">
+                                <p>The area code of the phone number associated with this guest</p>
+                            </def>
+                            <def title="Customer Details:Middle Name">The middle name of this guest, if any</def>
+                            <def title="Customer Details:Over21 Flag">
+                                <p>Is this guest over 21 years of age? (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Customer Details:Discreet Guest Flag">
+                                <p>Discreet Guest indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Customer Details:Multi Site Guest Flag">
+                                <p>Multi Site Guest indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Customer Details:Only BetMGM Flag">
+                                <p>Only BetMGM indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Customer Details:Primary Linked Account Flag">
+                                <p>
+                                    Is this guest considered as a primary linked account?
+                                    (<code>Yes</code> or <code>No</code>)
+                                </p>
+                            </def>
+                            <def title="Customer Details:Regional Guest">
+                                <p>Is this guest a regional guest? (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Customer Details:LV Guest">
+                                <p>Is this guest a Las Vegas guest? (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Customer Details:Latest MGM Visit">
+                                <p>The latest visit to MGM (<code>YYYY-MM-DD</code>)</p>
+                            </def>
+                            <def title="Customer Details:Last Property Visited">
+                                <p>The property code of the last property visited by this guest</p>
+                            </def>
+
+                            <def title="Gaming:18M Gaming Dominant Core Property">
+                                <p>The property code of the dominant core property for the last 18 months</p>
+                            </def>
+                            <def title="Gaming:3 Year Gaming Dominant Core Property">
+                                <p>The property code of the dominant core gaming property for the 3 year</p>
+                            </def>
+                            <def title="Gaming:18M Gaming Dominant Luxury Property">
+                                <p>The property code of the dominant luxury property for the last 18 months</p>
+                            </def>
+                            <def title="Gaming:3 Year Gaming Dominant Luxury Property">
+                                <p>The property code of the dominant luxury property for the last 3 year</p>
+                            </def>
+                            <def title="Gaming:18M Gaming Dominant LV Property">
+                                <p>
+                                    The property code of the dominant gaming property in Las Vegas for the last 18
+                                    months
+                                </p>
+                            </def>
+                            <def title="Gaming:3 Year Gaming Dominant LV Property">
+                                <p>The property code of the dominant Las Vegas property for the last 3 years</p>
+                            </def>
+                            <def title="Gaming:18M Gaming Dominant Mid Property">
+                                <p>The property code of the dominant gaming mid property for the last 18 months</p>
+                            </def>
+                            <def title="Gaming:3 Year Gaming Dominant Mid Property">
+                                <p>3 Year Gaming Dominant Mid Property</p>
+                            </def>
+                            <def title="Gaming:18M Gaming Dominant Mid Luxury Property">
+                                <p>18M Gaming Dominant Mid Luxury Property</p>
+                            </def>
+                            <def title="Gaming:3 Year Gaming Dominant Mid Luxury Property">
+                                <p>3 Year Gaming Dominant Mid Luxury Property</p>
+                            </def>
+                            <def title="Gaming:18M Gaming Dominant Regional Property">
+                                <p>18M Gaming Dominant Regional Property</p>
+                            </def>
+                            <def title="Gaming:3 Year Gaming Dominant Regional Property">
+                                <p>3 Year Gaming Dominant Regional Property</p>
+                            </def>
+                            <def title="Gaming:Dominant Gaming Property">
+                                <p>Dominant Gaming Property</p>
+                            </def>
+                            <def title="Gaming:Dominant LV Gaming Property">
+                                <p>Dominant LV Gaming Property</p>
+                            </def>
+                            <def title="Gaming:First Gaming Visit">
+                                <p>First Gaming Visit (<code>YYYY-MM-DD</code>)</p>
+                            </def>
+                            <def title="Gaming:Corporate Credit Flag">
+                                <p>Corporate Credit indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Gaming:Corporate Credit Stop Flag">
+                                <p>Corporate Credit Stop indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Gaming:Slot Flag">Slot indicator (<code>Yes</code> or <code>No</code>)</def>
+                            <def title="Gaming:Table Flag">Table indicator (<code>Yes</code> or <code>No</code>)</def>
+                            <def title="Gaming:Corporate Host Flag">
+                                <p>Does this guest have a corporate host? (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Gaming:Host ID">
+                                <p>Host ID of the customer, if any</p>
+                            </def>
+                            <def title="Gaming:Host First Name">
+                                <p>The first name of the host (if any) for a customer</p>
+                            </def>
+                            <def title="Gaming:Host Last Name">
+                                <p>The last name of the host (if any) for a customer</p>
+                            </def>
+                            <def title="Gaming:Last Gaming Site">
+                                <p>The last date this customer visited any property, based on gaming data.</p>
+                            </def>
+                            <def title="Gaming:Linked Guest ID">
+                                <p>Guest ID of the linked account of this customer.</p>
+                            </def>
+                            <def title="Gaming:Linked Guest Active Marketable Flag">
+                                <p>If the Guest ID linked to this customer (if any) is adobe active or not
+                                    (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Gaming:Linked Guest Patron ID">
+                                <p>The Patron ID (mLife ID) of the guest linked to current customer, if any</p>
+                            </def>
+                            <def title="Gaming:LinkNumber">
+                                <p>The link Number of the customer link account.</p>
+                            </def>
+                            <def title="Gaming:MGM Rewards Member">
+                                <p>Indicates whether a customer is in the mLife Rewards loyalty program. Any customer
+                                    with an assigned/current mLife Tier is in the program. (<code>Yes</code> or
+                                    <code>No</code>)</p>
+                            </def>
+                            <def title="Gaming:Player Type">
+                                <p>Based on LT net theo, the player's gaming tendency at corporate level defined as
+                                    follows:
+                                </p>
+                                <list>
+                                    <li>Table: &gt;= 90% Table Play,</li>
+                                    <li>TabX: &gt; 50%, &lt; 90% Table Play,</li>
+                                    <li>Slot: &gt;= 90 Slot Play,</li>
+                                    <li>SlotX: &gt;= 50%, &lt; 90% Slot Play,</li>
+                                    <li>Anything else is SlotX</li>
+                                </list>
+                            </def>
+
+                            <def title="GAMING:<<Property Name>>:Credit Limit">
+                                <p>Credit limit for the guest at this property</p>
+                            </def>
+                            <def title="GAMING:<<Property Name>>:Credit Outstanding">
+                                <p>Credit amount outstanding for the guest at this property</p>
+                            </def>
+                            <def title="GAMING:<<Property Name>>:Credit Available">
+                                <p>Credit amount available for the guest at this property</p>
+                            </def>
+                            <def title="GAMING:<<Property Name>>:Credit Stop Reason">
+                                <p>Reason why credit has been stopped for the guest at this property</p>
+                            </def>
+                            <def title="GAMING:<<Property Name>>:Ban Reason">
+                                <p>Reason why a guest has been banned at this property</p>
+                            </def>
+                            <def title="GAMING:<<Property Name>>:Ban Account Type">
+                                <p>
+                                    The account type associated with this ban. In most cases, this would either be
+                                    <code>PATRON</code> or <code>TCOLV PATRON</code>
+                                </p>
+                            </def>
+                            <def title="GAMING:<<Property Name>>:Ban Account ID">
+                                <p>The account ID associated with this ban</p>
+                            </def>
+
+                            <def title="Geographic:BEA Zone">BEA Zone</def>
+                            <def title="Geographic:BOR Zone">BOR Zone</def>
+                            <def title="Geographic:Distance to Atlantic City">
+                                <p>Distance to Atlantic City from this guest's survived address</p>
+                            </def>
+                            <def title="Geographic:Distance to Biloxi">
+                                <p>Distance to Biloxi from this guest's survived address</p>
+                            </def>
+                            <def title="Geographic:Distance to Detroit">
+                                <p>Distance to Detroit from this guest's survived address</p>
+                            </def>
+                            <def title="Geographic:Distance to National Harbor">
+                                <p>Distance to National Harbor from this guest's survived address</p>
+                            </def>
+                            <def title="Geographic:Distance to North Field">
+                                <p>Distance to North Field from this guest's survived address</p>
+                            </def>
+                            <def title="Geographic:Distance to Reno">
+                                <p>Distance to Reno from this guest's survived address</p>
+                            </def>
+                            <def title="Geographic:Distance to SpringField">
+                                <p>Distance to Springfield from this guest's survived address</p>
+                            </def>
+                            <def title="Geographic:Distance to LV Strip">
+                                <p>Distance to Las Vegas Strip from this guest's survived address</p>
+                            </def>
+                            <def title="Geographic:Distance to Tunica">
+                                <p>Distance to Tunica from this guest's survived address</p>
+                            </def>
+                            <def title="Geographic:Distance to Yonkers">
+                                <p>Distance to Yonkers from this guest's survived address</p>
+                            </def>
+                            <def title="Geographic:Market Area">
+                                <p>The Market Area customer's address</p>
+                            </def>
+                            <def title="Geographic:EMP Zone">
+                                <p>A business-defined segmentation of postal codes into property-specific clusters</p>
+                            </def>
+                            <def title="Geographic:GTU Zone">
+                                <p>A business-defined segmentation of postal codes into property-specific clusters</p>
+                            </def>
+                            <def title="Geographic:Latitude">
+                                <p>The geo latitude of the customer's postal code</p>
+                            </def>
+                            <def title="Geographic:Longitude">
+                                <p>The geo longitude of the customer's postal code</p>
+                            </def>
+                            <def title="Geographic:MDE Zone">
+                                <p>A business-defined segmentation of postal codes into property-specific clusters.</p>
+                            </def>
+                            <def title="Geographic:MNH Zone">
+                                <p>A business-defined segmentation of postal codes into property-specific clusters</p>
+                            </def>
+                            <def title="Geographic:MNP Zone">
+                                <p>A business-defined segmentation of postal codes into property-specific clusters</p>
+                            </def>
+                            <def title="Geographic:MSA">
+                                <p>The Metropolitan Statistical Area (MSA) of the customer's address</p>
+                            </def>
+                            <def title="Geographic:MSA Level">
+                                <p>A categorization of MSA polygons by population</p>
+                            </def>
+                            <def title="Geographic:MSA State">
+                                <p>The State (US) of each MSA</p>
+                            </def>
+                            <def title="Geographic:MSP Zone">
+                                <p>A business-defined segmentation of postal codes into property-specific clusters</p>
+                            </def>
+
+                            <def title="Marketability:Active Adobe Flag">
+                                <p>Active Adobe indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:Bad Address Flag">
+                                <p>Bad Address indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:Banned Account Flag">
+                                <p>Banned Account indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:Banned Customer Flag">
+                                <p>Banned Customer indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:Borgata Mail List Flag">
+                                <p>Borgata Mail List indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:Adobe Engagement Score">
+                                <p>Adobe Engagement Score indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:DNC Corporate Flag">
+                                <p>DNC Corporate indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:DNC Optin Flag">
+                                <p>DNC Opt-In indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:Email Exclusion List">
+                                <p>Email Exclusion List indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:Mail Exclusion List">
+                                <p>Mail Exclusion List indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:Person Exclusion List">
+                                <p>Person Exclusion List indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:GOO">
+                                <p>Global Opt-Out (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:Inactive Flag">
+                                <p>Inactive indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:Bad Mailing Address Flag">
+                                <p>Bad Mailing Address indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:Contactable Flag">
+                                <p>Contactable indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:Test Account Flag">
+                                <p>Is this guest a test account? (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:Valid Email Flag">
+                                <p>
+                                    Is the associated email for this guest valid? (<code>Yes</code> or <code>No</code>)
+                                </p>
+                            </def>
+                            <def title="Marketability:Valid Address Flag">
+                                <p>
+                                    Is the associated address for this guest valid? (<code>Yes</code> or <code>No</code>)
+                                </p>
+                            </def>
+                            <def title="Marketability:Marketable Address Flag">
+                                <p>Marketable Address indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:Marketable Name Flag">
+                                <p>Marketable Name indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:MLife_Optout_Flag">
+                                <p>MLife Opt-Out indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:TP_Optin_Flag">
+                                <p>TP_Opt-In_indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Marketability:Wrls_Optin_Flag">
+                                <p>Wrls_Opt-In_indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+
+                            <def title="MGM Rewards:Current Comp Balance">
+                                <p>Current Comp Balance</p>
+                            </def>
+                            <def title="MGM Rewards:Current Point Balance">Current Point Balance</def>
+                            <def title="MGM Rewards:Current Gaming Tier Credit">Current Gaming Tier Credit</def>
+                            <def title="MGM Rewards:Current NonGaming Tier Credit">Current NonGaming Tier Credit</def>
+                            <def title="MGM Rewards:MLCC Flag">
+                                <p>Does this guest have a MLife Credit Card? (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="MGM Rewards:HGS Current YTD">
+                                <p>HGS Current YTD</p>
+                            </def>
+                            <def title="MGM Rewards:HGS Earned YTD">
+                                <p>HGS Earned YTD</p>
+                            </def>
+                            <def title="MGM Rewards:HGS Prior YTD">
+                                <p>HGS Prior YTD</p>
+                            </def>
+                            <def title="MGM Rewards:HGS Redeemed YTD">
+                                <p>HGS Redeemed YTD</p>
+                            </def>
+                            <def title="MGM Rewards:Enrolled Date">
+                                <p>The date when this guest enrolled for mLife Rewards (<code>YYYY-MM-DD</code>)</p>
+                            </def>
+                            <def title="MGM Rewards:Tier Earn Date">
+                                <p>Tier Earn Date (<code>YYYY-MM-DD</code>)</p>
+                            </def>
+                            <def title="MGM Rewards:Tier Expire Date">
+                                <p>Tier Expire Date (<code>YYYY-MM-DD</code>)</p>
+                            </def>
+
+                            <def title="Non Gaming:First Hotel Stay">First Hotel Stay</def>
+                            <def title="Non Gaming:First MGM Visit">
+                                <p>First MGM Visit (<code>YYYY-MM-DD</code>)</p>
+                            </def>
+                            <def title="Non Gaming:Entertainment customer Flag">
+                                <p>Entertainment customer indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Non Gaming:Gaming customer Flag">
+                                <p>Gaming customer indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Non Gaming:Hotel customer flag">
+                                <p>Hotel customer indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Non Gaming:nongaming customer flag">
+                                <p>nongaming customer indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Non Gaming:LV Future Arrived Scheduled">
+                                <p>LV Future Arrived Scheduled (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Non Gaming:Future Arrived Scheduled">
+                                <p>Future Arrived Scheduled (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Non Gaming:Currently In House">
+                                <p>Is this guest currently checked in? (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Non Gaming:Nonregistered Guest Flag">
+                                <p>Non-registered Guest indicator (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Non Gaming:Last Hotel Visit">
+                                <p>Last Hotel Visit (<code>YYYY-MM-DD</code>)</p>
+                            </def>
+                            <def title="Non Gaming:Last Non-gaming Visit">
+                                <p>Last Non-gaming Visit (<code>YYYY-MM-DD</code>)</p>
+                            </def>
+                            <def title="Non Gaming:Next Hotel Visit">
+                                <p>Next Hotel Visit (<code>YYYY-MM-DD</code>)</p>
+                            </def>
+                            <def title="Non Gaming:Future Hotel Reservation">
+                                <p>Future Hotel Reservation (<code>Yes</code> or <code>No</code>)</p>
+                            </def>
+                            <def title="Non Gaming:Has Marriot Reservation">
+                                <p>
+                                    Has this guest made a reservation with Marriot? (<code>Yes</code> or <code>No</code>)
+                                </p>
+                            </def>
+                            <def title="Non Gaming:Marriot Exclusive">
+                                <p>
+                                    Is this guest strictly a Marriot customer (i.e. a non-MGM customer who had made
+                                    reservation through Marriot)? (<code>Yes</code> or <code>No</code>)
+                                </p>
+                            </def>
+                            <def title="Non Gaming:Marriot Bonvoy Tier">
+                                <p>
+                                    The Marriot Bonvoy tier of this guest, if such guest is a Marriot customer. Possible
+                                    values are (highest to lowest):
+                                </p>
+                                <list>
+                                    <li><code>AMBASSADOR</code></li>
+                                    <li><code>TITANIUM</code></li>
+                                    <li><code>PLATINUM</code></li>
+                                    <li><code>GOLD</code></li>
+                                    <li><code>SILVER</code></li>
+                                    <li><code>MEMBER</code></li>
+                                </list>
+                            </def>
+                        </deflist>
+                    </td>
+                </tr>
+            </table>
+        </chapter>
+    </snippet>
+</topic>

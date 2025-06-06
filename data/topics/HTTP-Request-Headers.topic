@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="HTTP Request Headers" id="HTTP-Request-Headers">
+
+    <table>
+        <tr>
+            <td>Field</td>
+            <td>Type</td>
+            <td>Mandatory</td>
+            <td>Description</td>
+        </tr>
+        <tr>
+            <td>Authorization</td>
+            <td>String</td>
+            <td>Y</td>
+            <td>Access token to invoke APIs</td>
+        </tr>
+        <tr>
+            <td>apollographql-client-name</td>
+            <td>String</td>
+            <td>Y</td>
+            <td>Value vendor_rhytmos needs to be passed</td>
+        </tr>
+    </table>
+</topic>

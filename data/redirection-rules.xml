@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rules SYSTEM "https://resources.jetbrains.com/writerside/1.0/redirection-rules.dtd">
+<rules>
+	<!-- format is as follows
+	<rule id="<unique id>">
+		<accepts>page.html</accepts>
+	</rule>
+	-->
+	<rule id="4f41547c">
+		<description><![CDATA[Created after removal of "<Overview.md>" from docs]]></description>
+		<accepts>Overview.html</accepts>
+	</rule>
+	<rule id="2be74c3b">
+		<description>Created after removal of "Recommendation API" from Customer Data Product Services</description>
+		<accepts>Recommendation-API.html</accepts>
+	</rule>
+	<rule id="70675fa5">
+		<description>Created after removal of "show-booking-service" from Customer Data Product Services</description>
+		<accepts>show-booking-service.html</accepts>
+	</rule>
+	<rule id="2150af02">
+		<description>Created after removal of "GraphQL API details" from Customer Data Product Services</description>
+		<accepts>GraphQL-API-details.html</accepts>
+	</rule>
+	<rule id="419b6313">
+		<description>Created after removal of "CURL equivalent command" from Customer Data Product Services
+		</description>
+		<accepts>CURL-equivalent-command.html</accepts>
+	</rule>
+	<rule id="4793d488">
+		<description>Created after removal of "HTTP Request Headers" from Customer Data Product Services</description>
+		<accepts>HTTP-Request-Headers.html</accepts>
+	</rule>
+	<rule id="e2da036">
+		<description>Created after removal of "HTTP Error Codes" from Customer Data Product Services</description>
+		<accepts>HTTP-Error-Codes.html</accepts>
+	</rule>
+	<rule id="11fdd568">
+		<description>Created after removal of "Table of contents" from Customer Data Product Services</description>
+		<accepts>Table-of-contents.html</accepts>
+	</rule>
+	<rule id="4abf089e">
+		<description>Created after removal of "mgm_cyber_defense" from Data API Documentation</description>
+		<accepts>mgm-cyber-defense.html</accepts>
+	</rule>
+	<rule id="57bcbc45">
+		<description>Created after removal of "mgm_cyber_defense" from Data API Documentation</description>
+		<accepts>mgm-cyber-defense.html</accepts>
+	</rule>
+	<rule id="251982b0">
+		<description>Created after removal of "Customer Search Detail" from Data API Documentation</description>
+		<accepts>Customer-Search.html</accepts>
+	</rule>
+</rules>

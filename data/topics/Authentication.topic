@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Authentication Guide" id="Authentication">
+
+    <chapter title="Introduction" id="introduction">
+        <p>
+            To access CDP APIs, appropriate access token must first be acquired via the appropriate Identity API. The
+            access token is then passed to the CDP API as part of the HTTP request header (<code>Authorization</code>).
+            Note that, while the same access token can be used over multiple CDP API calls, such token is usually
+            short-lived by default. Design consideration should be given to ensure the access token's validity prior to
+            its use.
+        </p>
+
+        <p>
+            This document describes the required authentication process to accessing CDP APIs.
+        </p>
+    </chapter>
+
+    <chapter title="Basic Flow" id="basic-flow">
+        Below is the basic execution flow between the API client and API provider (CDP API):
+
+        <procedure>
+            <step>
+                The API client invokes the appropriate Identity API to acquire a valid access token.
+            </step>
+            <step>
+                The API client creates a GraphQL request, with the access token in the HTTP header
+                (<code>Authorization</code>).
+            </step>
+            <step>
+                <p>Upon receiving the request, the API will query against its backend search engine.</p>
+                <list type="decimal">
+                    <li>Unauthorized access or invalid request (such as invalid parameter name or value) will
+                        result in an error response (still HTTP 200 status code).
+                    </li>
+                    <li>Successful search will result in an HTTP 200 response code, along with the appropriate
+                        response body.
+                    </li>
+                </list>
+            </step>
+        </procedure>
+    </chapter>
+
+    <chapter title="Details" id="Details">
+        <p>The pertinent information to obtain a valid access token is shown below.</p>
+
+        <format style="bold">Token Service endpoints</format>
+        <table>
+            <tr>
+                <td width="150"><b>Environment</b></td>
+                <td><b>Endpoint</b></td>
+            </tr>
+            <tr>
+                <td><b>Non-Prod (Apigee X)</b></td>
+                <td><code>https://preprod-api.apigee.devtest.vegas/identity/authorization/v1/</code></td>
+            </tr>
+            <tr>
+                <td><b>Prod (Apigee X)</b></td>
+                <td><code>https://api.apigee.mgmresorts.com/identity/authorization/v1/</code></td>
+            </tr>
+        </table>
+
+        <format style="bold">Service details</format>
+        <table>
+            <tr>
+                <td width="150"><b>Type</b></td>
+                <td><b>Value/Detail</b></td>
+            </tr>
+            <tr>
+                <td><b>Resource Name</b></td>
+                <td><code>mgmsvc/token</code></td>
+            </tr>
+            <tr>
+                <td><b>Resource Type</b></td>
+                <td><code>POST</code></td>
+            </tr>
+            <tr>
+                <td><b>Request Header</b></td>
+                <td><code>Content-Type: application/x-www-form-urlencoded</code></td>
+            </tr>
+            <tr>
+                <td><b>Request Body</b></td>
+                <td>
+                    <code-block lang="plain text">
+                        grant_type=client_credentials
+                        client_id=...
+                        client_secret=...
+                    </code-block>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Response</b></td>
+                <td><p>If successfully authenticated, the response will contain the access token.</p>
+                    <code-block lang="json">
+                        HTTP/1.1 200 OK
+                        Content-Type: application/json; charset=utf-8
+                        ... ...
+
+                        {"token_type": "Bearer","expires_in": 3600, "access_token": "eyJra… … … ", "scope": "… … "
+                        }
+                    </code-block>
+                </td>
+            </tr>
+        </table>
+
+        <format style="bold">Sample</format>
+        <code-block lang="bash" prompt="Request: " collapsible="true" default-state="expanded">
+            curl \
+            &nbsp;&nbsp;&nbsp;&nbsp;--location \
+            &nbsp;&nbsp;&nbsp;&nbsp;--request POST 'https://identityapi-preprod.devtest.vegas/identity/authorization/v1/mgmsvc/token' \
+            &nbsp;&nbsp;&nbsp;&nbsp;--header 'Content-Type: application/x-www-form-urlencoded' \
+            &nbsp;&nbsp;&nbsp;&nbsp;--data-urlencode 'grant_type=client_credentials' \
+            &nbsp;&nbsp;&nbsp;&nbsp;--data-urlencode 'client_id=...' \
+            &nbsp;&nbsp;&nbsp;&nbsp;--data-urlencode 'client_secret=...'
+        </code-block>
+
+        <code-block lang="json" prompt="Response (success): " collapsible="true" default-state="expanded">
+            {
+                "token_type": "Bearer", "expires_in": ..., "access_token": "eyJra...", "scope": "..."
+            }
+        </code-block>
+
+        <format style="bold">Error Scenarios</format>
+        <table>
+            <tr>
+                <td width="150"><b>Scenario</b></td>
+                <td><b>Error Message</b></td>
+                <td width="150"><b>HTTP Status Code</b></td>
+            </tr>
+            <tr>
+                <td>Invalid header</td>
+                <td>bad request parameters</td>
+                <td><code>400</code></td>
+            </tr>
+            <tr>
+                <td>Invalid <code>client_id</code></td>
+                <td>Invalid value for 'client_id' parameter</td>
+                <td><code>401</code></td>
+            </tr>
+            <tr>
+                <td>Invalid credentials</td>
+                <td>The client secret supplied for a confidential client is invalid.</td>
+                <td><code>401</code></td>
+            </tr>
+        </table>
+    </chapter>
+
+</topic>

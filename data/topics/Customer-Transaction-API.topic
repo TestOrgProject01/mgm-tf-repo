@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Customer Transaction API" id="Customer-Transaction-API">
+
+    <title>Customer Transaction API</title>
+
+    <chapter title="Introduction" id="customer-trips-introduction" caps="title">
+        <p>
+            The Customer Transactions API - a.k.a. Trips API - provides a way to retrieve customer transaction
+            information in the context of a trip. We can consider the entity relationship as the following:
+        </p>
+        <list>
+            <li>A customer may <i>have</i> zero or more trips.</li>
+            <li>Each trip is bounded by a start and end date.</li>
+            <li>For a given trip, there are one or more transactions.</li>
+            <li>Each transaction is associated to a transaction type:
+                <list>
+                    <li>Gaming</li>
+                    <li>Hotel</li>
+                    <li>Food and Beverage</li>
+                    <li>Entertainment</li>
+                    <li>Others</li>
+                </list>
+            </li>
+            <li>
+                Each transaction is also bounded to transaction date and one or more charged or redeemed amount.
+            </li>
+        </list>
+        <p>
+            Using this API, one can retrieve customer transaction information for further valuation-related
+            analysis, behavior and trend discovery and transaction-related verification. Currently, the API provides
+            only trip-based transaction retrieval. Future versions of the API may include additional capabilities.
+        </p>
+        <p>
+            At this time, this API is available through the
+            <a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">RESTful endpoint</a>.
+        </p>
+    </chapter>
+
+    <chapter title="Service details" id="customer-trips-chapter" caps="title">
+        <table>
+            <tr>
+                <td width="150"><b>Description</b></td>
+                <td>
+                    List all trips taken by a particular guest transactions and a particular start/end date pair,
+                    and the transactions associated with each trip.
+                </td>
+            </tr>
+            <tr>
+                <td><b>URI</b></td>
+                <td><code>{base-url}/customer-transactions</code></td>
+            </tr>
+            <tr>
+                <td><b>HTTP Method</b></td>
+                <td><code>GET</code></td>
+            </tr>
+            <tr>
+                <td><b>Permission</b></td>
+                <td>
+                        <code-block lang="http">
+                            scp=customer.graph:read:full
+groups=mgm_employee_customer_search
+groups=mgm_employee_customer_search_pii
+                        </code-block>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Request Header</b></td>
+                <td>
+                    <include from="CDP-API-snippets.topic" element-id="rest-header"/>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Query Parameters</b></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td><b>name</b></td>
+                            <td><b>default</b></td>
+                            <td><b>notes</b></td>
+                        </tr>
+                        <tr>
+                            <td><code>guestId</code></td>
+                            <td>&nbsp;</td>
+                            <td><b>REQUIRED</b></td>
+                        </tr>
+                        <tr>
+                            <td><code>tripStartDate</code></td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <b>REQUIRED</b> Must be in the format of <code>YYYY-MM-DD</code>. Must not be a date
+                                in the future.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>tripEndDate</code></td>
+                            <td>&nbsp;</td>
+                            <td>
+                                <b>REQUIRED</b> Must be in the format of <code>YYYY-MM-DD</code>. Must not be a date
+                                in the future. Must be a date later than the <code>tripStartDate</code>.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>descendingOrder</code></td>
+                            <td><code>false</code></td>
+                            <td>
+                                Optional. Specify <code>true</code> to list trips in descending order of trip start
+                                date -- i.e. the most recent trip first.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sample Request</b></td>
+                <td>
+                        <code-block lang="curl">
+                            {base-url}/customer-transactions?
+                            &nbsp; &nbsp; guestId=821…&amp;
+                            &nbsp; &nbsp; tripStartDate=2020-01-02&amp;
+                            &nbsp; &nbsp; tripEndDate=2020-02-02&amp;
+                            &nbsp; &nbsp; descendingOrder=true
+                        </code-block>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sample Response</b></td>
+                <td>
+                        <code-block lang="json">
+                            {
+                                "customerTrips": [
+                                    {
+                                        "startDate": 1560988800000, "endDate": 1561248000000, "memberStatus": "Active",
+                                        "mLifeTier": "Pearl", "hostId": ..., "host": "...",
+                                        "gamingDays": ..., "recommendationScore": "...",
+                                        "transactions": [
+                                            {
+                                                "transactionDate": 1560988800000,
+                                                "transactionType": {
+                                                    "value": "Food and Beverage owned",
+                                                    "gaming": false,
+                                                    "other": false,
+                                                    "foodAndBeverage": true,
+                                                    "entertainment": false,
+                                                    "hotel": false
+                                                },
+                                                "tripLodgingType": {
+                                                    "status": "In House",
+                                                    "inHouse": true,
+                                                    "local": false,
+                                                    "dropIn": false,
+                                                    "onlineOnly": false
+                                                },
+                                                "propertyCode": "MAN",
+                                                "propertyName": "Mandalay Bay",
+                                                "isHosted": true,
+                                                "slotGamesPlayed": ...,
+                                                "tableGamesPlayed": ...,
+                                                "slotNetTheoWin": 123.45,
+                                                "tableNetTheoWin": 0.0,
+                                                "gamingRevenue": 0.0,
+                                                "theoRevenue": 303.14,
+                                                "hotelRevenue": 0.0,
+                                                "resortFeeRevenue": 0.0,
+                                                "fnbRevenue": 262.0,
+                                                "entertainmentRevenue": 0.0,
+                                                "otherRevenue": 0.0,
+                                                "totalNGR": 262.0,
+                                                "fnbSwipedAmount": 200.0,
+                                                "entertainmentSwipedAmount": 0.0,
+                                                "otherSwipedAmount": 0.0,
+                                                "totalRevenue": 303.14,
+                                                "hotelComp": 0.0,
+                                                "resortFeeComp": 0.0,
+                                                "resortFeeWaived": 0.0,
+                                                "entertainmentComp": 0.0,
+                                                "fnbComp": 41.14,
+                                                "otherComp": 0.0,
+                                                "igNetGamingRevenue": 0.0,
+                                                "igTheoNetGamingRevenue": 0.0,
+                                                "totalComp": 41.14
+                                            }, {...}, ...
+                                        ]
+                                    }
+                                ], [{...}, ...]
+                            }
+                        </code-block>
+                    <p>Note that...</p>
+                    <list>
+                        <li>
+                            <code>startDate</code>, <code>endDate</code>, and <code>transactionDate</code> are in
+                            milliseconds since epoch.
+                        </li>
+                        <li>
+                            <code>gamingDays</code> refers to the number of days during a trip where the customer
+                            played one or more games (either slots or table games). May be 0.
+                        </li>
+                        <li>
+                            <code>recommendationScore</code> refers to the customer-provided likelihood (i.e.
+                            feedback) to recommend a similar trip or the corresponding property to a friend. This
+                            property is a text field. It can contain a numeric value or null.
+                        </li>
+                        <li><code>transactionType/value</code> is an enumeration of
+                            <list>
+                                <li><code>Slots</code></li>
+                                <li><code>BETMGM-SPORTS</code></li>
+                                <li><code>BETMGM-POKER</code></li>
+                                <li><code>BETMGM-CASINO</code></li>
+                                <li><code>Table Games</code></li>
+                                <li><code>Hotel</code></li>
+                                <li><code>Food and Beverage owned</code></li>
+                                <li><code>Food and Beverage leased</code></li>
+                                <li><code>Entertainment</code></li>
+                                <li><code>Other</code></li>
+                            </list>
+                        </li>
+                        <li>
+                            <code>tripLodgingType/status</code> is an enumeration of
+                            <list>
+                                <li><code>In House</code></li>
+                                <li><code>Local</code></li>
+                                <li><code>Drop In</code></li>
+                                <li><code>OnlineOnly</code></li>
+                            </list>
+                        </li>
+                        <li>
+                            <code>totalNGR</code> is the total "Non-Gaming Revenue", which is the sum of the
+                            following:
+                            <list>
+                                <li><code>hotelRevenue</code></li>
+                                <li><code>resortFeeRevenue</code></li>
+                                <li><code>fnbRevenue</code></li>
+                                <li><code>entertainmentRevenue</code></li>
+                                <li><code>otherRevenue</code></li>
+                                <li>
+                                    <code>fnbSwipedAmount</code> if <code>transactionType/footAndBeverage</code>
+                                    is <code>true</code>
+                                </li>
+                                <li><code>entertainmentSwipedAmount</code></li>
+                                <li><code>otherSwipedAmount</code></li>
+                            </list>
+                        </li>
+                        <li>
+                            <code>totalComp</code> is the total complimentary amount associated with a transaction,
+                            which is the sum of the following:
+                            <list>
+                                <li><code>hotelComp</code></li>
+                                <li><code>resortFeeComp</code></li>
+                                <li><code>resortFeeWaived</code></li>
+                                <li><code>entertainmentComp</code></li>
+                                <li><code>fnbComp</code></li>
+                                <li><code>otherComp</code></li>
+                            </list>
+                        </li>
+                        <li>
+                            <code>totalRevenue</code> is the sum of the following:
+                            <list>
+                                <li><code>totalNGR</code> (see above)</li>
+                                <li><code>totalComp</code> (see above)</li>
+                                <li><code>gamingRevenue</code></li>
+                            </list>
+                        </li>
+                    </list>
+                </td>
+            </tr>
+        </table>
+    </chapter>
+
+</topic>

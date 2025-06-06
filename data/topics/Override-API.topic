@@ -1,0 +1,1948 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Override API" id="Override-API">
+
+    <title>Override API</title>
+
+    <chapter title="Override" id="override">
+        <p>
+            The general concept of an Override, within the context of CDP, is to provide the ability to supersede the
+            system-generated PII ranking of a customer. This capability gives authorized end users the ability to use
+            otherwise lower-ranked PII as the "best" PII for a customer. When such an override request is processed by
+            the system (CDP), the previously top ranked PII is demoted to a lower rank, and the new override PII is
+            promoted to the top (denote with <code>source</code> as <code>CDP:OVERRIDE</code>).
+        </p>
+        <p>
+            The Override API provides the capability to:
+        </p>
+        <list type="bullet">
+            <li>Submit an override request</li>
+            <li>Query the submitted override status</li>
+            <li>List existing override</li>
+            <li>Show the detail of an override request, including history</li>
+            <li>Rescind a processed (<code>active</code>) override request (a.k.a. override reversal)</li>
+        </list>
+
+        <p>
+            Note that some of the Override API - particularly override submission and override reversal - are
+            separately privileged and are not generally made available to other Customer Search end users.
+        </p>
+
+        <p>
+            At this time, all Override APIs are available through the
+            <a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">RESTful endpoints</a>.
+        </p>
+    </chapter>
+
+    <chapter title="List existing override requests" id="override-list-chapter" caps="title">
+        <table>
+            <tr>
+                <td width="150"><b>Description</b></td>
+                <td>List existing override requests.</td>
+            </tr>
+            <tr>
+                <td><b>URI</b></td>
+                <td><code><a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">{rest-base-url}</a>/override/requests</code></td>
+            </tr>
+            <tr>
+                <td><b>HTTP Method</b></td>
+                <td><code>GET</code></td>
+            </tr>
+            <tr>
+                <td><b>Permission</b></td>
+                <td>
+                        <code-block lang="http">
+scp=customer.graph:read:full
+groups=mgm_employee_customer_search_override
+                        </code-block>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Request Header</b></td>
+                <td>
+                    <include from="CDP-API-snippets.topic" element-id="rest-header"/>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Query Parameters</b></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td><b>name</b></td>
+                            <td><b>default</b></td>
+                            <td><b>notes</b></td>
+                        </tr>
+                        <tr>
+                            <td><code>ticketNumber</code></td>
+                            <td> </td>
+                            <td> </td>
+                        </tr>
+                        <tr>
+                            <td><code>changeRequestType</code></td>
+                            <td> </td>
+                            <td>
+                                <p>One of these values:</p>
+                                <list>
+                                    <li><code>PII</code></li>
+                                    <li><code>Marketability</code></li>
+                                    <li><code>Account</code> (future use)</li>
+                                    <li><code>DNC</code></li>
+                                    <li><code>HARD_BOUNCE</code></li>
+                                    <li><code>ONE_TRUST</code></li>
+                                    <li><code>OKTA_ANON</code></li>
+                                </list>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>changeField</code></td>
+                            <td> </td>
+                            <td>
+                                <p>One of these values:</p>
+                                <p>PII:</p>
+                                <list>
+                                    <li><code>Address</code></li>
+                                    <li><code>Birth Date</code></li>
+                                    <li><code>Email</code></li>
+                                    <li><code>Gender</code></li>
+                                    <li><code>Name</code></li>
+                                    <li><code>Phone</code></li>
+                                </list>
+                                <p>Marketability:</p>
+                                <list>
+                                    <li><code>Customer Cluster Bad Address(es)</code></li>
+                                    <li><code>Is test account</code></li>
+                                    <li><code>Marketable Address</code></li>
+                                    <li><code>Marketable Name</code></li>
+                                    <li><code>Valid Email</code></li>
+                                </list>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>status</code></td>
+                            <td> </td>
+                            <td>
+                                <p>One of these values:</p>
+                                <list>
+                                    <li><code>Requested</code></li>
+                                    <li><code>Active</code></li>
+                                    <li><code>Reversal Requested</code></li>
+                                    <li><code>Inactive</code></li>
+                                </list>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>customerId</code></td>
+                            <td> </td>
+                            <td>a.k.a. <code>guestId</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>guestName</code></td>
+                            <td> </td>
+                            <td>The name of the customer. Support partial name (i.e. first name or last name)</td>
+                        </tr>
+                        <tr>
+                            <td><code>userId</code></td>
+                            <td> </td>
+                            <td>The user ID of the override requestor</td>
+                        </tr>
+                        <tr>
+                            <td><code>requestorName</code></td>
+                            <td> </td>
+                            <td>
+                                The name of the override requestor. Supports partial name (i.e. first name or last
+                                name)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>ipAddress</code></td>
+                            <td> </td>
+                            <td>The IP address where the request was made (via Customer Search).</td>
+                        </tr>
+                        <tr>
+                            <td><code>page</code></td>
+                            <td><code>1</code></td>
+                            <td> </td>
+                        </tr>
+                        <tr>
+                            <td><code>size</code></td>
+                            <td><code>10</code></td>
+                            <td> </td>
+                        </tr>
+                        <tr>
+                            <td><code>orderBy</code></td>
+                            <td> </td>
+                            <td>
+                                <p>One of these values:</p>
+                                <list>
+                                    <li><code>changeField</code></li>
+                                    <li><code>changeRequestType</code></li>
+                                    <li><code>createdDate</code></li>
+                                    <li><code>customerId</code></li>
+                                    <li><code>guestName</code></li>
+                                    <li><code>ipAddress</code></li>
+                                    <li><code>requestorName</code></li>
+                                    <li><code>status</code></li>
+                                    <li><code>ticketNumber</code></li>
+                                    <li><code>userId</code></li>
+                                </list>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>ascending</code></td>
+                            <td><code>false</code></td>
+                            <td>
+                                Either <code>true</code> or <code>false</code>. Only effective with a valid
+                                <code>orderBy</code>.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sample Request</b></td>
+                <td>
+                    <code>
+                        <a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">{rest-base-url}</a>/override/requests?
+                        page=1&amp;size=5&amp;orderBy=ticketNumber&amp;ascending=false&amp;customerId=74866198
+                    </code>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sample Response</b></td>
+                <td>
+                    <code-block lang="json">
+                    {
+                        "page": 1,
+                        "size": 1000,
+                        "orderBy": "ticketNumber",
+                        "ascending": true,
+                        "totalCount": 2
+                        "results": [
+                            {
+                                "changeId": "$ntrt$:6X41P…",
+                                "ticketNumber": "…",
+                                "changeRequestType": "PII",
+                                "changeField": "Birth Date",
+                                "createdDate": …,
+                                "lastUpdated": …,
+                                "status": "Inactive",
+                                "customerId": "1221…",
+                                "guestName": "…",
+                                "userId": "…",
+                                "requestorName": "…"
+                            },
+                            {
+                                "changeId": "$ntrt$:BDTjt…",
+                                "ticketNumber": "…",
+                                "changeRequestType": "PII",
+                                "changeField": "Birth Date",
+                                "createdDate": …,
+                                "lastUpdated": …,
+                                "status": "Active",
+                                "customerId": "1396…",
+                                "guestName": "…",
+                                "userId": "…",
+                                "requestorName": "…"
+                            }, … …
+                        ],
+                    }
+                    </code-block>
+                    <p>Note:</p>
+                    <list>
+                        <li>The <code>"changeId"</code> value (above) can be used to retrieve override request</li>
+                        <li>
+                            The <code>"createdDate"</code> field is expressed as timestamp (long) so that the
+                            corresponding API client can apply the desired date formatting efficiently.
+                        </li>
+                        <li>
+                            The <code>"changeField"</code> represents the field requested for override, which could
+                            be one of the PII fields (name, address, email, etc.), or one of the marketability
+                            flags.
+                        </li>
+                    </list>
+                </td>
+            </tr>
+        </table>
+    </chapter>
+
+    <chapter title="Retrieve override request detail" id="override-detail-chapter" caps="title">
+        <table>
+            <tr>
+                <td width="150"><b>Description</b></td>
+                <td>Show the detail of an override request.</td>
+            </tr>
+            <tr>
+                <td><b>URI</b></td>
+                <td><code>{base-url}/override/request</code></td>
+            </tr>
+            <tr>
+                <td><b>HTTP Method</b></td>
+                <td><code>GET</code></td>
+            </tr>
+            <tr>
+                <td><b>Permission</b></td>
+                <td>
+                        <code-block lang="http">
+                            scp=customer.graph:read:full
+groups=mgm_employee_customer_search_override
+                        </code-block>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Request Header</b></td>
+                <td>
+                    <include from="CDP-API-snippets.topic" element-id="rest-header"/>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Query Parameters</b></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td><b>name</b></td>
+                            <td><b>default</b></td>
+                            <td><b>notes</b></td>
+                        </tr>
+                        <tr>
+                            <td><code>changeId</code></td>
+                            <td> </td>
+                            <td><b>REQUIRED</b></td>
+                        </tr>
+                        <tr>
+                            <td><code>overrideType</code></td>
+                            <td> </td>
+                            <td>
+                                <b>REQUIRED</b>
+                                <list>
+                                    <li><code>PII</code></li>
+                                    <li><code>Marketability</code></li>
+                                    <li><code>DNC</code></li>
+                                    <li><code>HARD_BOUNCE</code></li>
+                                    <li><code>ONE_TRUST</code></li>
+                                    <li><code>OKTA_ANON</code></li>
+                                </list>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sample Request</b></td>
+                <td>
+                    <code>
+                        <a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">{rest-base-url}</a>/override/request?changeId=$ntrt$:6X41P…&amp;overrideType=PII
+                    </code>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sample Response</b></td>
+                <td>
+                    <p>For PII override request, the response would look like the following:</p>
+                    <code-block lang="json">
+                    {
+                        "guestId": "…",
+                        "amperityId": "…",
+                        "status": "…",
+                        "createdDate": …,
+                        "lastUpdated": …,
+                        "history": [
+                            {
+                                "eventTime": …,
+                                "eventName": "…",
+                                "guestId": …,
+                                "guestName": "…",
+                                "requestorUserId": "…",
+                                "requestorName": "…",
+                                "ipAddress": "…",
+                                "comments": "…"
+                            }
+                        ],
+                        "piiOverrides": [
+                            {
+                                "overrideGroup": "…",
+                                "overrideValue": {…},
+                                "oldValue": {…},
+                                "overrideDate": …,
+                                "active": true|false
+                            }
+                        ]
+                    }
+                    </code-block>
+
+                    <p>Both <code>overrideValue</code> and <code>oldValue</code> follow similar structures.</p>
+                    <p>When <code>overrideGroup</code> has a value of <code>name</code>:</p>
+                    <code-block lang="json">
+                    {
+                        "firstName": "…",
+                        "lastName": "…",
+                        "accountId": "…",
+                        "accountType": "…"
+                    }
+                    </code-block>
+
+                    <p>When <code>overrideGroup</code> has a value of <code>address</code>:</p>
+                    <code-block lang="json">
+                    {
+                        "addressLine1": "…",
+                        "city": "…",
+                        "state": "…",
+                        "postal": "…",
+                        "country": "…",
+                        "accountId": "…",
+                        "accountType": "…"
+                    }
+                    </code-block>
+
+                    <p>When <code>overrideGroup</code> has a value of <code>email</code>:</p>
+                    <code-block lang="json">{ "email": "…", "accountId": "…", "accountType": "…" }</code-block>
+
+                    <p>When <code>overrideGroup</code> has a value of <code>phone</code>:</p>
+                    <code-block lang="json">{ "phone": "…", "accountId": "…", "accountType": "…" }</code-block>
+
+                    <p>When <code>overrideGroup</code> has a value of <code>birthdate</code>:</p>
+                    <code-block lang="json">{ "birthDt": "…", "accountId": "…", "accountType": "…" }</code-block>
+
+                    <p>When <code>overrideGroup</code> has a value of <code>gender</code>:</p>
+                    <code-block lang="json">{ "gender": "…", "accountId": "…", "accountType": "…" }</code-block>
+
+                    <p>For Marketability override request:</p>
+                    <code-block lang="json">
+                    {
+                        "guestId": "…",
+                        "amperityId": "…",
+                        "status": "…",
+                        "createdDate": …,
+                        "lastUpdated": …,
+                        "history": [
+                            {
+                                "eventTime": …,
+                                "eventName": "…",
+                                "guestId": …,
+                                "guestName": "…",
+                                "requestorUserId": "…",
+                                "requestorName": "…",
+                                "ipAddress": "…",
+                                "comments": "…"
+                            }
+                        ],
+                        "marketabilityOverrides": [
+                            { "flag": "…", "value": "…" }, … …
+                        ]
+                    }
+                    </code-block>
+                    <p>For DNC override request:</p>
+                    <code-block lang="json">
+                    {
+                        "guestId": "…",
+                        "amperityId": "…",
+                        "status": "…",
+                        "createdDate": …,
+                        "lastUpdated": …,
+                        "history": [
+                            {
+                                "eventTime": …,
+                                "eventName": "…",
+                                "guestId": …,
+                                "guestName": "…",
+                                "requestorUserId": "…",
+                                "requestorName": "…",
+                                "comments": "…"
+                            }
+                        ],
+                        "dnc": {
+                            "accountId": "…",
+                            "accountType": "…",
+                            "category": "…",
+                            "phone": "…"
+                        }
+                    }
+                    </code-block>
+                    <p>For HARD_BOUNCE override request:</p>
+                    <code-block lang="json">
+                    {
+                        "guestId": "…",
+                        "amperityId": "…",
+                        "status": "…",
+                        "createdDate": …,
+                        "lastUpdated": …,
+                        "history": [
+                            {
+                                "eventTime": …,
+                                "eventName": "…",
+                                "guestId": …,
+                                "guestName": "…",
+                                "requestorUserId": "…",
+                                "requestorName": "…",
+                                "comments": "…"
+                            }
+                        ],
+                        "hardBounce": {
+                            "accountId": "…",
+                            "accountType": "…",
+                            "category": "…",
+                            "email": "…"
+                        }
+                    }
+                    </code-block>
+                    <p>For ONE_TRUST override request:</p>
+                    <code-block lang="json">
+                    {
+                        "guestId": "…",
+                        "amperityId": "…",
+                        "status": "…",
+                        "createdDate": …,
+                        "lastUpdated": …,
+                        "history": [
+                            {
+                                "eventTime": …,
+                                "eventName": "…",
+                                "guestId": …,
+                                "guestName": "…",
+                                "requestorUserId": "…",
+                                "requestorName": "…",
+                                "ipAddress": "…",
+                                "comments": "…"
+                            }
+                        ],
+                        "oneTrust": {
+                            "accountId": "…",
+                            "accountType": "…",
+                            "globalFlags": {…},
+                            "marketabilityFlags": [
+                                { "flag": "…", "id": "...", "value": "…" }, … …
+                            ],
+                            "preferenceId": "…",
+                            "propertyCode": "…"
+                        }
+                    }
+                    </code-block>
+                    <p>For OKTA_ANON override request:</p>
+                    <code-block lang="json">
+                    {
+                        "guestId": "…",
+                        "amperityId": "…",
+                        "status": "…",
+                        "createdDate": …,
+                        "lastUpdated": …,
+                        "history": [
+                            {
+                                "eventTime": …,
+                                "eventName": "…",
+                                "guestId": …,
+                                "guestName": "…",
+                                "requestorUserId": "…",
+                                "requestorName": "…",
+                                "ipAddress": "…",
+                                "comments": "…"
+                            }
+                        ],
+                        "oktaAnonymization": {
+                            "accountId": "…",
+                            "accountType": "…",,
+                            "overridden": [
+                                { "field": "…", "priorValue": "…" }, … …
+                            ],
+                        }
+                    }
+                    </code-block>
+                </td>
+            </tr>
+        </table>
+    </chapter>
+
+    <chapter title="Retrieve override status" id="override-status-chapter" caps="title">
+        <table>
+            <tr>
+                <td width="150"><b>Description</b></td>
+                <td>
+                    List all the PII, Marketability, DNC, Hard Bounce, OneTrust and OKTA Anonymization overrides and
+                    the respective status for a given guest. API client can reconcile the response of this API against
+                    a response from the Customer Insights API to determine the fields/flags that are overridden and
+                    apply the appropriate logic such as decorate the overridden fields with the appropriate indicator.
+                </td>
+            </tr>
+            <tr>
+                <td><b>URI</b></td>
+                <td>
+                    <code>
+                        <a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">{rest-base-url}</a>/override/status?guestId=...
+                    </code>
+                </td>
+            </tr>
+            <tr>
+                <td><b>HTTP Method</b></td>
+                <td><code>GET</code></td>
+            </tr>
+            <tr>
+                <td><b>Permission</b></td>
+                <td>
+                    <code-block lang="http">
+scp=customer.graph:read:full
+groups=mgm_employee_customer_search
+                    </code-block>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Request Header</b></td>
+                <td>
+                    <include from="CDP-API-snippets.topic" element-id="rest-header"/>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Query Parameters</b></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td><b>name</b></td>
+                            <td><b>default</b></td>
+                            <td><b>notes</b></td>
+                        </tr>
+                        <tr>
+                            <td><code>guestId</code></td>
+                            <td> </td>
+                            <td><b>REQUIRED</b></td>
+                        </tr>
+                        <tr>
+                            <td><code>overrideTypes</code></td>
+                            <td><code>all</code></td>
+                            <td>
+                                A comma-separated list of these possible values: <code>PII</code>,
+                                <code>Marketability</code>, <code>DNC</code>, <code>HARD_BOUNCE</code>,
+                                <code>ONE_TRUST</code>, <code>OKTA_ANON</code>. Absence of any
+                                value means <b><code>all</code></b>.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sample Request</b></td>
+                <td>
+                    <code>
+                        <a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">{rest-base-url}</a>/override/status?guestId=…
+                    </code>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sample Response</b></td>
+                <td>
+                    <code-block lang="json">
+                    {
+                      "guestId": "...",
+                      "pii": [
+                        {
+                          "entity": "email",
+                          "status": "Active",
+                          "requestor": "...",
+                          "created": 173...
+                        }, ... ...
+                      ],
+                      "marketability": [
+                        {
+                          "entity": "marketableAddressFlag",
+                          "status": "Active",
+                          "requestor": "...",
+                          "created": 164...
+                        }, ... ...
+                      ],
+                      "dnc": [
+                        {
+                          "status": "Active",
+                          "requestor": "…",
+                          "created": 173...,
+                          "accountType": "PATRON",
+                          "accountId": "...",
+                          "category": "DNC",
+                          "phone": "..."
+                        }, ... ...
+                      ],
+                      "hardBounce": [
+                        {
+                          "status": "Requested",
+                          "requestor": "…",
+                          "created": 173...,
+                          "accountType": "OPERA",
+                          "accountId": "...",
+                          "category": "HARD_BOUNCE",
+                          "email": "..."
+                        }, ... ...
+                      ],
+                      "oneTrust": [
+                        {
+                          "entity": "ARI",
+                          "status": "Success",
+                          "requestor": "...",
+                          "created": 173...
+                        },
+                        {
+                          "entity": "MGR",
+                          "status": "Fail",
+                          "requestor": "...",
+                          "created": 173...
+                        }, ... ...
+                      ]
+                    }
+                    </code-block>
+                    <p>Note:</p>
+                    <p>For <code>"pii"</code>:</p>
+                    <list>
+                        <li>
+                            <code>"entity"</code> can be <code>name</code>, <code>address</code>,
+                            <code>birthdate</code>, <code>phone</code>, <code>email</code>, <code>gender</code>.
+                        </li>
+                        <li>
+                            <code>"status"</code> can be <code>Requested</code>, <code>Active</code>,
+                            <code>Reversal Requested</code>, <code>Inactive</code>.
+                        </li>
+                    </list>
+                    <p>For <code>"marketability"</code>:</p>
+                    <list>
+                        <li>
+                            <code>"entity"</code> can be <code>isBadMailingAddress</code>,
+                            <code>isTestAccount</code>, <code>isValidEmail</code>, <code>marketableNameFlag</code>,
+                            <code>marketableAddressFlag</code>.
+                        </li>
+                        <li>
+                            <code>"status"</code> can be either <code>Requested</code>, <code>Active</code> or
+                            <code>Inactive</code>.
+                        </li>
+                    </list>
+                    <p>For <code>"dnc"</code> and <code>"hardBounce"</code>:</p>
+                    <list>
+                        <li>
+                            <code>"status"</code> can be <code>Requested</code>, <code>Pending</code>,
+                            <code>Success</code>, <code>Fail</code>.
+                        </li>
+                        <li>
+                            <code>"accountType"</code> can be one of the known account types:
+                            <include from="CDP-API-snippets.topic" element-id="source-codes"/>
+                        </li>
+                    </list>
+                    <p>For <code>"oneTrust"</code>:</p>
+                    <list>
+                        <li>
+                            <code>"status"</code> can be <code>Success</code> or <code>Fail</code>
+                        </li>
+                        <li>
+                            <code>"entity"</code> can be one of the known property codes:
+                            <include from="CDP-API-snippets.topic" element-id="property-codes"/>
+                        </li>
+                    </list>
+                    All values for <code>created</code> are epoch/timestamp.
+                </td>
+            </tr>
+        </table>
+    </chapter>
+
+    <chapter title="Submit new override request" id="override-submission-chapter" caps="title">
+        <p>
+            Submit override request for a specific guest. Each request may contain one or more data
+            categories (<code>name</code>, <code>email</code>, <code>marketability</code>, etc.).
+            Successfully processed request will result in an HTTP status <code>204</code>, as an
+            indication that the request is queue for processing (often the same day, if not the next day).
+        </p>
+        <p>
+            Currently, there are 6 types of override request, and they perform different functions. Each override
+            request is processed as part of CDP daily data pipeline. Depending on the nature of the override request,
+            different events can be expected:
+        </p>
+        <list>
+            <li>
+                <b>PII</b> - override the currently survived PII value with another one. Successful processing of such
+                request will add a new entry to the associate PII category (e.g. <code>name</code>,
+                <code>address</code>, etc.) and the previously ranking of the PII records in the same category will be
+                demoted by 1.
+            </li>
+            <li>
+                <b>Marketability</b> - override current marketability flag(s) from <code>true</code> or
+                <code>false</code>, or vice versa. Successful processing of such request will set the corresponding
+                <code>{flag}_Overridden</code> column to <code>true</code>.
+            </li>
+            <li>
+                <b>Greylist::Hard Bounce</b> - lift the hard bounce greylist flag of a specific email
+                address. Note that this effectively lift off the same greylist flag for the same email
+                regardless of association. Successful processing of such request will lift the hard bounce flag for the
+                specific email address, regardless of the guests/accounts that are associated it.
+            </li>
+            <li>
+                <b>Greylist::DNC</b> - lift the DNC greylist flag of a specific phone number. Note that this
+                effectively lift off the same greylist flag for the same phone number regardless of
+                association. Successful processing of such request will lift the DNC flag for the specific phone number,
+                regardless of the guests/accounts that are associated it.
+            </li>
+            <li>
+                <b>OneTrust Consent</b> - override the existing OneTrust marketing preferences (essentially
+                an "MGM Initiated" event). Unlike other override requests, this override request will be processed
+                immediately. A successful processing of such request will update the corresponding OneTrust consent
+                flag(s) in OneTrust. However data update from OneTrust will likely take up to 48 hours.
+            </li>
+            <li>
+                <b>OKTA Anonymization</b> - request for all PII associated to an OKTA account to be cleared. Unlike
+                the other override requests, this request will be processed immediately. A successful processing of
+                such request will clear all PII associated to the corresponding OKTA account in the OKTA system. Data
+                will be synchronized from OKTA to CDP in 1 - 2 days.
+            </li>
+        </list>
+
+        <tabs>
+            <tab title="PII and Marketability">
+                <table>
+                    <tr>
+                        <td width="150"><b>Description</b></td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>URI</b></td>
+                        <td>
+                            <p><code><a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">{rest-base-url}</a>/override/PII</code></p>
+                            <p><code><a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">{rest-base-url}</a>/override/Marketability</code></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>HTTP Method</b></td>
+                        <td><code>POST</code></td>
+                    </tr>
+                    <tr>
+                        <td><b>Permission</b></td>
+                        <td>
+                    <code-block lang="http">
+scp=customer.graph:read:full
+groups=mgm_employee_customer_search_override
+                    </code-block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Request Header</b></td>
+                        <td>
+                            <include from="CDP-API-snippets.topic" element-id="rest-header"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Request Body</b></td>
+                        <td>
+                            <p>The request body should follow the following structure:</p>
+                            <code-block lang="json">
+                    {
+                        "requestInfo": {
+                            "userId": "…",
+                            "requestorName": "…",
+                            "ipAddress": "…",
+                            "customerId": "…",
+                            "guestName": "…",
+                            "changeRequestType": "…"
+                        },
+                        "name": {
+                            "ref": "…",
+                            "accountType": "…",
+                            "accountId": "…",
+                            "firstName": "…",
+                            "lastName": "…"
+                        },
+                        "address": {
+                            "ref": "…",
+                            "accountType": "…",
+                            "accountId": "…",
+                            "addressLine1": "…",
+                            "city": "…",
+                            "stateCd": "…",
+                            "postalCd": "…"
+                        },
+                        "comment": "…"
+                    }
+                    </code-block>
+                            <p>Note:</p>
+                            <list>
+                                <li>
+                                    <code>"ref"</code> value should correspond to the <code>"ref"</code> values
+                                    found via the <a href="Override-API.topic#ranked-list-chapter">Ranked Data API</a>.
+                                </li>
+                                <li><code>"changeRequestType"</code> can be "PII", "Marketability" or "PII,Marketability"</li>
+                                <li>The <code>"comment"</code> property is optional.</li>
+                                <li>
+                                    Each request may contain multiple data categories, but at
+                                    most 1 instance from each category (i.e. only 1 <code>"name"</code> or
+                                    <code>"address"</code> instance).
+                                </li>
+                            </list>
+                            <p>
+                                Below are other possible data categories to override:
+                            </p>
+                            <code-block lang="json">
+                    {
+                        "name": {
+                            "ref": "…",
+                            "accountType": "…",
+                            "accountId": "…",
+                            "firstName": "…",
+                            "lastName": "…"
+                        },
+
+                        "address": {
+                            "ref": "…",
+                            "accountType": "…",
+                            "accountId": "…",
+                            "addressLine1": "…",
+                            "addressLine2": "…",
+                            "city": "…",
+                            "stateCd": "…",
+                            "postalCd": "…",
+                            "countryCd": "…"
+                        },
+
+                        "dateOfBirth": {
+                            "ref": "…",
+                            "accountType": "…",
+                            "accountId": "…",
+                            "dateOfBirth": "…"
+                        },
+
+                        "emailAddress": {
+                            "ref": "…",
+                            "accountType": "…",
+                            "accountId": "…",
+                            "emailAddress": "…"
+                        },
+
+                        "phoneNumber": {
+                            "ref": "…",
+                            "accountType": "…",
+                            "accountId": "…",
+                            "phoneNumber": "…"
+                        },
+
+                        "gender": {
+                            "ref": "…",
+                            "accountType": "…",
+                            "accountId": "…",
+                            "gender": "…"
+                        },
+
+                        "marketability": [
+                            {"flag": "…", "value": "…"},
+                            {"flag": "…", "value": "…"}, ...
+                        ]
+                    }
+                    </code-block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Response Code</b></td>
+                        <td><code>201 Created</code> for success</td>
+                    </tr>
+                    <tr>
+                        <td><b>Response Body</b></td>
+                        <td>
+                            <p>For success condition:</p>
+                            <code-block lang="http">
+HTTP/1.1 201 Created
+… …
+
+{
+  "changeIds": [
+    "$ntrt$:3F6…", "$ntrt$:$HF9…", …
+  ]
+}
+                        </code-block>
+                        </td>
+                    </tr>
+                </table>
+            </tab>
+            <tab title="Greylist - Hard Bounce">
+                <table>
+                <tr>
+                    <td width="150"><b>Description</b></td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>URI</b></td>
+                    <td><code><a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">{rest-base-url}</a>/override/HARD_BOUNCE</code></td>
+                </tr>
+                <tr>
+                    <td><b>HTTP Method</b></td>
+                    <td><code>POST</code></td>
+                </tr>
+                <tr>
+                    <td><b>Permission</b></td>
+                    <td>
+                    <code-block lang="http">
+scp=customer.graph:read:full
+groups=mgm_employee_customer_search_override,
+       mgm_employee_customer_search_greylist_override
+                    </code-block>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Request Header</b></td>
+                    <td>
+                        <include from="CDP-API-snippets.topic" element-id="rest-header"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Request Body</b></td>
+                    <td>
+                        <p>The request body should follow the following structure</p>
+                        <code-block lang="json">
+                    {
+                        "requestInfo": {
+                            "userId": "…",
+                            "requestorName": "…",
+                            "ipAddress": "…",
+                            "customerId": "…",
+                            "guestName": "…",
+                            "changeRequestType": "…"
+                        },
+                        "hardBounce": {
+                            "accountType": "...",
+                            "accountId": "…",
+                            "category": "…",
+                            "email": "…"
+                        },
+                        "comment": "…"
+                    }
+                    </code-block>
+                        <p>Note:</p>
+                        <list>
+                            <li>The <code>"comment"</code> property is optional.</li>
+                            <li><code>"changeRequestType"</code> and <code>"category"</code> should be "HARD_BOUNCE"</li>
+                        </list>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Response Code</b></td>
+                    <td><code>201 Created</code> for success</td>
+                </tr>
+                <tr>
+                    <td><b>Response Body</b></td>
+                    <td>
+                        <p>For success condition:</p>
+                        <code-block lang="http">
+HTTP/1.1 201 Created
+… …
+
+{
+  "changeIds": [
+    "$ntrt$:3F6…", "$ntrt$:$HF9…", …
+  ]
+}
+                        </code-block>
+                        <p>For condition: No guest found</p>
+                        <code-block lang="http">
+                            {
+                                "resultMessage": {
+                                    "message": "No record found via Guest ID {guestId}"
+                                }
+                            }
+                        </code-block>
+                    </td>
+                </tr>
+                </table>
+            </tab>
+            <tab title="Greylist - DNC">
+                <table>
+                    <tr>
+                        <td width="150"><b>Description</b></td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>URI</b></td>
+                        <td><code><a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">{rest-base-url}</a>/override/DNC</code></td>
+                    </tr>
+                    <tr>
+                        <td><b>HTTP Method</b></td>
+                        <td><code>POST</code></td>
+                    </tr>
+                    <tr>
+                        <td><b>Permission</b></td>
+                        <td>
+                    <code-block lang="http">
+scp=customer.graph:read:full
+groups=mgm_employee_customer_search_override,
+       mgm_employee_customer_search_greylist_override
+                    </code-block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Request Header</b></td>
+                        <td>
+                            <include from="CDP-API-snippets.topic" element-id="rest-header"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Request Body</b></td>
+                        <td>
+                            <p>The request body should follow the following structure:</p>
+                            <code-block lang="json">
+                    {
+                        "requestInfo": {
+                            "userId": "…",
+                            "requestorName": "…",
+                            "ipAddress": "…",
+                            "customerId": "…",
+                            "guestName": "…",
+                            "changeRequestType": "…"
+                        },
+                        "dnc": {
+                            "accountType": "…",
+                            "accountId": "…",
+                            "category": "…",
+                            "phone": "…"
+                        },
+                        "comment": "…"
+                    }
+                    </code-block>
+                            <p>Note:</p>
+                            <list>
+                                <li>The <code>"comment"</code> property is optional.</li>
+                                <li><code>"changeRequestType"</code> and <code>"category"</code> should be "DNC"</li>
+                            </list>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Response Code</b></td>
+                        <td><code>201 Created</code> for success</td>
+                    </tr>
+                    <tr>
+                        <td><b>Response Body</b></td>
+                        <td>
+                            <p>For success condition:</p>
+                            <code-block lang="http">
+HTTP/1.1 201 Created
+… …
+
+{
+  "changeIds": [
+    "$ntrt$:3F6…", "$ntrt$:$HF9…", …
+  ]
+}
+                        </code-block>
+                        </td>
+                    </tr>
+                </table>
+            </tab>
+            <tab title="OneTrust Consent">
+                <p>
+                    OneTrust override can be of two types:
+                </p>
+                <list>
+                <li>
+                    Property level consents
+                </li>
+                <li>
+                    Global level consents
+                </li>
+                </list>
+                <table>
+                    <tr>
+                        <td width="150"><b>Description</b></td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>URI</b></td>
+                        <td><code><a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">{rest-base-url}</a>/override/ONE_TRUST</code></td>
+                    </tr>
+                    <tr>
+                        <td><b>HTTP Method</b></td>
+                        <td><code>POST</code></td>
+                    </tr>
+                    <tr>
+                        <td><b>Permission</b></td>
+                        <td>
+                    <code-block lang="http">
+scp=customer.graph:read:full
+groups=mgm_employee_customer_search_override,
+       mgm_employee_customer_search_onetrust_override
+                    </code-block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Request Header</b></td>
+                        <td>
+                            <include from="CDP-API-snippets.topic" element-id="rest-header"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Request Body</b></td>
+                        <td>
+                            <p>
+                                <b>Single property level consents</b><br></br>
+                                Please make sure to send override consent type and also current values of other consent types, as OneTrust request expect all consent types and its values in its request
+
+                            </p>
+
+                            <code-block lang="json">
+                    {
+                        "requestInfo": {
+                            "userId": "…",
+                            "requestorName": "…",
+                            "ipAddress": "…",
+                            "customerId": "…",
+                            "guestName": "…",
+                            "changeRequestType": "…"
+                        },
+                        "oneTrust": [
+                            {
+                                "accountType": "…",
+                                "accountId": "…",
+                                "preferenceId": "…",
+                                "propertyCode": "…",
+                                "marketabilityFlags": [
+                                    {
+                                        "flag": "…",
+                                        "id": "…",
+                                        "value": "…"
+                                    },
+                                    {
+                                        "flag": "…",
+                                        "id": "…",
+                                        "value": "…"
+                                    }, ...
+                                ]
+                            }
+                        ],
+                        "comment": "…"
+                    }
+                    </code-block>
+                            <p>
+                                <b>Multiple property level consents</b>
+                            </p>
+                            <br></br>
+                            <code-block lang="json">
+                    {
+                        "requestInfo": {
+                            "userId": "…",
+                            "requestorName": "…",
+                            "ipAddress": "…",
+                            "customerId": "…",
+                            "guestName": "…",
+                            "changeRequestType": "…"
+                        },
+                        "oneTrust": [
+                            {
+                                "accountType": "…",
+                                "accountId": "…",
+                                "preferenceId": "…",
+                                "propertyCode": "…",
+                                "marketabilityFlags": [
+                                    {
+                                        "flag": "…",
+                                        "id": "…",
+                                        "value": "…"
+                                    },
+                                    {
+                                        "flag": "…",
+                                        "id": "…",
+                                        "value": "…"
+                                    }, ...
+                                ]
+                            },
+                            {
+                                "accountType": "...",
+                                "accountId": "…",
+                                "preferenceId": "...",
+                                "propertyCode": "...",
+                                "marketabilityFlags": [
+                                    {
+                                        "flag": "…",
+                                        "id": "…",
+                                        "value": "…"
+                                    },
+                                    {
+                                        "flag": "…",
+                                        "id": "…",
+                                        "value": "…"
+                                    }, ...
+                                ]
+                            }
+                        ],
+                        "comment": "…"
+                    }
+                    </code-block>
+                            <p>
+                                <b>Global OneTrust consent override</b>
+                            </p>
+                            <code-block lang="json">
+                    {
+                        "requestInfo": {
+                            "userId": "…",
+                            "requestorName": "…",
+                            "ipAddress": "…",
+                            "customerId": "…",
+                            "guestName": "…",
+                            "changeRequestType": "…"
+                        },
+                        "oneTrust": [
+                            {
+                                "accountType": "…",
+                                "accountId": "…",
+                                "preferenceId": "…",
+                                "globalFlags": {
+                                    "Global Opt-Out": "…"
+                                }
+                            }
+                        ],
+                        "comment": "…"
+                    }
+                    </code-block>
+                            <p>Note:</p>
+                            <list>
+                                <li>The <code>"comment"</code> property is optional.</li>
+                                <li>"changeRequestType" should be "ONE_TRUST"</li>
+                                <li>"value" should be "YES" or "NO"</li>
+                                <li>"propertyCode" can be "ARI", "BEL" ...</li>
+                                <li>"flag" can be "DIRECT", "EMAIL", "TELE" or "MGMREWARDAPP"</li>
+                                <li>"Global Opt-Out" can be "WITHDRAWN" ...</li>
+                            </list>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Response Code</b></td>
+                        <td><code>201 Created</code> for success</td>
+                    </tr>
+                    <tr>
+                        <td><b>Response Body</b></td>
+                        <td>
+                            <p>For success condition:</p>
+                            <code-block lang="http">
+HTTP/1.1 201 Created
+… …
+
+{
+  "changeIds": [
+    "$ntrt$:3F6…", "$ntrt$:$HF9…", …
+  ]
+}
+                        </code-block>
+                        </td>
+                    </tr>
+                </table>
+            </tab>
+            <tab title="OKTA Anonymization">
+                <table>
+                <tr>
+                    <td width="150"><b>Description</b></td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>URI</b></td>
+                    <td><code><a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">{rest-base-url}</a>/override/OKTA_ANON</code></td>
+                </tr>
+                <tr>
+                    <td><b>HTTP Method</b></td>
+                    <td><code>POST</code></td>
+                </tr>
+                <tr>
+                    <td><b>Permission</b></td>
+                    <td>
+                    <code-block lang="http">
+scp=customer.graph:read:full
+groups=mgm_employee_customer_search_override
+                    </code-block>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Request Header</b></td>
+                    <td>
+                        <include from="CDP-API-snippets.topic" element-id="rest-header"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Request Body</b></td>
+                    <td>
+                        <p>The request body should follow the following structure and some conditions</p>
+                        <br></br>
+                        <code-block lang="json">
+                    {
+                        "requestInfo": {
+                            "userId": "…",
+                            "requestorName": "…",
+                            "ipAddress": "…",
+                            "customerId": "…",
+                            "guestName": "…",
+                            "changeRequestType": "…"
+                        },
+                        "oktaAnonymization": {
+                            "accountType": "…",
+                            "accountId": "…",
+                            "overridden": [
+                                {
+                                    "field": "…",
+                                    "priorValue": "…",
+                                    "currentValue": ""
+                                },
+                                {
+                                    "field": "…",
+                                    "priorValue": "…",
+                                    "currentValue": ""
+                                }, ...
+                            ]
+                        },
+                        "comment": "…"
+                    }
+                    </code-block>
+                        <p>Note:</p>
+                        <list>
+                            <li>The <code>"comment"</code> property is optional.</li>
+                            <li>"changeRequestType" should be "OKTA_ANON"</li>
+                            <li>"accountType" should be "okta"</li>
+                            <li>"field" can be "first_name", "last_name", "email", "phone", "city", "state", "dateOfBirth"</li>
+                        </list>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Response Code</b></td>
+                    <td><code>201 Created</code> for success</td>
+                </tr>
+                <tr>
+                    <td><b>Response Body</b></td>
+                    <td>
+                        <p>For success condition:</p>
+                        <code-block lang="http">
+HTTP/1.1 201 Created
+… …
+
+{
+  "changeIds": [
+    "$ntrt$:3F6…", "$ntrt$:$HF9…", …
+  ]
+}
+                        </code-block>
+                    </td>
+                </tr>
+                </table>
+            </tab>
+        </tabs>
+
+    </chapter>
+
+    <chapter title="Reverse override request" id="override-reversal-chapter" caps="title">
+        <table>
+            <tr>
+                <td width="150"><b>Description</b></td>
+                <td>
+                    Reverse a previously submitted override request, effectively restoring the data survivorship
+                    of a guest to its currently Rank 1 dataset. The override request in question will be updated
+                    with active as false. During the next CDP data refresh cycle, the appropriate survived data
+                    will be restored to the affected guest record.
+                </td>
+            </tr>
+            <tr>
+                <td><b>URI</b></td>
+                <td><code>{base-url}/override/reversal</code></td>
+            </tr>
+            <tr>
+                <td><b>HTTP Method</b></td>
+                <td><code>PUT</code></td>
+            </tr>
+            <tr>
+                <td><b>Permission</b></td>
+                <td>
+                        <code-block lang="http">
+                            scp=customer.graph:read:full
+groups=mgm_employee_customer_search_override
+                        </code-block>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Request Header</b></td>
+                <td>
+                    <include from="CDP-API-snippets.topic" element-id="rest-header"/>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Request Body</b></td>
+                <td>
+                        <code-block lang="json">
+                            {
+                                "pii": {
+                                    "changeId": "…",
+                                    "reversals": [ "…", "…", … … ]
+                                },
+
+                                "marketability": {
+                                    "changeId": "…",
+                                    "reversals": [ "…", "…", … … ]
+                                },
+
+                                "comment": "…"
+                            }
+                        </code-block>
+                    <p>
+                        Within the <code>"reversals"</code> property, the <code>changeField</code> appropriately to
+                        the enclosing property (<code>pii</code> or <code>marketability</code>) should be provided:
+                    </p>
+                    <list type="none">
+                        <li>
+                            <code>"pii"</code>:
+                            <list>
+                                <li><code>"name"</code></li>
+                                <li><code>"address"</code></li>
+                                <li><code>"email"</code></li>
+                                <li><code>"phone"</code></li>
+                                <li><code>"birthdate"</code></li>
+                                <li><code>"gender"</code></li>
+                            </list>
+                        </li>
+                        <li>
+                            <code>"marketability"</code>:
+                            <list>
+                                <li><code>"isBadMailingAddress"</code></li>
+                                <li><code>"isTestAccount"</code></li>
+                                <li><code>"isValidEmail"</code></li>
+                                <li><code>"marketableNameFlag"</code></li>
+                                <li><code>"marketableAddressFlag"</code></li>
+                            </list>
+                        </li>
+                    </list>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Response Code</b></td>
+                <td><code>204 No Content</code> for success</td>
+            </tr>
+            <tr>
+                <td><b>Response Body</b></td>
+                <td>
+                    <p>For success condition:</p>
+                    <code-block lang="http">
+                    HTTP/1.1 204 No Content
+        … …
+                    </code-block>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sample Request</b></td>
+                <td>
+                    <p>Sample "PII" override reversal:</p>
+                    <code-block lang="json">
+                    {
+                        "pii": {
+                          "changeId": "…", "reversals": ["name", "email"]
+                        },
+                        "comment": "…"
+                    }
+                    </code-block>
+                    <p>Sample "Marketability" override reversal:</p>
+                    <code-block lang="json">
+                    {
+                        "marketability": {
+                            "changeId": "…", "reversals": ["isValidEmail", "…"]
+                        },
+                        "comment": "…"
+                    }
+                    </code-block>
+                </td>
+            </tr>
+        </table>
+    </chapter>
+
+    <chapter title="Ranked PII APIs - Introduction" id="ranked-data">
+        <p>
+            In CDP, each customer comprises one or more accounts. Each account is associated with one or more
+            PII attributes such as name, address, email, phone, etc. For a given customer, these PII attributes are
+            ranked (part of CDP daily data pipeline) based on the source and the quality of the data. The ranking is
+            used to determine the "best" PII for a customer.
+        </p>
+        <p>
+            The Ranked Data APIs provide the capability to retrieve the PII attributes for a customer, the associated
+            ranking and details.<br/>
+        </p>
+        <p>
+            At this time, all Ranked Data API endpoints are available through the
+            <a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">RESTful endpoints</a>.
+        </p>
+    </chapter>
+
+    <chapter title="Ranked PII Listing API" id="ranked-list-chapter" caps="title">
+        <table>
+            <tr>
+                <td width="150"><b>Description</b></td>
+                <td>
+                    List all PII data related to the various accounts associated with a particular guest. This
+                    includes data of account type <code>CDP:OVERRIDES</code>, which should always be ranked as 1
+                    (i.e. first).<br/>
+
+                    The API will include up to 1000 records per data category (<code>name</code>,
+                    <code>email</code>, <code>address</code>, etc.), which should suffice most cases.<br/>
+
+                    The response will include a <code>"ref"</code> value per ranked PII instance, which can be
+                    used to create <a href="Override-API.topic#override-submission-chapter">override submission
+                    request</a>.<br/>
+
+                    The API client can use the response of this API to determine if an override is permitted per
+                    data category. For example, if <code>"name"</code> already contains an instance of ranked data
+                    with account type as <code>CDP:OVERRIDES</code>, then no more override should be allowed for
+                    the <code>"name"</code> category. Or, if there is no PII data for the <code>"email"</code> category,
+                    then no override request should be performed for said category.
+                </td>
+            </tr>
+            <tr>
+                <td><b>URI (REST)</b></td>
+                <td><code><a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">{rest-base-url}</a>/rankedData/list</code></td>
+            </tr>
+            <tr>
+                <td><b>HTTP Method</b></td>
+                <td><code>GET</code></td>
+            </tr>
+            <tr>
+                <td><b>Permission</b></td>
+                <td>
+                    <code-block lang="http">
+scp=customer.graph:read:full
+groups=mgm_employee_customer_search
+groups=mgm_employee_customer_search_pii
+                    </code-block>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Request Header</b></td>
+                <td>
+                    <include from="CDP-API-snippets.topic" element-id="rest-header"/>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Query Parameters</b></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td><b>name</b></td>
+                            <td><b>default</b></td>
+                            <td><b>notes</b></td>
+                        </tr>
+                        <tr>
+                            <td><code>guestId</code></td>
+                            <td> </td>
+                            <td><b>REQUIRED</b></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sample Request</b></td>
+                <td><code-block lang="curl">{base-url}/rankedData/list?guestId=821…</code-block></td>
+            </tr>
+            <tr>
+                <td><b>Sample Response</b></td>
+                <td>
+                    <code-block lang="json">
+                    {
+                      "amperityId": "…",
+                      "guestId": "…",
+                      "names": [
+                        {
+                          "accountType": "CDP:OVERRIDES",
+                          "ref": "$ntrt$:9967…",
+                          "firstName": "…",
+                          "lastName": "…",
+                          "rank": 1
+                        },
+                        {
+                          "accountType": "opera",
+                          "accountId": "…",
+                          "ref": "$ntrt$:6AE3…",
+                          "firstName": "…",
+                          "lastName": "…",
+                          "rank": 2
+                        }, … …
+                      ],
+                      "addresses": [
+                        {
+                          "accountType": "CDP:OVERRIDES",
+                          "ref": "$ntrt$:312A…",
+                          "addressLine1": "…",
+                          "city": "…",
+                          "stateCd": "…",
+                          "postalCd": "…",
+                          "rank": 1
+                        },
+                        {
+                          "accountType": "patron",
+                          "accountId": "…",
+                          "ref": "$ntrt$:398F…",
+                          "addressLine1": "…",
+                          "city": "…",
+                          "stateCd": "…",
+                          "postalCd": "…",
+                          "countryCd": "…",
+                          "rank": 2
+                        }, … …
+                      ],
+                      "phoneNumbers": [
+                        {
+                          "accountType": "patron",
+                          "accountId": "…",
+                          "ref": "$ntrt$:0A5B…",
+                          "phoneNumber": "…",
+                          "rank": 1
+                        }
+                      ],
+                      "dateOfBirths": [
+                        {
+                          "accountType": "patron",
+                          "accountId": "…",
+                          "ref": "$ntrt$:6C57…",
+                          "dateOfBirth": "…",
+                          "rank": 1
+                        },
+                        {
+                          "accountType": "patron",
+                          "accountId": "…",
+                          "ref": "$ntrt$:3F16…",
+                          "dateOfBirth": "…",
+                          "rank": 2
+                        }, … …
+                      ],
+                      "emailAddresses": [
+                        {
+                          "accountType": "patron",
+                          "accountId": "…",
+                          "ref": "$ntrt$:37CA…",
+                          "emailAddress": "…",
+                          "rank": 1
+                        },
+                        {
+                          "accountType": "patron",
+                          "accountId": "…",
+                          "ref": "$ntrt$:BC1C…",
+                          "emailAddress": "…",
+                          "rank": 2
+                        }, … …
+                      ],
+                      "genders": []
+                    }
+                    </code-block>
+                    <p>Note:</p>
+                    <list>
+                        <li>
+                            The API response list all the PII category for a given <code>guestId</code>, even if
+                            there are no PII data for a given category (e.g. <code>genders</code>).
+                        </li>
+                        <li>
+                            As shown above, each PII category can contain zero to many instances of ranked data,
+                            ordered by <code>rank</code>. Each PII data instance contains a <code>"ref"</code>
+                            value, which can be used to create override submission request. However, there are
+                            cases where no override should be submitted for a given category.
+                            <list>
+                                <li>
+                                    If a PII category contain existing override, which is represented by an
+                                    <code>accountType</code> value of <code>CDP:OVERRIDES</code>, then no more
+                                    override should be submitted for such category. Example: (above) <code>names</code>,
+                                    <code>addresses</code>, etc.
+                                </li>
+                                <li>
+                                    If a PII category contain zero or one instance of ranked data, then no override
+                                    should be submitted for such category. Example: (above) <code>phoneNumbers</code>,
+                                    <code>genders</code>.
+                                </li>
+                            </list>
+                            See Override Submission API for more detail.
+                        </li>
+                    </list>
+                </td>
+            </tr>
+        </table>
+    </chapter>
+
+    <chapter title="Ranked PII Metadata API" id="ranked-metadata-chapter" caps="title">
+        <table>
+            <tr>
+                <td width="150"><b>Description</b></td>
+                <td>
+                    Expose additional data regarding each PII data captured for all the accounts associated to a
+                    <code>guestId</code>. These additional data, or, metadata, provides additional survivorship-related
+                    insights to each data category (<code>names</code>,<code>addresses</code>,
+                    <code>emailAddresses</code>, etc.).
+                </td>
+            </tr>
+            <tr>
+                <td><b>URI (REST)</b></td>
+                <td><code><a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">{rest-base-url}</a>/rankedData/metadata</code></td>
+            </tr>
+            <tr>
+                <td><b>HTTP Method</b></td>
+                <td><code>GET</code></td>
+            </tr>
+            <tr>
+                <td><b>Permission</b></td>
+                <td>
+                    <code-block lang="http">
+scp=customer.graph:read:full
+groups=mgm_employee_customer_search
+groups=mgm_employee_customer_search_pii
+                    </code-block>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Request Header</b></td>
+                <td>
+                    <include from="CDP-API-snippets.topic" element-id="rest-header"/>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Query Parameters</b></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td><b>name</b></td>
+                            <td><b>default</b></td>
+                            <td><b>notes</b></td>
+                        </tr>
+                        <tr>
+                            <td><code>guestId</code></td>
+                            <td> </td>
+                            <td><b>REQUIRED</b></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sample Request</b></td>
+                <td><code-block lang="curl">{base-url}/rankedData/metadata?guestId=821…</code-block></td>
+            </tr>
+            <tr>
+                <td><b>Sample Response</b></td>
+                <td>
+                    <p>
+                        A list of associated data, separated by its category (e.g. <code>names</code>,
+                        <code>addresses</code>, etc.). Each associated data instance contains the following fields:
+                    </p>
+                    <list>
+                        <li><code>accountType</code> (text)</li>
+                        <li><code>accountId</code> (text)</li>
+                        <li><code>rank</code> (numeric)</li>
+                        <li><code>playerId</code> (true/false)</li>
+                        <li><code>sourceRanking</code> (numeric)</li>
+                        <li><code>lastUpdated</code> (numeric; epoch)</li>
+                        <li><code>completeness</code> (numeric)</li>
+                        <li><code>greyListCheck</code> (true/false)</li>
+                        <li><code>greyListReasons</code> (list of reason to place grey flag on specific PII data)</li>
+                    </list>
+                    <code-block lang="json">
+                    {
+                      "guestId": "…",
+                      "names": [
+                        {
+                          "accountType": "CDP:OVERRIDES",
+                          "accountId": "",
+                          "playerId": false,
+                          "greyListCheck": false,
+                          "sourceRanking": 0,
+                          "completeness": 2,
+                          "greyListReasons": {
+                            "MAC Exclusion": false
+                          },
+                          "rank": 1
+                        },
+                        {
+                          "accountType": "opera",
+                          "accountId": "…",
+                          "playerId": false,
+                          "greyListCheck": false,
+                          "sourceRanking": 2,
+                          "lastUpdated": 1687…,
+                          "completeness": 3,
+                          "greyListReasons": {
+                            "MAC Exclusion": false
+                          },
+                          "rank": 2
+                        }, … …
+                      ],
+                      "addresses": [
+                        {
+                          "accountType": "CDP:OVERRIDES",
+                          "accountId": "",
+                          "playerId": false,
+                          "greyListCheck": false,
+                          "sourceRanking": 0,
+                          "completeness": 4,
+                          "greyListReasons": {
+                            "MAC Exclusion": false
+                          },
+                          "rank": 1
+                        },
+                        {
+                          "accountType": "patron",
+                          "accountId": "…",
+                          "playerId": false,
+                          "greyListCheck": false,
+                          "sourceRanking": 1,
+                          "lastUpdated": 1665…,
+                          "completeness": 5,
+                          "greyListReasons": {
+                            "MAC Exclusion": false
+                          },
+                          "rank": 2
+                        }, … …
+                      ],
+                      "phoneNumbers": [
+                        {
+                          "accountType": "patron",
+                          "accountId": "…",
+                          "playerId": false,
+                          "greyListCheck": false,
+                          "sourceRanking": 1,
+                          "lastUpdated": 1163…,
+                          "completeness": 1,
+                          "greyListReasons": {
+                            "Do Not Call": false
+                          },
+                          "rank": 1
+                        },
+                        {
+                          "accountType": "patron",
+                          "accountId": "…",
+                          "playerId": false,
+                          "greyListCheck": true,
+                          "sourceRanking": 1,
+                          "lastUpdated": 1665…,
+                          "completeness": 0,
+                          "greyListReasons": {
+                            "Do Not Call": true
+                          },
+                          "rank": 2
+                        }, … …
+                      ],
+                      "dateOfBirths": [
+                        {
+                          "accountType": "patron",
+                          "accountId": "…",
+                          "playerId": false,
+                          "greyListCheck": false,
+                          "sourceRanking": 1,
+                          "lastUpdated": 1650…,
+                          "completeness": 1,
+                          "greyListReasons": {
+                            "MAC Exclusion": false
+                          },
+                          "rank": 1
+                        },
+                        {
+                          "accountType": "patron",
+                          "accountId": "…",
+                          "playerId": false,
+                          "greyListCheck": false,
+                          "sourceRanking": 1,
+                          "lastUpdated": 1649…,
+                          "completeness": 1,
+                          "greyListReasons": {
+                            "MAC Exclusion": false
+                          },
+                          "rank": 2
+                        }, … …
+                      ],
+                      "genders": []
+                    }
+                    </code-block>
+                </td>
+            </tr>
+        </table>
+    </chapter>
+
+</topic>

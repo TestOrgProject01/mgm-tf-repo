@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="customer_search" id="Customer-Search">
+
+    <title>API Developer's Guide for Customer Search Application</title>
+
+    <chapter title="Introduction" id="introduction">
+        <p>
+            The Customer Search application is a web application that provides customer search and customer detail
+            display capabilities. It utilizes CDP API (Customer Search API, Customer Insights API, Override API) to
+            fulfil its functionality.
+        </p>
+        <p>
+            The Customer Search application accesses CDPI API differently than other service accounts (such as
+            <a href="mgm_backstage_service.topic" target="_blank"><code>mgm_backstage_service</code></a>. For service
+            accounts, authentication token is acquired via the <a href="Authentication.topic" target="_blank">Identity
+            API</a> and passed to the CDPI API as part of the HTTP request header (<code>Authorization</code>). On the
+            other hand, Customer Search application uses the authentication token of its logged-in user to access the
+            CDPI API. The authentication token is managed and stored within the "middleware" layer of the Customer
+            Search application. The diagram below illustrate the logical flow and dependency between Customer Search
+            and CDP API.
+        </p>
+
+        <img scale="15" src="customer_search_2024.png" alt="High-level Customer Search architecture"/>
+
+        <p>
+            More detail on the architecture of Customer Search application is available on
+            <a href="https://mgmdigitalventures.atlassian.net/wiki/spaces/PER/pages/2540340279/Customer+Search+v2.1+Architecture+Overview"
+               target="_blank">Confluence</a>.
+        </p>
+
+        <p>
+            This document assumes that the appropriate authentication token is already available in the Customer Search
+            middleware layer (Nodes) as part of user session. The authentication token is injected as part of the HTTP
+            request headers when invoking CDP API.
+        </p>
+
+        <p>
+            API endpoints are exposed in two ways: RESTful and GraphQL - both are fronted through ApigeeX.
+            <a href="Customer-Search-API.topic"/> and <a href="Customer-Insights-API.topic"/> are GraphQL-based since
+            they are accessible by the Customer Search application, MGM internal API clients and external API clients.
+            The API endpoints that are accessed by Customer Search application only are RESTful-based. For example,
+            <a href="Override-API.topic"/>.
+        </p>
+        <p>
+            Below are the API endpoint base URLs:
+        </p>
+
+        <var name="graphql_endpoint_title" value="GraphQL endpoints"/>
+        <var name="graphql_endpoint_id" value="customer-search-endpoint"/>
+        <include from="CDP-API-snippets.topic" element-id="cdp-api-graphql-endpoints" id="customer-search-graphql-endpoints"/>
+
+        <var name="cdpapi_endpoint_title" value="RESTful endpoints base URLs"/>
+        <var name="cdpapi_endpoint_id" value="override-endpoint"/>
+        <include from="CDP-API-snippets.topic" element-id="cdp-api-rest-endpoints" id="customer-search-rest-endpoints"/>
+    </chapter>
+
+    <var name="glossary-collapsed-state" value="collapsed"/>
+    <include from="CDP-API-snippets.topic" element-id="glossary"/>
+
+</topic>

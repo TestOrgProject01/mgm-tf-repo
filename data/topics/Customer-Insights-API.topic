@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Customer Insights API" id="Customer-Insights-API">
+
+    <title>Customer Insights API</title>
+
+    <chapter title="Customer Insights" id="customer-insights">
+        <p>The Customer Insights API provides additional customer information:</p>
+        <list>
+            <li>Customer PII data such as name, date of birth, email, address, phone, gender.</li>
+            <li>Customer Graph - associated accounts from various sources such as Patrons, Opera, SevenRooms, Archtics,
+                OKTA, etc.
+            </li>
+            <li>Unsurvived data based on account type and account id, including the relative ranking. Data is
+                categorized into Name, Address, Email, Phone, and Gender.
+            </li>
+            <li>Global and Property -based marketability flags. Property-based marketability flags may include
+                “Enterprise Default”.
+            </li>
+            <li>
+                Customer Insights regarding Gaming Activity, Non-Gaming Activity, Market Segment and MGM Rewards, in
+                the form of key-value pairs.
+            </li>
+        </list>
+
+        <p>This API provides flexibility in terms of search parameters and display options:</p>
+        <list>
+            <li>Search by Account Type and Account ID.</li>
+            <li>Search by PII fields such as name, address, email, and phone.</li>
+            <li>Limit the display of property-based marketability flags via the <code>propertyCd</code> parameter.</li>
+            <li>Control information retrieval and display via the <code>displayRestriction</code> parameter.</li>
+        </list>
+
+        <p>
+            At this time, Customer Insights API is available through the
+            <a href="Customer-Search.topic" nullable="true" anchor="customer-search-graphql-endpoints">GraphQL endpoints</a>.
+        </p>
+
+        <include from="Customer-Insights-Detail.topic" element-id="customer-insights-details"/>
+        <include from="Customer-Insights-Detail.topic" element-id="customer-insights-sample"/>
+
+        <p id="response3"/>
+        <include from="Customer-Insights-Detail.topic" element-id="customer-insights-response"/>
+    </chapter>
+
+</topic>

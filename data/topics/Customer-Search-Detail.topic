@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Customer Search Detail" id="Customer-Search-Detail" is-library="true">
+
+    <snippet id="customer-search-details-pii">
+        <chapter title="Service details" id="customer-search-details-pii-chapter" collapsible="true"
+                 default-state="collapsed" caps="title">
+            <table>
+                <tr>
+                    <td width="150"><b>Type</b></td>
+                    <td><b>Value/Detail</b></td>
+                </tr>
+                <tr>
+                    <td><b>Query Function</b></td>
+                    <td><code>customerSearch</code></td>
+                </tr>
+                <tr>
+                    <td><b>Request Header</b></td>
+                    <td>
+                        <include from="CDP-API-snippets.topic" element-id="graphql-header"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Request Body</b></td>
+                    <td>
+                        <code-block lang="http">
+                        query CustomerSearch($input: CustomerSearchInput!) {
+                        &nbsp; customerSearch(input: $input) {
+                        &nbsp; &nbsp; resultCount
+                        &nbsp; &nbsp; resultMessage {
+                        &nbsp; &nbsp; &nbsp; id
+                        &nbsp; &nbsp; &nbsp; value
+                        &nbsp; &nbsp; }
+                        &nbsp; &nbsp; searchResults {
+                        &nbsp; &nbsp; &nbsp; firstName
+                        &nbsp; &nbsp; &nbsp; lastName
+                        &nbsp; &nbsp; &nbsp; gender
+                        &nbsp; &nbsp; &nbsp; dateOfBirth
+                        &nbsp; &nbsp; &nbsp; emailAddress
+                        &nbsp; &nbsp; &nbsp; phoneNumber
+                        &nbsp; &nbsp; &nbsp; addressLineOne
+                        &nbsp; &nbsp; &nbsp; city
+                        &nbsp; &nbsp; &nbsp; stateCd
+                        &nbsp; &nbsp; &nbsp; postalCd
+                        &nbsp; &nbsp; &nbsp; countryCd
+                        &nbsp; &nbsp; &nbsp; guestId
+                        &nbsp; &nbsp; &nbsp; mLifeId
+                        &nbsp; &nbsp; &nbsp; mgmRewardsTierCurrent
+                        &nbsp; &nbsp; }
+                        &nbsp; }
+                        }
+                        </code-block>
+
+                        GQL Variables:
+                        <code-block lang="json">
+                        "variables": {
+                        &nbsp; "input": {
+                        &nbsp; &nbsp; "firstName": "……",
+                        &nbsp; &nbsp; "lastName": "……",
+                        &nbsp; &nbsp; "dateOfBirth": "{{YYYY-MM-DD}}",
+                        &nbsp; &nbsp; "emailAddress": "……",
+                        &nbsp; &nbsp; "phoneNumber": "……",
+                        &nbsp; &nbsp; "addressLineOne": "……",
+                        &nbsp; &nbsp; "city": "……",
+                        &nbsp; &nbsp; "stateCd": "……",
+                        &nbsp; &nbsp; "postalCd": "……",
+                        &nbsp; &nbsp; "countryCd": "……",
+                        &nbsp; &nbsp; "guestId": "……",
+                        &nbsp; &nbsp; "amperityId": "……"
+                        &nbsp; }
+                        }
+                        </code-block>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <b>Note:</b>
+                        <list>
+                            <li>
+                                Response can be altered by adjusting the fields under <code>searchResults</code>, as
+                                made possible by the GraphQL technology. For example, if only name is needed, then one
+                                can specify something like this:
+                                <code-block lang="javascript">
+                                query CustomerSearch($input: CustomerSearchInput!) {
+                                    customerSearch(input: $input) {
+                                        searchResults {
+                                            firstName
+                                            lastName
+                                        }
+                                        … …
+                                    }
+                                }
+                                </code-block>
+                            </li>
+                            <li>
+                                The search result is an array and hence may contain more than 1 search result instance.
+                                However, there is a limit to the maximum number of results it returns. In most cases,
+                                the maximum number of results returned is 20.
+                            </li>
+                            <li>
+                                If no customer is found, the response payload would like this:
+                                <code-block lang="json">
+                                {
+                                  "data": {
+                                    "customerSearch": {
+                                      "resultCount": 0,
+                                      "searchResults": [],
+                                      "resultMessage": {
+                                        "id": 200001,
+                                        "value": "Data Unavailable."
+                                      }
+                                    }
+                                  }
+                                }
+                                </code-block>
+                            </li>
+                            <li>
+                                If there are ore than the maximum allowed number of search results, the response will
+                                include the following in addition to the search results:
+                                <code-block lang="json">
+                                {
+                                  "data": {
+                                    "customerSearch": {
+                                      "resultCount": 20,
+                                      "resultMessage": {
+                                        "id": 1200091,
+                                        "value": "Your search returned too many results - please refine your search terms."
+                                      },
+                                      "searchResults": [ {…}, {…}, ... ]
+                                    }
+                                  }
+                                }
+                                </code-block>
+                            </li>
+                        </list>
+                    </td>
+                </tr>
+            </table>
+        </chapter>
+    </snippet>
+
+    <snippet id="customer-search-sample-pii">
+        <chapter title="Sample" id="customer-search-sample-pii-chapter" collapsible="true" default-state="collapsed"
+                 caps="title">
+            <code-block lang="json" prompt="Query: " collapsible="true" default-state="expanded">
+                query CustomerSearch($input: CustomerSearchInput!) {
+                &nbsp; customerSearch(input: $input) {
+                &nbsp; &nbsp; resultCount
+                &nbsp; &nbsp; resultMessage {
+                &nbsp; &nbsp; &nbsp; id
+                &nbsp; &nbsp; &nbsp; value
+                &nbsp; &nbsp; }
+                &nbsp; &nbsp; searchResults {
+                &nbsp; &nbsp; &nbsp; firstName
+                &nbsp; &nbsp; &nbsp; lastName
+                &nbsp; &nbsp; &nbsp; emailAddress
+                &nbsp; &nbsp; &nbsp; mLifeId
+                &nbsp; &nbsp; &nbsp; mgmRewardsTierCurrent
+                &nbsp; &nbsp; }
+                &nbsp; }
+                }
+
+                "variables": {
+                &nbsp; "input": {
+                &nbsp; &nbsp; "firstName": "John",
+                &nbsp; &nbsp; "lastName": "Smith",
+                &nbsp; &nbsp; "stateCd": "WA"
+                &nbsp; }
+                }
+            </code-block>
+
+            <code-block lang="console" prompt="CURL equivalent: " collapsible="true" default-state="expanded">
+                curl \
+                &nbsp; --location \
+                &nbsp; --request POST 'https://qa4-api.devtest.vegas/graphql-next' \
+                &nbsp; --header 'Authorization: Bearer {{access_token}}' \
+                &nbsp; --header 'apollographql-client-name: {{client_id}}' \
+                &nbsp; --header 'Content-Type: application/json' \
+                &nbsp; --data-raw '{"query":"query CustomerSearch($input: CustomerSearchInput!) {\n
+                customerSearch(input: $input) {\n resultCount\n resultMessage {\n id\n value\n }\n searchResults {\n
+                firstName\n lastName\n emailAddress\n mLifeId\n mgmRewardsTierCurrent\n }\n }\n}\n",
+                "variables":{"input":{"firstName":"John","lastName":"Smith","stateCd":"WA"}}}'
+            </code-block>
+        </chapter>
+    </snippet>
+
+    <snippet id="customer-search-details-accounts">
+        <chapter title="Service details" id="customer-search-details-accounts-chapter" collapsible="true"
+                 default-state="collapsed" caps="title">
+            <table>
+                <tr>
+                    <td width="150"><b>Type</b></td>
+                    <td><b>Value/Detail</b></td>
+                </tr>
+                <tr>
+                    <td><b>Query Function</b></td>
+                    <td><code>customerSearch</code></td>
+                </tr>
+                <tr>
+                    <td><b>Request Header</b></td>
+                    <td>
+                        <include from="CDP-API-snippets.topic" element-id="graphql-header"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Request Body</b></td>
+                    <td>
+                        <code-block lang="http">
+                            query CustomerSearch($input: CustomerSearchInput!) {
+                            &nbsp; customerSearch(input: $input) {
+                            &nbsp; &nbsp; resultCount
+                            &nbsp; &nbsp; resultMessage {
+                            &nbsp; &nbsp; &nbsp; id
+                            &nbsp; &nbsp; &nbsp; value
+                            &nbsp; &nbsp; }
+                            &nbsp; &nbsp; searchResults {
+                            &nbsp; &nbsp; &nbsp; firstName
+                            &nbsp; &nbsp; &nbsp; lastName
+                            &nbsp; &nbsp; &nbsp; gender
+                            &nbsp; &nbsp; &nbsp; dateOfBirth
+                            &nbsp; &nbsp; &nbsp; emailAddress
+                            &nbsp; &nbsp; &nbsp; phoneNumber
+                            &nbsp; &nbsp; &nbsp; addressLineOne
+                            &nbsp; &nbsp; &nbsp; city
+                            &nbsp; &nbsp; &nbsp; stateCd
+                            &nbsp; &nbsp; &nbsp; postalCd
+                            &nbsp; &nbsp; &nbsp; countryCd
+                            &nbsp; &nbsp; &nbsp; guestId
+                            &nbsp; &nbsp; &nbsp; mLifeId
+                            &nbsp; &nbsp; &nbsp; mgmRewardsTierCurrent
+                            &nbsp; &nbsp; }
+                            &nbsp; }
+                            }
+                        </code-block>
+
+                        GQL Variables:
+                        <code-block lang="json">
+                            "variables": {
+                            &nbsp; "input": {
+                            &nbsp; &nbsp; "accountType": "……",
+                            &nbsp; &nbsp; "accountId": "……"
+                            &nbsp; }
+                            }
+                        </code-block>
+                    </td>
+                </tr>
+            </table>
+        </chapter>
+    </snippet>
+
+    <snippet id="customer-search-sample-accounts">
+        <chapter title="Sample" id="customer-search-sample-accounts-chapter" collapsible="true"
+                 default-state="collapsed"
+                 caps="title">
+            <code-block lang="json" prompt="Query: " collapsible="true" default-state="expanded">
+                query CustomerSearch($input: CustomerSearchInput!) {
+                &nbsp; customerSearch(input: $input) {
+                &nbsp; &nbsp; resultCount
+                &nbsp; &nbsp; resultMessage {
+                &nbsp; &nbsp; &nbsp; id
+                &nbsp; &nbsp; &nbsp; value
+                &nbsp; &nbsp; }
+                &nbsp; &nbsp; searchResults {
+                &nbsp; &nbsp; &nbsp; firstName
+                &nbsp; &nbsp; &nbsp; lastName
+                &nbsp; &nbsp; &nbsp; emailAddress
+                &nbsp; &nbsp; &nbsp; mLifeId
+                &nbsp; &nbsp; &nbsp; mgmRewardsTierCurrent
+                &nbsp; &nbsp; }
+                &nbsp; }
+                }
+
+                "variables": {
+                &nbsp; "input": {
+                &nbsp; &nbsp; "accountType": "archtics",
+                &nbsp; &nbsp; "accountId": "..."
+                &nbsp; }
+                }
+            </code-block>
+
+            <code-block lang="console" prompt="CURL equivalent: " collapsible="true" default-state="expanded">
+                curl \
+                &nbsp; --location \
+                &nbsp; --request POST 'https://qa4-api.devtest.vegas/graphql-next' \
+                &nbsp; --header 'Authorization: Bearer {{access_token}}' \
+                &nbsp; --header 'apollographql-client-name: {{client_id}}' \
+                &nbsp; --header 'Content-Type: application/json' \
+                &nbsp; --data-raw '{"query":"query CustomerSearch($input: CustomerSearchInput!) {\n
+                customerSearch(input: $input) {\n resultCount\n resultMessage {\n id\n value\n }\n searchResults {\n
+                firstName\n lastName\n emailAddress\n mLifeId\n mgmRewardsTierCurrent\n }\n }\n}\n",
+                "variables":{"input":{"accountType":"archtics","accountId":"……"}}}'
+            </code-block>
+        </chapter>
+    </snippet>
+
+    <snippet id="customer-search-response">
+        <chapter title="Response" id="customer-search-response-chapter" collapsible="true" default-state="collapsed"
+                 caps="title">
+            <p>When Customer Search API returns one or more matching customer information, the response looks like
+                this:</p>
+            <code-block lang="json">
+                {
+                &nbsp; "data": {
+                &nbsp; &nbsp; "customerSearch": {
+                &nbsp; &nbsp; &nbsp; "resultCount": 4,
+                &nbsp; &nbsp; &nbsp; "resultMessage": null,
+                &nbsp; &nbsp; &nbsp; "searchResults": [
+                &nbsp; &nbsp; &nbsp; &nbsp; {
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "addressLineOne": "123 2ND STREET",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "city": "NEW YORK",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "dateOfBirth": "1979-01-30",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "emailAddress": "JOEQ@GMAIL.COM",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "firstName": "JOE",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "lastName": "QUIZZY",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "guestId": "7308174",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "postalCd": "23423",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "stateCd": "NY",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "mLifeId": "95595072"
+                &nbsp; &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; &nbsp; { … … },
+                &nbsp; &nbsp; &nbsp; &nbsp; { … … }, … …
+                &nbsp; &nbsp; &nbsp; ]
+                &nbsp; &nbsp; }
+                &nbsp; }
+                }
+            </code-block>
+
+            <p>
+                If the search should yield more than 20 records, the first 20 records will be returned, along
+                with a <code>resultMessage</code> indicating that the search returned too many results.
+            </p>
+            <code-block lang="json">
+                {
+                &nbsp; "data": {
+                &nbsp; &nbsp; "customerSearch": {
+                &nbsp; &nbsp; &nbsp; "resultCount": 20,
+                &nbsp; &nbsp; &nbsp; "resultMessage": {
+                &nbsp; &nbsp; &nbsp; &nbsp; "id": 1200091,
+                &nbsp; &nbsp; &nbsp; &nbsp; "value": "Your search returned too many results - please
+                refine your search terms"
+                &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; "searchResults": [
+                &nbsp; &nbsp; &nbsp; &nbsp; {
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "addressLineOne": "101 LIQUOR LN",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "city": "LAKELAND",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "dateOfBirth": "1977-08-26",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "firstName": "JOHN",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "gender": "M",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "guestId": "151994413",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "lastName": "DOE",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "postalCd": "33805",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "stateCd": "FL"
+                &nbsp; &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; &nbsp; { … … }, { … … }, … …
+                &nbsp; &nbsp; &nbsp; ]
+                &nbsp; &nbsp; }
+                &nbsp; }
+                }
+            </code-block>
+
+            <p>If the search yielded too many results, use other search fields to narrow the search. For example,
+                <code>firstName</code> AND <code>lastName</code> AND <code>stateCd</code>.
+            </p>
+
+            <p>If no record can be found via the search parameters:</p>
+            <code-block lang="json">
+                {
+                &nbsp; "data": {
+                &nbsp; &nbsp; "customerSearch": {
+                &nbsp; &nbsp; &nbsp; "resultCount": 0,
+                &nbsp; &nbsp; &nbsp; "searchResults": []
+                &nbsp; &nbsp; &nbsp; "resultMessage": {
+                &nbsp; &nbsp; &nbsp; &nbsp; "id": 1200101,
+                &nbsp; &nbsp; &nbsp; &nbsp; "value": "No matches found"
+                &nbsp; &nbsp; &nbsp; }
+                &nbsp; &nbsp; }
+                &nbsp; }
+                }
+            </code-block>
+        </chapter>
+    </snippet>
+
+    <snippet id="customer-search-error">
+        <chapter title="Error Scenarios" id="customer-search-error-chapter" collapsible="true" default-state="collapsed"
+                 caps="title">
+            <table>
+                <tr>
+                    <td>Scenario</td>
+                    <td>Error Message</td>
+                    <td>Error Code (response payload)</td>
+                    <td>HTTP Status Code</td>
+                </tr>
+                <tr>
+                    <td>Header not sent as per contract</td>
+                    <td>Invalid request: Please check the header.</td>
+                    <td>100001</td>
+                    <td>200</td>
+                </tr>
+                <tr>
+                    <td>Invalid JWT</td>
+                    <td>Invalid request: Please check the Client ID and scopes passed in the request.</td>
+                    <td>100002</td>
+                    <td>200</td>
+                </tr>
+                <tr>
+                    <td>Minimum search inputs not provided</td>
+                    <td>Invalid request: Please check the search input.</td>
+                    <td>100004</td>
+                    <td>200</td>
+                </tr>
+                <tr>
+                    <td>Valid input, but no data found</td>
+                    <td>Data Unavailable.</td>
+                    <td>200001</td>
+                    <td>200</td>
+                </tr>
+                <tr>
+                    <td>Unknown exception occurred while processing</td>
+                    <td>System was unable to process your request. Please try again after some time.</td>
+                    <td>300001</td>
+                    <td>500</td>
+                </tr>
+            </table>
+        </chapter>
+    </snippet>
+
+
+</topic>

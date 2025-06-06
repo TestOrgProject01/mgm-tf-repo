@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="mgm_cyber_defense" id="mgm_cyber_defense">
+
+    <title>API Developer Guide for mgm_cyber_defense</title>
+
+    <include from="CDP-API-snippets.topic" element-id="api-prerequisite"/>
+
+    <chapter title="Customer Search" id="customer-search">
+        <p>
+            Customer Search API is a GraphQL API that provides the ability to search for customers based on a variety of
+            search fields. Each matching customer will be returned in the response along with the customer's PII data
+            and basic account information. This API will return up to the first 20 matches.
+        </p>
+        <p>
+            All provided search fields will be used to compound the <b>AND</b> condition of the search operation. In
+            other word, the addition of search fields will narrow the search results.
+        </p>
+
+        <var name="graphql_endpoint_title" value="Customer Search endpoints"/>
+        <var name="graphql_endpoint_id" value="customer-search-endpoint"/>
+        <include from="CDP-API-snippets.topic" element-id="cdp-api-graphql-endpoints"/>
+
+        <chapter title="Customer Search by PII" id="customer-search-pii">
+            <p>
+                Customer Search supports the searching of customers based on a variety of PII fields (can be combined).
+            </p>
+            <list type="bullet" columns="3">
+                <li><code>firstName</code></li>
+                <li><code>lastName</code></li>
+                <li><code>dateOfBirth</code></li>
+                <li><code>emailAddress</code></li>
+                <li><code>phoneNumber</code></li>
+                <li><code>addressLineOne</code></li>
+                <li><code>city</code></li>
+                <li><code>stateCd</code> (two-letter code)</li>
+                <li><code>postalCd</code></li>
+                <li><code>countryCd</code></li>
+                <li><code>guestId</code></li>
+                <li><code>amperityId</code></li>
+                <li><code>sortBy</code></li>
+            </list>
+
+            <p>One of the following combinations must be present in the API request:</p>
+            <list type="decimal">
+                <li><code>firstName</code> <b>AND</b> <code>lastName</code></li>
+                <li><code>guestId</code></li>
+                <li><code>amperityId</code></li>
+            </list>
+
+            <p>Additional PII fields can be added to narrow the search.</p>
+
+            <include from="Customer-Search-Detail.topic" element-id="customer-search-details-pii"/>
+            <include from="Customer-Search-Detail.topic" element-id="customer-search-sample-pii"/>
+            <b>Response</b>: see the <a href="#response">Response</a> section for more details.
+        </chapter>
+
+        <chapter title="Customer Search by Account" id="customer-search-account">
+            <p>
+                Customer Search also supports the search of customer via one of the associated account. In this case,
+                the API client is expected to provide the following information:
+            </p>
+            <deflist type="medium">
+                <def title="accountType">One of the following account types (case-sensitive):
+                    &nbsp;
+                    <var name="source-codes-columns" value="3"/>
+                    <include from="CDP-API-snippets.topic" element-id="source-codes"/>
+
+                    Note that <code>mlifeId</code> is equivalent to <code>patron</code>, and is provided as a
+                    convenience.
+                </def>
+                <def title="accountId">The Account ID in question.</def>
+            </deflist>
+
+            <include from="Customer-Search-Detail.topic" element-id="customer-search-details-accounts"/>
+            <include from="Customer-Search-Detail.topic" element-id="customer-search-sample-accounts"/>
+        </chapter>
+
+        <p id="response"/>
+        <include from="Customer-Search-Detail.topic" element-id="customer-search-response"/>
+
+        <include from="Customer-Search-Detail.topic" element-id="customer-search-error"/>
+    </chapter>
+
+    <chapter title="Customer Insights" id="customer-insights">
+        <p>The Customer Insights API provides additional customer information:</p>
+        <list>
+            <li>Customer PII data such as name, birth date, email, address, phone, gender.</li>
+            <li>Customer Graph - associated accounts from various sources such as Patrons, Opera, SevenRooms, Archtics,
+                OKTA, etc.
+            </li>
+            <li>Unsurvived data based on account type and account id, including the relative ranking. Data is
+                categorized into Name, Address, Email, Phone, and Gender.
+            </li>
+            <li>Global and Property -based marketability flags. Property-based marketability flags may include
+                “Enterprise Default”.
+            </li>
+            <li>
+                Customer Insights regarding Gaming Activity, Non-Gaming Activity, Market Segment and MGM Rewards, in
+                the form of key-value pairs.
+            </li>
+        </list>
+
+        <p>This API provides flexibility in terms of search parameters and display options:</p>
+        <list>
+            <li>Search by Account Type and Account ID.</li>
+            <li>Search by PII fields such as name, address, email, and phone.</li>
+            <li>Limit the display of property-based marketability flags via the <code>propertyCd</code> parameter.</li>
+            <li>Control information retrieval and display via the <code>displayRestriction</code> parameter.</li>
+        </list>
+
+        <var name="graphql_endpoint_title" value="Customer Insights endpoints"/>
+        <var name="graphql_endpoint_id" value="customer-insights-endpoint"/>
+        <include from="CDP-API-snippets.topic" element-id="cdp-api-graphql-endpoints"/>
+
+        <include from="Customer-Insights-Detail.topic" element-id="customer-insights-details"/>
+        <include from="Customer-Insights-Detail.topic" element-id="customer-insights-sample"/>
+
+        <p id="response3"/>
+        <include from="Customer-Insights-Detail.topic" element-id="customer-insights-response"/>
+    </chapter>
+
+    <var name="glossary-collapsed-state" value="collapsed"/>
+    <include from="CDP-API-snippets.topic" element-id="glossary"/>
+
+</topic>

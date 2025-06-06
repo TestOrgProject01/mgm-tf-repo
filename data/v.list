@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE vars SYSTEM "https://resources.jetbrains.com/writerside/1.0/vars.dtd">
+<vars>
+	<var name="product" value="Data API"/>
+	<var name="graphql-qa-endpoint" value="https://mgm-nonprod-qa4.apigee.net/graphql"/>
+	<var name="graphql-preprod-endpoint" value="https://mgm-nonprod-preprod.apigee.net/graphql"/>
+	<var name="graphql-prod-endpoint" value="https://mgm-prod-prod.apigee.net/graphql"/>
+</vars>

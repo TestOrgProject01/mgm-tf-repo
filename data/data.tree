@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+	SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="data" name="Data API Documentation" start-page="Welcome.topic">
+	<toc-element topic="Welcome.topic"/>
+
+	<toc-element topic="CDP-API.topic">
+		<toc-element topic="Authentication.topic"/>
+
+		<toc-element id="mgm_backstage_service" topic="mgm_backstage_service.topic" hidden="true"/>
+		<toc-element id="mgm_cyber_defense" topic="mgm_cyber_defense.topic" toc-title="mgm_cyber_defense"/>
+		<toc-element id="mgm_identity_service" topic="mgm_identity_service.topic" hidden="true"/>
+		<toc-element id="mgm_parking_service" topic="mgm_parking_service.topic" hidden="true"/>
+		<toc-element id="mgm_recommendations" topic="mgm_recommendations.topic" hidden="true"/>
+		<toc-element id="mgm_rpa_app" topic="mgm_rpa_app.topic" toc-title="mgm_rpa_app"/>
+		<toc-element id="mgm_rtc_service" topic="mgm_rtc_service.topic" hidden="true"/>
+		<toc-element id="payments-storage-service" topic="payments-storage-service.topic" hidden="true"/>
+		<toc-element id="show-booking-service" topic="show-booking-service.topic" hidden="true"/>
+		<toc-element id="vendor_avaya" topic="vendor_avaya.topic" hidden="true"/>
+		<toc-element id="vendor_betmgm" topic="vendor_betmgm.topic" hidden="true"/>
+		<toc-element id="vendor_rhytmos" topic="vendor_rhytmos.topic" hidden="true"/>
+		<toc-element id="vendor_sevenrooms" topic="vendor_sevenrooms.topic" hidden="true"/>
+
+		<toc-element topic="Customer-Search.topic" toc-title="Customer Search Application">
+			<toc-element topic="Customer-Search-API.topic"/>
+			<toc-element topic="Customer-Insights-API.topic"/>
+			<toc-element topic="Override-API.topic"/>
+			<toc-element topic="Customer-Transaction-API.topic"/>
+			<toc-element topic="Unlinked-Accounts-API.topic"/>
+			<toc-element topic="OneTrust-Consent-API.topic"/>
+		</toc-element>
+
+		<toc-element topic="Glossary.topic"/>
+	</toc-element>
+
+	<toc-element topic="Recommendation-API.topic" hidden="true"/>
+</instance-profile>

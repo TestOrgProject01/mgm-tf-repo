@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+	SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="data_libraries"
+                  name="data_libraries" is-library="true">
+
+	<toc-element topic="Customer-Search-Detail.topic"/>
+	<toc-element topic="Customer-Insights-Detail.topic"/>
+	<toc-element topic="CDP-API-snippets.topic"/>
+</instance-profile>

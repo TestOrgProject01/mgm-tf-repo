@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="mgm-rpa-app" id="mgm_rpa_app">
+
+    <title>API Developer Guide for mgm_rpa_app</title>
+
+    <chapter title="Summary" id="summary">
+        <p>
+            This document outlines the steps to invoke Customer Search API for the purpose of retrieving Customer
+            information through one or more Customer PII data.
+        </p>
+
+        <note>
+            <b>Basic Flow</b>
+            <p>
+                To access Customer Search API, appropriate access token must first be acquired. Additionally, since such
+                access token is short-lived by design, consideration should be given to ensure its validity thereof.
+            </p>
+            <p>
+                Below is the basic execution flow between the API client and API provider (Customer Search):
+            </p>
+            <list type="decimal">
+                <li>The API client invokes the appropriate Identity API to acquire a valid access token.</li>
+                <li>
+                    The API client creates a GraphQL-based API request, with the valid access token in the HTTP header
+                    (<code>Authorization</code>).
+                </li>
+                <li>
+                    Upon receiving the request, Customer Search API will query against its backend search engine.
+                    <list type="alpha-lower">
+                        <li>
+                            Unauthorized access or invalid request (such as invalid parameter name or value) will
+                            likely result in an error response (still HTTP 200 status code).
+                        </li>
+                        <li>
+                            Successful search will result in a HTTP 200 response code, with the response body
+                            containing 0 or more matches.
+                        </li>
+                    </list>
+                </li>
+            </list>
+        </note>
+    </chapter>
+
+    <include from="CDP-API-snippets.topic" element-id="api-prerequisite"/>
+
+    <chapter title="Customer Search" id="customer-search">
+        <p>
+            Customer Search API is a GraphQL API that provides the ability to search for customers based on a variety of
+            search fields. Each matching customer will be returned in the response along with the customer's PII data
+            and basic account information. This API will return up to the first 20 matches.
+        </p>
+
+        <var name="graphql_endpoint_title" value="Customer Search endpoints"/>
+        <var name="graphql_endpoint_id" value="customer-search-endpoint"/>
+        <include from="CDP-API-snippets.topic" element-id="cdp-api-graphql-endpoints"/>
+
+        <p>
+            All provided search fields will be used to compound the <b>AND</b> condition of the search operation. In
+            other word, the addition of search fields will narrow the search results.
+        </p>
+        <p>
+            The API client is expected to provide one or more of the following inputs:
+        </p>
+
+        <list type="bullet" columns="1">
+            <li><code>firstName</code> <b>AND</b> <code>lastName</code></li>
+            <li><code>emailAddress</code></li>
+            <li><code>phoneNumber</code> (format: 10-digit)</li>
+            <li><code>mLifeId</code> (MGM Rewards/Patron ID)</li>
+        </list>
+
+        <p>
+            The pertinent information to perform Customer Search is shown below.
+        </p>
+
+        <include from="Customer-Search-Detail.topic" element-id="customer-search-details-pii"/>
+
+        <chapter id="mgm_rpa_app_sample1" title="Sample 1 - Verify existence of customer via Patron ID"
+                 collapsible="true" default-state="expanded" caps="title">
+            <code-block lang="javascript" prompt="Query: " collapsible="true" default-state="expanded">
+            query CustomerSearch($input: CustomerSearchInput!) {
+              customerSearch(input: $input) {
+                resultCount
+                resultMessage {
+                  id
+                  value
+                }
+                searchResults {
+                  firstName
+                  lastName
+                  emailAddress
+                  mLifeId
+                  mgmRewardsTierCurrent
+                }
+              }
+            }
+
+            "variable": {
+              "input": {
+                "accountType": "patron",
+                "accountId": "……"
+              }
+            }
+            </code-block>
+
+            <code-block lang="console" prompt="CURL equivalent: " collapsible="true" default-state="expanded">
+            curl \
+             --location \
+             --request POST 'https://…/graphql-next' \
+             --header 'Authorization: Bearer {{access_token}}' \
+             --header 'apollographql-client-name: mgm_rpa_app' \
+             --header 'Content-Type: application/json' \
+             --data-raw '{"query":"query CustomerSearch($input: \
+                CustomerSearchInput!) {\n customerSearch(input: $input) {\n \
+                resultCount\n resultMessage {\n id\n value\n }\n \
+                searchResults {\n firstName\n lastName\n emailAddress\n \
+                mLifeId\n mgmRewardsTierCurrent\n }\n }\n}\n", \
+                "variables":{"input":{"accountType":"patron","accountId":"……"}}}'
+            </code-block>
+        </chapter>
+
+        <chapter id="mgm_rpa_app_sample2" title="Sample 2 - Verify existence of customer via Email Address and Name"
+                 collapsible="true" default-state="expanded" caps="title">
+            <code-block lang="javascript" prompt="Query: " collapsible="true" default-state="expanded">
+            query CustomerSearch($input: CustomerSearchInput!) {
+              customerSearch(input: $input) {
+                resultCount
+                resultMessage {
+                  id
+                  value
+                }
+                searchResults {
+                  phoneNumber
+                  mLifeId
+                }
+              }
+            }
+
+            "variable": {
+              "input": {
+                "firstName": "John",
+                "lastName": "Doe",
+                "emailAddress": "john.doe@aol.com"
+              }
+            }
+            </code-block>
+
+            <code-block lang="console" prompt="CURL equivalent: " collapsible="true" default-state="expanded">
+            curl \
+             --location \
+             --request POST 'https://…/graphql-next' \
+             --header 'Authorization: Bearer {{access_token}}' \
+             --header 'apollographql-client-name: mgm_rpa_app' \
+             --header 'Content-Type: application/json' \
+             --data-raw '{"query":"query CustomerSearch($input: \
+                CustomerSearchInput!) {\n customerSearch(input: $input) {\n \
+                resultCount\n resultMessage {\n id\n value\n }\n \
+                searchResults {\n phoneNumber\n mLifeId\n }\n }\n}\n", \
+                "variables":{"input":{"firstName":"John","lastName":"Doe", \
+                "emailAddress": "john.doe@aol.com"}}}'
+            </code-block>
+        </chapter>
+
+        <chapter id="mgm_rpa_app_sample3" title="Sample 3 - Verify existence of customer via Phone Number"
+                 collapsible="true" default-state="expanded" caps="title">
+            <code-block lang="javascript" prompt="Query: " collapsible="true" default-state="expanded">
+            query CustomerSearch($input: CustomerSearchInput!) {
+              customerSearch(input: $input) {
+                resultCount
+                resultMessage {
+                  id
+                  value
+                }
+                searchResults {
+                  firstName
+                  lastName
+                  mLifeId
+                }
+              }
+            }
+
+            "variable": {
+              "input": {
+                "phoneNumber": "2125551234"
+              }
+            }
+            </code-block>
+
+            <code-block lang="console" prompt="CURL equivalent: " collapsible="true" default-state="expanded">
+            curl \
+             --location \
+             --request POST 'https://…/graphql-next' \
+             --header 'Authorization: Bearer {{access_token}}' \
+             --header 'apollographql-client-name: mgm_rpa_app' \
+             --header 'Content-Type: application/json' \
+             --data-raw '{"query":"query CustomerSearch($input: \
+                CustomerSearchInput!) {\n customerSearch(input: $input) {\n \
+                resultCount\n resultMessage {\n id\n value\n }\n \
+                searchResults {\n firstName\n lastName\n mLifeId\n }\n }\n}\n", \
+                "variables":{"input":{"phoneNumber":"2125551234"}}}'
+            </code-block>
+        </chapter>
+
+        <include from="Customer-Search-Detail.topic" element-id="customer-search-error"/>
+    </chapter>
+
+    <var name="glossary-collapsed-state" value="collapsed"/>
+    <include from="CDP-API-snippets.topic" element-id="glossary"/>
+
+</topic>

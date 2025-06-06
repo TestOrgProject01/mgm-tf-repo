@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Welcome" id="Welcome">
+
+    <p>
+        The Data API team is responsible for the various data-centric API assets within TDD. This documentation
+        provides the technical information on the capabilities of these APIs and how to access them.<br/>
+    </p>
+    <p>
+        At a high level, here are the breakdowns of these APIs:
+    </p>
+    <list>
+        <li>
+            CDP API - A set of <a
+                href="https://mgmdigitalventures.atlassian.net/wiki/spaces/PER/pages/3369795585/CDP+API"
+                target="_blank">APIs</a>
+            to expose and update CDP information.
+        </li>
+        <li>
+            Customer Search Portal API - An extension to CDP API but with focus on the needs of the
+            <a href="https://mgmdigitalventures.atlassian.net/wiki/spaces/PER/pages/3369468037/Customer+Search+Search+Tool"
+               target="_blank">Customer Search</a>
+            application.
+        </li>
+        <li>
+            Recommendation API - <i>Coming soon...</i>
+            A set of APIs to expose booking-related recommendation, mostly for upsell purpose.
+        </li>
+        <li>
+            Data-Ingress API - <i>Coming soon...</i>
+            A set of APIs to manage vendor data ingestion.
+        </li>
+        <li>
+            Customer Search - (NOT API) Also dubbed as the <i>Search Tool</i>. A web application to facilitate the
+            searching of customer based on PII and account information, and the display of customer details and
+            insights. This web application, as with the API assets listed above, is maintained by the Data API team.
+        </li>
+    </list>
+    <p>
+        For contacts and additional technical details, consult the
+        <a href="https://mgmdigitalventures.atlassian.net/wiki/spaces/PER/folder/3174924878" target="_blank">Confluence
+            pages</a>.
+    </p>
+</topic>

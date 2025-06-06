@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Unlinked Accounts API" id="Unlinked-Accounts-API">
+
+    <title>Customer Unlinked Accounts API</title>
+
+    <p>
+        The concept of a guest is realized through a process of associating the "strongly matched" PII information,
+        often referred to as Customer Stitch. The accounts of the associated PII data are then "clustered" together as a
+        guest, referenced by a unique <code>guestId</code>.
+    </p>
+    <p>
+        However, from time to time, as more PII details are collected, account association may be strengthened or
+        weakened. The weak associations eventually leads to disassociation of an account from its "guest cluster".
+    </p>
+    <p>
+        The purpose of this Unlinked Accounts API is to expose the accounts that were previously associated with a
+        guest. This is mainly useful for research and analysis purposes. Response of this API is a list of unlinked
+        accounts for a guest, the date of such disassociation, and the new guest id if the account was re-associated
+        elsewhere.
+    </p>
+    <p>
+        At this time, this API is available through the
+        <a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">RESTful endpoint</a>.
+    </p>
+
+    <chapter title="Customer unlinked account request" id="cust-unlinked-chapter" caps="title">
+        <table>
+            <tr>
+                <td width="150"><b>Description</b></td>
+                <td>Customer unlinked account request</td>
+            </tr>
+            <tr>
+                <td><b>URI</b></td>
+                <td><code><a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">{rest-base-url}</a>/unlinked-accounts</code></td>
+            </tr>
+            <tr>
+                <td><b>HTTP Method</b></td>
+                <td><code>GET</code></td>
+            </tr>
+            <tr>
+                <td><b>Permission</b></td>
+                <td>
+                    <code-block lang="http">
+scp=customer.graph:read:full
+groups=mgm_employee_customer_search
+                    </code-block>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Request Header</b></td>
+                <td>
+                    <include from="CDP-API-snippets.topic" element-id="rest-header"/>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Query Parameters</b></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td><code>guestId</code></td>
+                            <td>&nbsp;</td>
+                            <td>expects numeric</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sample Request</b></td>
+                <td>
+                    <code-block lang="curl">
+                        {rest-base-url}/unlinked-accounts?guestId=74866198
+                    </code-block>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sample Response</b></td>
+                <td>
+                    <code-block lang="json">
+                    {
+                        "customerUnlinkedAccounts": [
+                            {
+                                "accountId": "...",
+                                "accountType": "patron",
+                                "newGuestId": "...",
+                                "unlinkedDate": "Nov 17, 2024, 12:00:00 AM",
+                                "outdated": false
+                            },
+                            {
+                                "accountId": "...",
+                                "accountType": "onetrust",
+                                "newGuestId": "...",
+                                "unlinkedDate": "Nov 17, 2024, 12:00:00 AM",
+                                "outdated": false
+                            },
+                            {
+                                "accountId": "...",
+                                "accountType": "customers",
+                                "newGuestId": "...",
+                                "unlinkedDate": "Nov 17, 2024, 12:00:00 AM",
+                                "outdated": false
+                            }, ... ..
+                        ]
+                    }
+                    </code-block>
+                    <p>Note:</p>
+                    <list>
+                        <li><code>"accountType</code> will be one of the known account types:
+                            <include from="CDP-API-snippets.topic" element-id="source-codes"/>
+                        </li>
+                        <li><code>outdated</code> - <code>true</code> means that the account is no longer valid
+                            (possibly deleted) and is not associated with another guest.
+                        </li>
+                    </list>
+                </td>
+            </tr>
+        </table>
+    </chapter>
+
+</topic>

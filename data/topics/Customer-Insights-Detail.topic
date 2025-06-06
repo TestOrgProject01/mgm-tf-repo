@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Customer-Insights-Detail" id="Customer-Insights-Detail" is-library="true">
+
+    <snippet id="customer-insights-details">
+        <chapter title="Service details" id="customer-insights-details-chapter" collapsible="true"
+                 default-state="expanded" caps="title">
+            <table>
+                <tr>
+                    <td width="150"><b>Type</b></td>
+                    <td><b>Value/Detail</b></td>
+                </tr>
+                <tr>
+                    <td><b>Query Function</b></td>
+                    <td><code>customerInsightsInfo</code></td>
+                </tr>
+                <tr>
+                    <td><b>Request Header</b></td>
+                    <td>
+                        <include from="CDP-API-snippets.topic" element-id="graphql-header"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Request Body</b></td>
+                    <td>
+                        <code-block lang="http">
+                            query CustomerInsightsInfo
+                            &nbsp; &nbsp; ($input: CustomerInsightsInfoInput) {
+                            &nbsp; customerInsightsInfo(input: $input) {
+                            &nbsp; &nbsp; resultMessage {
+                            &nbsp; &nbsp; &nbsp; id
+                            &nbsp; &nbsp; &nbsp; value
+                            &nbsp; &nbsp; }
+                            &nbsp; &nbsp; customerInfo {
+                            &nbsp; &nbsp; &nbsp; hostInfo {
+                            &nbsp; &nbsp; &nbsp; &nbsp; hostFirstName
+                            &nbsp; &nbsp; &nbsp; &nbsp; hostLastName
+                            &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; loyalty {
+                            &nbsp; &nbsp; &nbsp; &nbsp; mLifeID
+                            &nbsp; &nbsp; &nbsp; &nbsp; mLifeTierCurrent
+                            &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; accountInfo {
+                            &nbsp; &nbsp; &nbsp; &nbsp; firstName
+                            &nbsp; &nbsp; &nbsp; &nbsp; lastName
+                            &nbsp; &nbsp; &nbsp; &nbsp; addressLineOne
+                            &nbsp; &nbsp; &nbsp; &nbsp; city
+                            &nbsp; &nbsp; &nbsp; &nbsp; stateCd
+                            &nbsp; &nbsp; &nbsp; &nbsp; postalCd
+                            &nbsp; &nbsp; &nbsp; &nbsp; countryCd
+                            &nbsp; &nbsp; &nbsp; &nbsp; emailAddress
+                            &nbsp; &nbsp; &nbsp; &nbsp; phoneNumber
+                            &nbsp; &nbsp; &nbsp; &nbsp; dateOfBirth
+                            &nbsp; &nbsp; &nbsp; &nbsp; gender
+                            &nbsp; &nbsp; &nbsp; &nbsp; linkedAccounts {
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; accountId
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; accountType
+                            &nbsp; &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; allAccounts {
+                            &nbsp; &nbsp; &nbsp; &nbsp; totalAccounts
+                            &nbsp; &nbsp; &nbsp; &nbsp; accounts {
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; accountId
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; accountType
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; name {
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; firstName
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; lastName
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; rank
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; address {
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; addressLine1
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; addressLine2
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; city
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; stateCd
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; postalCd
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; countryCd
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; rank
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; emailAddress {
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; emailAddress
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; rank
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; phoneNumber {
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; phoneNumber
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; rank
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dateOfBirth {
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dateOfBirth
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; rank
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; gender {
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; gender
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; rank
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; identifiers {
+                            &nbsp; &nbsp; &nbsp; &nbsp; guestId
+                            &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; visitation {
+                            &nbsp; &nbsp; &nbsp; &nbsp; lastGamingVisitCorporate
+                            &nbsp; &nbsp; &nbsp; &nbsp; lastNonGamingVisitCorporate
+                            &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; globalMarketabilityFlags {
+                            &nbsp; &nbsp; &nbsp; &nbsp; isContactable
+                            &nbsp; &nbsp; &nbsp; &nbsp; bannedFlag
+                            &nbsp; &nbsp; &nbsp; &nbsp; adobeActiveSyntheticFlag
+                            &nbsp; &nbsp; &nbsp; &nbsp; archticsT5Y
+                            &nbsp; &nbsp; &nbsp; &nbsp; badFlag
+                            &nbsp; &nbsp; &nbsp; &nbsp; bannedGuestIDFlag
+                            &nbsp; &nbsp; &nbsp; &nbsp; betMGMEnrollment
+                            &nbsp; &nbsp; &nbsp; &nbsp; betMGMWagerT5Y
+                            &nbsp; &nbsp; &nbsp; &nbsp; borgataMailListMaster
+                            &nbsp; &nbsp; &nbsp; &nbsp; currentEngagementScore0to3
+                            &nbsp; &nbsp; &nbsp; &nbsp; goo
+                            &nbsp; &nbsp; &nbsp; &nbsp; inactiveFlag
+                            &nbsp; &nbsp; &nbsp; &nbsp; isBetMGMExcluded
+                            &nbsp; &nbsp; &nbsp; &nbsp; isOver21
+                            &nbsp; &nbsp; &nbsp; &nbsp; isUsableCluster
+                            &nbsp; &nbsp; &nbsp; &nbsp; isValidEmail
+                            &nbsp; &nbsp; &nbsp; &nbsp; isValidMail
+                            &nbsp; &nbsp; &nbsp; &nbsp; lMENGLtransT5Y
+                            &nbsp; &nbsp; &nbsp; &nbsp; legacyEngagementScore0to3
+                            &nbsp; &nbsp; &nbsp; &nbsp; linkedtoTheoT5Y
+                            &nbsp; &nbsp; &nbsp; &nbsp; marketableAddressFlag
+                            &nbsp; &nbsp; &nbsp; &nbsp; marketableNameFlag
+                            &nbsp; &nbsp; &nbsp; &nbsp; oTOptInT5Y
+                            &nbsp; &nbsp; &nbsp; &nbsp; operafutureres
+                            &nbsp; &nbsp; &nbsp; &nbsp; operaresT5Y
+                            &nbsp; &nbsp; &nbsp; &nbsp; patronenrollmentT18M
+                            &nbsp; &nbsp; &nbsp; &nbsp; theoT5Y
+                            &nbsp; &nbsp; &nbsp; &nbsp; exclusionListEmail
+                            &nbsp; &nbsp; &nbsp; &nbsp; exclusionListMail
+                            &nbsp; &nbsp; &nbsp; &nbsp; exclusionListPerson
+                            &nbsp; &nbsp; &nbsp; &nbsp; exclusionListMailOverridden
+                            &nbsp; &nbsp; &nbsp; &nbsp; isBadMailingAddressOverridden
+                            &nbsp; &nbsp; &nbsp; &nbsp; isBadMailingAddress
+                            &nbsp; &nbsp; &nbsp; &nbsp; hasCreditStopCorporate
+                            &nbsp; &nbsp; &nbsp; &nbsp; isTestAccount
+                            &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; propertyMarketabilityFlags {
+                            &nbsp; &nbsp; &nbsp; &nbsp; propertyCd
+                            &nbsp; &nbsp; &nbsp; &nbsp; propertyName
+                            &nbsp; &nbsp; &nbsp; &nbsp; isContactable
+                            &nbsp; &nbsp; &nbsp; &nbsp; isDirectMailMarketable
+                            &nbsp; &nbsp; &nbsp; &nbsp; isEmailMarketable
+                            &nbsp; &nbsp; &nbsp; &nbsp; isTeleMarketable
+                            &nbsp; &nbsp; &nbsp; &nbsp; isAppMarketable
+                            &nbsp; &nbsp; &nbsp; &nbsp; isTextMarketable
+                            &nbsp; &nbsp; &nbsp; &nbsp; isLinkedDirectMailMarketable
+                            &nbsp; &nbsp; &nbsp; &nbsp; isLinkedEmailMarketable
+                            &nbsp; &nbsp; &nbsp; &nbsp; isLinkedTeleMarketable
+                            &nbsp; &nbsp; &nbsp; &nbsp; isLinkedAppMarketable
+                            &nbsp; &nbsp; &nbsp; &nbsp; betMGMExcludedProperty
+                            &nbsp; &nbsp; &nbsp; &nbsp; CASLProperty
+                            &nbsp; &nbsp; &nbsp; &nbsp; hasCreditStop
+                            &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; &nbsp; insightAttributes {
+                            &nbsp; &nbsp; &nbsp; &nbsp; name
+                            &nbsp; &nbsp; &nbsp; &nbsp; value
+                            &nbsp; &nbsp; &nbsp; }
+                            &nbsp; &nbsp; }
+                            &nbsp; }
+                            }
+                        </code-block>
+
+                        <p>GQL Variables:</p>
+                        <code-block lang="json">
+                            {
+                            &nbsp; "input": {
+                            &nbsp; &nbsp; "accountType": "……",
+                            &nbsp; &nbsp; "accountId": "……",
+                            &nbsp; &nbsp; "propertyCd": "……",
+                            &nbsp; &nbsp; "firstName": "……",
+                            &nbsp; &nbsp; "lastName": "……",
+                            &nbsp; &nbsp; "gender": "……",
+                            &nbsp; &nbsp; "dateOfBirth": "……",
+                            &nbsp; &nbsp; "emailAddress": "……",
+                            &nbsp; &nbsp; "phoneNumber": "……",
+                            &nbsp; &nbsp; "addressLineOne": "……",
+                            &nbsp; &nbsp; "city": "……",
+                            &nbsp; &nbsp; "stateCd": "……",
+                            &nbsp; &nbsp; "postalCd": "……",
+                            &nbsp; &nbsp; "countryCd": "……",
+                            &nbsp; &nbsp; "displayRestriction": "……"
+                            &nbsp; }
+                            }
+                        </code-block>
+
+                        <format style="bold">References</format>
+                        <deflist>
+                            <def title="accountType">
+                                <p>
+                                    <b>REQUIRED</b>. Must be one of the following values:
+                                </p>
+                                <var name="source-codes-columns" value="1"/>
+                                <include from="CDP-API-snippets.topic" element-id="source-codes"/>
+                            </def>
+                            <def title="accountId">
+                                <b>REQUIRED</b>. Must match the account type specified in the <code>accountType</code>
+                                input.
+                            </def>
+                            <def title="propertyCd">
+                                <p>Optional. One or more of the following values (comma-separated):</p>
+                                <include from="CDP-API-snippets.topic" element-id="property-codes"/>
+                            </def>
+                            <def title="dateOfBirth">
+                                Optional. Date of Birth of the intended guest. Must be in the form of
+                                <code>YYYY-MM-DD</code>
+                            </def>
+                            <def title="displayRestriction">
+                                <p>
+                                    Optional. This input determines the categories of customer data to retrieve. In many
+                                    cases the categories of data to retrieve are predetermined and preconfigured for
+                                    specific <code>client_id</code>. However, in some cases, the client may want to
+                                    narrow down the categories of data to retrieve. Multiple values should be separated
+                                    by comma.
+                                </p>
+                                <list>
+                                    <li><code>hostInfo</code></li>
+                                    <li><code>loyalty</code></li>
+                                    <li><code>accountInfo</code></li>
+                                    <li><code>identifiers</code></li>
+                                    <li><code>visitation</code></li>
+                                    <li><code>globalMarketability</code></li>
+                                    <li><code>propertyMarketability</code></li>
+                                    <li><code>allAccounts</code></li>
+                                    <li><code>insightAttributes</code></li>
+                                </list>
+                            </def>
+                        </deflist>
+
+                        <p>
+                            API client is expected to provide either one of accounts associated to a customer (e.g.
+                            <code>{"accountType": "patron", "accountId": "…"}</code>), or a combination of customer
+                            PII information (e.g. <code>{"firstName": "John", "lastName": "Doe"}</code>).
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </chapter>
+    </snippet>
+
+    <snippet id="customer-insights-sample">
+        <chapter title="Sample" id="customer-insights-sample-chapter" collapsible="true" default-state="expanded"
+                 caps="title">
+            An example of retrieving customer insights using <code>accountType</code>, <code>accountId</code>,
+            <code>firstName</code>, <code>lastName</code>, and <code>emailAddress</code>. Note that only
+            <code>accountType</code> and <code>accountId</code> are required.
+            <code-block lang="json" prompt="Query: " collapsible="true" default-state="collapsed">
+                query CustomerInsightsInfo($input: CustomerInsightsInfoInput) {
+                &nbsp; customerInsightsInfo( customerInsightsInfoInput: $input ) {
+                &nbsp; &nbsp; resultMessage {
+                &nbsp; &nbsp; &nbsp; id
+                &nbsp; &nbsp; &nbsp; value
+                &nbsp; &nbsp; }
+                &nbsp; &nbsp; customerInfo {
+                &nbsp; &nbsp; &nbsp; loyalty {
+                &nbsp; &nbsp; &nbsp; &nbsp; mLifeID
+                &nbsp; &nbsp; &nbsp; &nbsp; mLifeTierCurrent
+                &nbsp; &nbsp; &nbsp; }
+                &nbsp; &nbsp; &nbsp; accountInfo {
+                &nbsp; &nbsp; &nbsp; &nbsp; firstName
+                &nbsp; &nbsp; &nbsp; &nbsp; lastName
+                &nbsp; &nbsp; &nbsp; &nbsp; gender
+                &nbsp; &nbsp; &nbsp; &nbsp; dateOfBirth
+                &nbsp; &nbsp; &nbsp; &nbsp; emailAddress
+                &nbsp; &nbsp; &nbsp; &nbsp; phoneNumber
+                &nbsp; &nbsp; &nbsp; &nbsp; addressLineOne
+                &nbsp; &nbsp; &nbsp; &nbsp; city
+                &nbsp; &nbsp; &nbsp; &nbsp; stateCd
+                &nbsp; &nbsp; &nbsp; &nbsp; postalCd
+                &nbsp; &nbsp; &nbsp; &nbsp; countryCd
+                &nbsp; &nbsp; &nbsp; }
+                &nbsp; &nbsp; &nbsp; identifiers {
+                &nbsp; &nbsp; &nbsp; &nbsp; guestId
+                &nbsp; &nbsp; &nbsp; }
+                &nbsp; &nbsp; &nbsp; hostInfo {
+                &nbsp; &nbsp; &nbsp; &nbsp; hostLastName
+                &nbsp; &nbsp; &nbsp; &nbsp; hostFirstName
+                &nbsp; &nbsp; &nbsp; }
+                &nbsp; &nbsp; &nbsp; visitation {
+                &nbsp; &nbsp; &nbsp; &nbsp; lastGamingVisitCorporate
+                &nbsp; &nbsp; &nbsp; &nbsp; lastNonGamingVisitCorporate
+                &nbsp; &nbsp; &nbsp; }
+                &nbsp; &nbsp; &nbsp; insightAttributes {
+                &nbsp; &nbsp; &nbsp; &nbsp; name
+                &nbsp; &nbsp; &nbsp; &nbsp; value
+                &nbsp; &nbsp; &nbsp; }
+                &nbsp; &nbsp; }
+                &nbsp; }
+                }
+
+                "variables": {
+                &nbsp; "input": {
+                &nbsp; &nbsp; "firstName": "…",
+                &nbsp; &nbsp; "lastName": "…",
+                &nbsp; &nbsp; "emailAddress": "…",
+                &nbsp; &nbsp; "accountType": "…",
+                &nbsp; &nbsp; "accountId": "…"
+                &nbsp; }
+                }
+            </code-block>
+            <code-block lang="console" prompt="CURL equivalent: " collapsible="true" default-state="collapsed">
+                curl \
+                &nbsp; 'https://qa4-api.devtest.vegas/graphql-next' \
+                &nbsp; -H 'Content-Type: application/json' \
+                &nbsp; -H 'Authorization: Bearer {{access_token}}' \
+                &nbsp; --data-raw '{"query":"query CustomerInsightsInfo(\
+                &nbsp; &nbsp; $input: CustomerInsightsInfoInput) {\n \
+                &nbsp; &nbsp; customerInsightsInfo( customerInsightsInfoInput: $input ) {\n\
+                &nbsp; &nbsp; &nbsp; resultMessage { id value }\n \
+                &nbsp; &nbsp; &nbsp; customerInfo {\n\t \
+                &nbsp; &nbsp; &nbsp; &nbsp; loyalty { mLifeID mLifeTierCurrent }\n\
+                &nbsp; &nbsp; &nbsp; &nbsp; accountInfo { firstName lastName gender dateOfBirth \
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; emailAddress phoneNumber addressLineOne city stateCd \
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; postalCd countryCd }\n\
+                &nbsp; &nbsp; &nbsp; &nbsp; identifiers { guestId }\n \
+                &nbsp; &nbsp; &nbsp; &nbsp; hostInfo { hostLastName hostFirstName }\n \
+                &nbsp; &nbsp; &nbsp; &nbsp; visitation { lastGamingVisitCorporate lastNonGamingVisitCorporate }\n\
+                &nbsp; &nbsp; &nbsp; &nbsp; insightAttributes { name value }\n\
+                &nbsp; &nbsp; }\n }\n }",\
+                &nbsp; &nbsp; "variables":{\
+                &nbsp; &nbsp; &nbsp; "input":{\
+                &nbsp; &nbsp; &nbsp; &nbsp; "firstName":"…",\
+                &nbsp; &nbsp; &nbsp; &nbsp; "lastName":"…",\
+                &nbsp; &nbsp; &nbsp; &nbsp; "emailAddress":"…",\
+                &nbsp; &nbsp; &nbsp; &nbsp; "accountType":"…",\
+                &nbsp; &nbsp; &nbsp; &nbsp; "accountId":"…"\
+                &nbsp; &nbsp; }}}'
+            </code-block>
+
+            A <i>simpler</i> example of retrieving customer insights using <code>guestId</code>
+            (<code>accountType</code> is <code>guest</code>).
+            <code-block lang="json" prompt="Query: " collapsible="true" default-state="collapsed">
+                query CustomerInsightsInfo {
+                &nbsp; customerInsightsInfo(customerInsightsInfoInput: {
+                &nbsp; &nbsp; accountId: "{{guestId}}",
+                &nbsp; &nbsp; accountType:"guest",
+                &nbsp; &nbsp; displayRestriction:"insightAttributes"
+                &nbsp; }) {
+                &nbsp; &nbsp; resultMessage {
+                &nbsp; &nbsp; &nbsp; id
+                &nbsp; &nbsp; &nbsp; value
+                &nbsp; &nbsp; }
+                &nbsp; &nbsp; customerInfo {
+                &nbsp; &nbsp; &nbsp; insightAttributes {
+                &nbsp; &nbsp; &nbsp; &nbsp; name
+                &nbsp; &nbsp; &nbsp; &nbsp; value
+                &nbsp; &nbsp; &nbsp; }
+                &nbsp; &nbsp; }
+                &nbsp; }
+                }
+            </code-block>
+            <code-block lang="console" prompt="CURL equivalent: " collapsible="true" default-state="collapsed">
+                curl \
+                &nbsp; --location \
+                &nbsp; --request POST 'https://qa4-api.devtest.vegas/graphql-next' \
+                &nbsp; --header 'Authorization: Bearer {{access_token}}' \
+                &nbsp; --header 'apollographql-client-name: {{access_token}}' \
+                &nbsp; --header 'Content-Type: application/json' \
+                &nbsp; --data-raw '{"query":"query CustomerInsightsInfo {\n\
+                &nbsp; &nbsp; customerInsightsInfo(customerInsightsInfoInput: { \
+                &nbsp; &nbsp; &nbsp; accountId: \"...\", accountType:\"guest\", \
+                &nbsp; &nbsp; &nbsp; displayRestriction:\"insightAttributes\" }) {\n \
+                &nbsp; &nbsp; resultMessage { id value\n }\n \
+                &nbsp; &nbsp; customerInfo { insightAttributes { name value }\n }\n\
+                &nbsp; &nbsp; }\n }\n "}'
+            </code-block>
+        </chapter>
+    </snippet>
+
+    <snippet id="customer-insights-response">
+        <chapter title="Response" id="customer-insights-response-chapter" collapsible="true" default-state="expanded"
+                 caps="title">
+            <p>If a customer is found, Customer Insights API returns the said information like this:</p>
+            <code-block lang="json">
+                {
+                &nbsp; "data": {
+                &nbsp; &nbsp; "customerInsightsInfo": {
+                &nbsp; &nbsp; &nbsp; "customerInfo": {
+                &nbsp; &nbsp; &nbsp; &nbsp; "loyalty": {
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "mLifeID": "…",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "mLifeTierCurrent": "Pearl"
+                &nbsp; &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; &nbsp; "accountInfo": {
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "firstName": "…",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "lastName": "…",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "gender": null,
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "dateOfBirth": "…",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "emailAddress": "…",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "phoneNumber": "…",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "addressLineOne": "…",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "city": "…",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "stateCd": "…",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "postalCd": "…"
+                &nbsp; &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; &nbsp; "identifiers": {
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "guestId": …
+                &nbsp; &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; &nbsp; "insightAttributes": [
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "name": "Corporate Host Flag",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "value": "Yes"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; { … … … }
+                &nbsp; &nbsp; &nbsp; &nbsp; ]
+                &nbsp; &nbsp; &nbsp; }
+                &nbsp; &nbsp; }
+                &nbsp; }
+                }
+            </code-block>
+
+            <p>If no customer is found, the response payload would like this:</p>
+            <code-block lang="json">
+                {
+                &nbsp; "data": {
+                &nbsp; &nbsp; "customerInsightsInfo": {
+                &nbsp; &nbsp; &nbsp; "resultMessage": {
+                &nbsp; &nbsp; &nbsp; &nbsp; "id": 1200101,
+                &nbsp; &nbsp; &nbsp; &nbsp; "value": "No matches found."
+                &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; "customerInfo": null
+                &nbsp; &nbsp; }
+                &nbsp; }
+                }
+            </code-block>
+
+            <p>
+                <b>Credit Limit</b>: If a customer has credit limit at one or more properties (and
+                <code>displayRestriction</code> contains, or is configured to include, <code>insightAttributes</code>):
+            </p>
+            <code-block lang="json">
+                {
+                &nbsp;"data": {
+                &nbsp; &nbsp;"customerInsightsInfo": {
+                &nbsp; &nbsp; &nbsp;"resultMessage": null,
+                &nbsp; &nbsp; &nbsp;"customerInfo": {
+                &nbsp; &nbsp; &nbsp; &nbsp;"insightAttributes": [
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; { … … },
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"name": "GAMING:Aria:Credit Limit",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"value": "0.00"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"name": "GAMING:Aria:Credit Outstanding",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"value": "0.00"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"name": "GAMING:Aria:Credit Available",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"value": "0.00"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"name": "GAMING:Aria:Credit Stop Reason",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"value": "Self Limited"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"name": "GAMING:Bellagio:Credit Limit",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"value": "0.00"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"name": "GAMING:Bellagio:Credit Outstanding",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"value": "0.00"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;},
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"name": "GAMING:Bellagio:Credit Available",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"value": "0.00"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;},
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"name": "GAMING:Bellagio:Credit Stop Reason",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"value": "Self Excluded"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
+                &nbsp; &nbsp; &nbsp; &nbsp;]
+                &nbsp; &nbsp; &nbsp;}
+                &nbsp; &nbsp;}
+                &nbsp;}
+                }
+            </code-block>
+
+            <p>
+                <b>Credit Limit</b>: If a customer has credit limit at a single property (and
+                <code>displayRestriction</code> contains, or is configured to include, <code>insightAttributes</code>):
+            </p>
+            <code-block lang="json">
+                {
+                &nbsp;"data": {
+                &nbsp; &nbsp;"customerInsightsInfo": {
+                &nbsp; &nbsp; &nbsp;"resultMessage": null,
+                &nbsp; &nbsp; &nbsp;"customerInfo": {
+                &nbsp; &nbsp; &nbsp; &nbsp;"insightAttributes": [
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{ … … },
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"name": "GAMING:Aria:Credit Limit",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"value": "0.00"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;},
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"name": "GAMING:Aria:Credit Outstanding",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"value": "0.00"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;},
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"name": "GAMING:Aria:Credit Available",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"value": "0.00"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;},
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"name": "GAMING:Aria:Credit Stop Reason",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;"value": "Self Limited"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
+                &nbsp; &nbsp; &nbsp; &nbsp;]
+                &nbsp; &nbsp; &nbsp;}
+                &nbsp; &nbsp;}
+                &nbsp;}
+                }
+            </code-block>
+            <note>
+                Note that the <code>insightAttributes</code>' <code>name</code> follows a consistent format:
+                <code>GAMING:</code><b>Property Name</b><code>:</code><b>Credit Stop Attribute</b>
+                <br/>
+                ... where, <b>Credit Stop Attribute</b> can be any of the following:
+                <list>
+                    <li>Credit Limit</li>
+                    <li>Credit Outstanding</li>
+                    <li>Credit Available</li>
+                    <li>Credit Stop Reason</li>
+                </list>
+                API client can use this format to parse out relevant information about the customer's credit
+                stop details.
+            </note>
+
+            <p>
+                <b>Customer Bans</b>: If a customer has one or more bans (and <code>displayRestriction</code> contains,
+                or is configured to include, <code>insightAttributes</code>):
+            </p>
+            <code-block lang="json">
+                {
+                &nbsp;"data": {
+                &nbsp; &nbsp;"customerInsightsInfo": {
+                &nbsp; &nbsp; &nbsp;"resultMessage": null,
+                &nbsp; &nbsp; &nbsp;"customerInfo": {
+                &nbsp; &nbsp; &nbsp; &nbsp;"insightAttributes": [
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; { … … },
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "name": "GAMING:Aria:Ban Reason",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "value": "Do Not Trespass - AML/KYC Compliance"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "name": "GAMING:Aria:Ban Account Type",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "value": "patron"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "name": "GAMING:Aria:Ban Account ID",
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "value": "…"
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; },
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; { … … }
+                &nbsp; &nbsp; &nbsp; &nbsp;]
+                &nbsp; &nbsp; &nbsp;}
+                &nbsp; &nbsp;}
+                &nbsp;}
+                }
+            </code-block>
+            <note>
+                Note that the <code>insightAttributes</code>' <code>name</code> follows a consistent format:
+                <code>GAMING:</code><b>Property Name</b><code>:</code><b>Ban Attribute</b>
+                <br/>
+                ... where, <b>Ban Attribute</b> can be any of the following:
+                <list>
+                    <li>Ban Reason</li>
+                    <li>Ban Account Type</li>
+                    <li>Ban Account ID</li>
+                </list>
+                API client can use this format to parse out relevant information about the customer's ban details.
+            </note>
+
+        </chapter>
+    </snippet>
+
+
+</topic>

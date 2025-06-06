@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="OneTrust Consent API" id="OneTrust-Consent-API">
+
+    <title>OneTrust Consent API</title>
+
+    <p>
+        OneTrust is used to track customer marketing preferences, which can be set at a global level or at a property
+        level. OneTrust provides API to enable the changing of such preferences. CDP API's OneTrust Consent API is
+        to interface with OneTrust (vendor) API so that customer marketing preferences can be updated accurately and
+        efficiently.
+    </p>
+    <p>
+        Additionally, the OneTrust Consent API also shows the currently recorded marketing preferences for a customer.
+    </p>
+    <p>
+        At this time, all OneTrust Consent API endpoints are available through the
+        <a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">RESTful endpoints</a>.
+    </p>
+
+    <chapter title="Get Customer OneTrust Consent" id="show-onetrust-consent" caps="title">
+        <table>
+            <tr>
+                <td width="150"><b>Description</b></td>
+                <td>Display customer's marketing preferences retrieved from OneTrust</td>
+            </tr>
+            <tr>
+                <td><b>URI</b></td>
+                <td><code><a href="Customer-Search.topic" nullable="true" anchor="customer-search-rest-endpoints">{rest-base-url}</a>/customer/onetrust/consent</code></td>
+            </tr>
+            <tr>
+                <td><b>HTTP Method</b></td>
+                <td><code>GET</code></td>
+            </tr>
+            <tr>
+                <td><b>Permission</b></td>
+                <td>
+                    <code-block lang="http">
+scp=customer.graph:read:full
+groups=mgm_employee_customer_search
+                    </code-block>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Request Header</b></td>
+                <td>
+                    <include from="CDP-API-snippets.topic" element-id="rest-header"/>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Query Parameters</b></td>
+                <td>
+                    <table>
+                        <tr>
+                            <td><code>guestId</code></td>
+                            <td>&nbsp;</td>
+                            <td>expects numeric</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sample Request</b></td>
+                <td>
+                    <code-block lang="curl">
+                        {rest-base-url}/customer/onetrust/consent?guestId=...
+                    </code-block>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Sample Response</b></td>
+                <td>
+                    <code-block lang="json">
+                    {
+                        "guestId": "...",
+                        "globalMarketability": {
+                            "goo": [
+                                {
+                                    "preferenceId": "...",
+                                    "accountType": "amperity",
+                                    "accountId": "...",
+                                    "consentType": "ACTIVE",
+                                    "consentDateTime": "2015-08-15 08:06:24",
+                                    "status": "...",
+                                    "reason": "..."
+                                }
+                            ]
+                        },
+                        "propertyMarketability": {
+                            "VDA": [
+                                {
+                                    "direct": false,
+                                    "email": true,
+                                    "tele": false,
+                                    "text": false,
+                                    "mgmRewardApp": false,
+                                    "preferenceId": "...",
+                                    "accountType": "patron",
+                                    "accountId": "...",
+                                    "consentType": "ACTIVE",
+                                    "consentDateTime": "2015-08-15 08:06:24",
+                                    "status": "...",
+                                    "reason": "..."
+                                },
+                                {
+                                    "direct": false,
+                                    "email": true,
+                                    "tele": false,
+                                    "text": false,
+                                    "mgmRewardApp": false,
+                                    "preferenceId": "...",
+                                    "accountType": "patron",
+                                    "accountId": "...",
+                                    "consentType": "ACTIVE",
+                                    "consentDateTime": "2015-08-15 08:06:24",
+                                    "status": "...",
+                                    "reason": "..."
+                                }
+                            ]
+                        }
+                    }
+                    </code-block>
+                    <p>Note:</p>
+                    <list>
+                        <li>
+                            Both <code>"globalMarketability"</code> and <code>"propertyMarketability</code> can be
+                            empty. For <code>"globalMarketability"</code> there can be 1 entry - <code>"goo"</code>
+                            (Global Opt-Out). For <code>"propertyMarketability"</code> there can be multiple entries.
+                        </li>
+                        <li><code>"accountType</code> will be one of the known account types:
+                            <include from="CDP-API-snippets.topic" element-id="source-codes"/>
+                        </li>
+                        <li>
+                            <code>"status"</code> can be <code>NEW</code> or <code>UPDATE</code>.
+                        </li>
+                        <li>
+                            <code>"consentType"</code> can be <code>ACTIVE</code>,
+                            <code>WITHDRAWN</code> (client initiated), <code>HARD_OPT_OUT</code> (MGM initiated).
+                        </li>
+                    </list>
+                </td>
+            </tr>
+        </table>
+    </chapter>
+
+    <chapter title="Update Customer OneTrust Consent" id="update-onetrust-consent" caps="title">
+        <table>
+            <tr>
+                <td width="150"><b>Description</b></td>
+                <td>
+                    Override OneTrust Consent - this capability is expressed through the
+                    <a href="Override-API.topic#override-submission-chapter">Override API - Submit New Override Request</a>
+                </td>
+            </tr>
+        </table>
+    </chapter>
+
+</topic>
