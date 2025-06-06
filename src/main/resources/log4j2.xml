@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+
+	<Appenders>
+		<Console name="LogToConsole" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} %1.-1level %logger{20.-20} - %msg%n"/>
+		</Console>
+	</Appenders>
+
+	<Loggers>
+		<Logger name="com.azure" level="info" additivity="false">
+			<AppenderRef ref="LogToConsole"/>
+		</Logger>
+		<Logger name="com.azure.cosmos" level="warn" additivity="false">
+			<AppenderRef ref="LogToConsole"/>
+		</Logger>
+		<Logger name="com.jayway.jsonpath" level="warn" additivity="false">
+			<AppenderRef ref="LogToConsole"/>
+		</Logger>
+		<Logger name="com.blazemeter" level="warn" additivity="false">
+			<AppenderRef ref="LogToConsole"/>
+		</Logger>
+		<Logger name="io.netty" level="warn" additivity="false">
+			<AppenderRef ref="LogToConsole"/>
+		</Logger>
+		<Logger name="reactor.util" level="warn" additivity="false">
+			<AppenderRef ref="LogToConsole"/>
+		</Logger>
+		<Logger name="reactor.netty" level="warn" additivity="false">
+			<AppenderRef ref="LogToConsole"/>
+		</Logger>
+		<Logger name="org.apache.http" level="warn" additivity="false">
+			<AppenderRef ref="LogToConsole"/>
+		</Logger>
+		<Logger name="org.apache.jmeter" level="warn" additivity="false">
+			<AppenderRef ref="LogToConsole"/>
+		</Logger>
+		<Logger name="org.apache.jorphan" level="warn" additivity="false">
+			<AppenderRef ref="LogToConsole"/>
+		</Logger>
+		<Logger name="kg.apc" level="warn" additivity="false">
+			<AppenderRef ref="LogToConsole"/>
+		</Logger>
+		<Logger name="freemarker" level="warn" additivity="false">
+			<AppenderRef ref="LogToConsole"/>
+		</Logger>
+		<Logger name="us.abstracta.jmeter.javadsl.azure" level="info" additivity="false">
+			<AppenderRef ref="LogToConsole"/>
+		</Logger>
+
+		<Logger name="com.mgmresorts.dataapi" level="debug" additivity="false">
+			<AppenderRef ref="LogToConsole"/>
+		</Logger>
+
+		<Root level="debug">
+			<AppenderRef ref="LogToConsole"/>
+		</Root>
+	</Loggers>
+</Configuration>
