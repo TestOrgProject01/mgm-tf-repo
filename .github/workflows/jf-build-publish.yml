@@ -21,7 +21,7 @@ permissions:
   issues: read
 
 jobs:
-  xray-nuget-audit:
+  xray-audit:
     runs-on: ubuntu-latest
 
     steps:
@@ -40,7 +40,7 @@ jobs:
     - name: Run JFrog Xray Audit and Save Output
       continue-on-error: true
       run: |
-        jf audit data/* --format=table --extended-table=true --nuget=true --secrets=true --sast=true --sca=true --vuln=true --licenses=true --fail=false >> xray-audit-report.txt
+        jf audit data/* --format=table --extended-table=true --mvn=true --secrets=true --sast=true --sca=true --vuln=true --licenses=true --fail=false >> xray-audit-report.txt
    
     - name: Job Summary
       run: |
