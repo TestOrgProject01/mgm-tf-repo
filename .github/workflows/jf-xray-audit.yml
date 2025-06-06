@@ -25,8 +25,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout source code
+    
+    - name: Checkout source code from specific branch
       uses: actions/checkout@v3
+      with:
+        ref: data-api-docs-dev
 
     - name: Set up JFrog CLI
       uses: jfrog/setup-jfrog-cli@v4
@@ -40,7 +43,7 @@ jobs:
     - name: Run JFrog Xray Audit and Save Output
       continue-on-error: true
       run: |
-        jf audit data/* --format=table --extended-table=true --mvn=true --secrets=true --sast=true --sca=true --vuln=true --licenses=true --fail=false >> xray-audit-report.txt
+        jf audit ./data/* --format=table --extended-table=true --mvn=true --secrets=true --sast=true --sca=true --vuln=true --licenses=true --fail=false >> xray-audit-report.txt
    
     - name: Job Summary
       run: |
