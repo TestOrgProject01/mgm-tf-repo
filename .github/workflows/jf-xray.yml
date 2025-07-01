@@ -19,7 +19,7 @@ permissions:
   issues: read
 
 jobs:
-  xray-audit:
+  xray:
     runs-on: ubuntu-latest
 
     steps:
