@@ -1,4 +1,4 @@
-#
+
 name: Jfrog Xray audit
 
 on:
@@ -42,7 +42,7 @@ jobs:
     - name: Run JFrog Xray Audit and Save Output
       # continue-on-error: true
       run: |
-        jf audit --format=table --extended-table=true --nuget=true --secrets=true --sast=true --sca=true --vuln=true --licenses=true --fail=false >> xray-audit-report.txt
+        jf audit --format=table --extended-table=true --mvn=true --secrets=true --sast=true --sca=true --vuln=true --licenses=true --fail=false >> xray-audit-report.txt
    
     - name: Job Summary
       run: |
