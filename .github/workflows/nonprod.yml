@@ -1,0 +1,66 @@
+name: Apigee Nonprod CI
+on:
+  push:
+    branches: [ nonprod ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      apigee-x-organization: mgm-gcp-apigee-dev-38ed
+      deployment-tool-path: apigee-deployment-tool/ApigeeDeploymentTool/ApigeeDeploymentTool
+      gcp_workload_identity_provider: projects/238307586088/locations/global/workloadIdentityPools/de-apigee-dev-pool/providers/github
+      gcp_service_account: apigeex-deployment@mgm-gcp-apigee-dev-38ed.iam.gserviceaccount.com
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Set up .NET 6.0
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0'
+
+      - name: Checkout Apigee deployment tool (KVM Updater) repo
+        uses: actions/checkout@v3
+        with:
+          repository: MGMResorts/apigee-deployment-tool
+          ref: main          
+          token: ${{ secrets.APIGEE_GH_REPOS_PAT }}
+          path: apigee-deployment-tool
+
+      - name: Create token to authenticate request to Google Cloud
+        id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          token_format: 'access_token'
+          workload_identity_provider: ${{ env.gcp_workload_identity_provider }}
+          service_account: ${{ env.gcp_service_account }}
+
+      - name: Create secrets.json file
+        run: echo '${{ toJson(secrets) }}' > ${{ github.workspace }}/secrets.json
+
+      - name: Update dev KVM
+        run: dotnet run --project ${{ env.deployment-tool-path }} -o ${{ env.apigee-x-organization }} -e dev -k ${{ github.workspace }}/resources/env/dev/kvms.json -g ${{ github.workspace }}/secrets.json -t ${{ steps.auth.outputs.access_token }}
+             
+      - name: Update preprod KVM
+        run: dotnet run --project ${{ env.deployment-tool-path }} -o ${{ env.apigee-x-organization }} -e preprod -k ${{ github.workspace }}/resources/env/preprod/kvms.json -g ${{ github.workspace }}/secrets.json -t ${{ steps.auth.outputs.access_token }}
+      
+      - name: Update green KVM
+        run: dotnet run --project ${{ env.deployment-tool-path }} -o ${{ env.apigee-x-organization }} -e green -k ${{ github.workspace }}/resources/env/green/kvms.json -g ${{ github.workspace }}/secrets.json -t ${{ steps.auth.outputs.access_token }}
+          
+      - name: Update qa3 KVM
+        run: dotnet run --project ${{ env.deployment-tool-path }} -o ${{ env.apigee-x-organization }} -e qa3 -k ${{ github.workspace }}/resources/env/qa3/kvms.json -g ${{ github.workspace }}/secrets.json -t ${{ steps.auth.outputs.access_token }}
+   
+      - name: Update qa4 KVM
+        run: dotnet run --project ${{ env.deployment-tool-path }} -o ${{ env.apigee-x-organization }} -e qa4 -k ${{ github.workspace }}/resources/env/qa4/kvms.json -g ${{ github.workspace }}/secrets.json -t ${{ steps.auth.outputs.access_token }}
+     
+      - name: Update qa2 KVM
+        run: dotnet run --project ${{ env.deployment-tool-path }} -o ${{ env.apigee-x-organization }} -e qa2 -k ${{ github.workspace }}/resources/env/qa2/kvms.json -g ${{ github.workspace }}/secrets.json -t ${{ steps.auth.outputs.access_token }}
+         

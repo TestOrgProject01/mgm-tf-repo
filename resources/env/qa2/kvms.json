@@ -1,0 +1,97 @@
+[
+  {
+    "keyValueEntries": [
+      {
+        "name": "CORS",
+        "value": "apigee, guestservices_ces, recommendation_api_uw_fa_d_new_v2, recommendation_v2, scimexample, booking_room_addons, booking_reservation_search, booking_inventorytypes_sync, booking_rateplan_sync, booking_reservation_sync, booking_rateplan_search, booking_property_search, booking_inventory_search, booking_room_search, booking_room_update, booking_room, booking_restaurant, booking_import, booking_restaurant_events, booking_property_sync, booking_show, shopping_show, booking_room_refdata, booking_myvegas, content_services, cig_preferences_v1, c360_v1, identity_enrollment, identity_utils, guestservices_ces, guestservices_smartqueue, guestservices_pgs, guestservices_dqm, guestservices_pks, guestservices_rcs, pet, wallet, pps, roomcharge, recommendation_v2, sre_ams, sre_servicegraph, sre_ts, tds, wayfinding_service, mpay, shopping_v1, guestservices_ns, booking_events, guestservices_dls, acrs_response, recommendation, rcxapi, rcxapi2, guestservices_ocrs_srch, staging_guestservices_ocrs_srch"
+      },
+      {
+        "name": "Security",
+        "value": "test, tcolv, booking_tcolv_ari, backstage_permissions, adtest, identity_authorization_v1, identity_authorization, recommendation_api_uw_fa_d_new_v2, recommendation_v2, acrs_response, scimexample, roomcharge, guestservices_pks, service_graph, booking_restaurant_sevenrooms, booking_rms, booking_rms_datatransferutils, rcxapi, rcxapi2, nglinfogen, loyalty_core, sre_webhooktest, rte_lmseventconsumer, derbysoftoxievents, derbysoft_oxi_eventhandler_v1, rte_operaeventbridge, user_preferences, rte_operacloudjwt, profile_itinerary_v1, payment_widget, guestservices_ocrs_er, staging_guestservices_ocrs_er, payment_ui, payment_oxiproxy_internal, cmscs_events, content_api_v4, payment_preview, rte_opera_profile_sync, rte_onpremtoprofilesync"
+      },
+      {
+        "name": "PathSecurity",
+        "value": "booking_room_search_v1_reservation_folio_basic, booking_room_search_v1_reservations_basic, guestservices_dks_key, guestservices_us_offers_mobile, derbysoft_inbound, guestservices_ocrs_srch_v1_reservations_basic, guestservices_ocrs_srch_v1_reservation_folio_basic, staging_guestservices_ocrs_srch_v1_reservations_basic, staging_guestservices_ocrs_srch_v1_reservation_folio_basic, guestservices_rcs_api_reservations_checkouttransient, pet_v1_exchangeaccountdata, pet_v1_accountdatapublickey, identity_directory_v1_deeplink_en_hyatt, identity_directory_v1_guest_activate, identity_directory_v1_guest_forgotpassword, identity_directory_v1_guest_partner_*, identity_directory_v1_guest_stopcode_*, identity_directory_v1_guest_updatepassword, identity_directory_v1_guest_verifycode, identity_directory_v1_guest_verifytoken, identity_directory_v1_guest, identity_directory_v1_guided_sign_in, identity_directory_v1_status, identity_directory_v1_webhook_idrs_eventhook, identity_directory_v1_webhook_token, identity_directory_v1_events_okta, identity_directory_v1_discoveryresults, payment_cis_api_v1_retrievefnbocard, payment_roomcharges_v1_service_relay_generic, payment_roomcharges_v1_service_relay_infogenesis"
+      },
+      {
+        "name": "Ip",
+        "value": "test, sre_webhooktest, guestservices_pks"
+      }
+    ],
+    "name": "security-exclusion"
+  },
+  {
+    "keyValueEntries": [
+      {
+        "name": "Access-Control-Allow-Origin",
+        "value": "https://localhost:3000, http://localhost:3000, http://localhost:3001, http://localhost:4000, http://localhost:9900, http://localhost:9922, http://localhost:9966, https://checkin.mgmresorts.com, https://dev-checkin.mgmresorts.com, https://qa-checkin.mgmresorts.com, https://preprod-checkin.mgmresorts.com, https://uat-checkin.mgmresorts.com, https://studio.apollographql.com, https://web-ordermgmnt-dev.azureedge.net, https://victorious-forest-0feceda1e.azurestaticapps.net, https://guestservicesuiuwsad.z22.web.core.windows.net, https://guestservicesuiuwsaq.z22.web.core.windows.net, https://guestservicesuiuwsag.z22.web.core.windows.net, https://searchtool-uw-as-q.azurewebsites.net, https://uat.devtest.vegas, https://qa4.devtest.vegas, https://dev.devtest.vegas, https://sre-sg-uw-wa-d.azurewebsites.net, https://webaccountdev.z22.web.core.windows.net, https://preprod.devtest.vegas, https://uat-aria.devtest.vegas, https://uat-beaurivage.devtest.vegas, https://uat-bellagio.devtest.vegas, https://uat-borgata.devtest.vegas, https://uat-delanolasvegas.devtest.vegas, https://uat-empirecitycasino.devtest.vegas, https://uat-excalibur.devtest.vegas, https://uat-goldstrike.devtest.vegas, https://uat-luxor.devtest.vegas, https://uat-mandalaybay.devtest.vegas, https://uat-mgmgrand.devtest.vegas, https://uat-mgmgranddetroit.devtest.vegas, https://uat-mgmnationalharbor.devtest.vegas, https://uat-mgmnorthfieldpark.devtest.vegas, https://uat-mgmspringfield.devtest.vegas, https://uat-mirage.devtest.vegas, https://uat-newyorknewyork.devtest.vegas, https://uat-nomadlasvegas.devtest.vegas, https://uat-parkmgm.devtest.vegas, https://uat-signaturemgmgrand.devtest.vegas, https://uat-vdara.devtest.vegas, https://dev-aria.devtest.vegas, https://dev-beaurivage.devtest.vegas, https://dev-bellagio.devtest.vegas, https://dev-borgata.devtest.vegas, https://dev-delanolasvegas.devtest.vegas, https://dev-empirecitycasino.devtest.vegas, https://dev-excalibur.devtest.vegas, https://dev-goldstrike.devtest.vegas, https://dev-luxor.devtest.vegas, https://dev-mandalaybay.devtest.vegas, https://dev-mgmgrand.devtest.vegas, https://dev-mgmgranddetroit.devtest.vegas, https://dev-mgmnationalharbor.devtest.vegas, https://dev-mgmnorthfieldpark.devtest.vegas, https://dev-mgmspringfield.devtest.vegas, https://dev-mirage.devtest.vegas, https://dev-newyorknewyork.devtest.vegas, https://dev-nomadlasvegas.devtest.vegas, https://dev-parkmgm.devtest.vegas, https://dev-vdara.devtest.vegas, https://dev-signaturemgmgrand.devtest.vegas, https://qa4-aria.devtest.vegas, https://qa4-beaurivage.devtest.vegas, https://qa4-bellagio.devtest.vegas, https://qa4-borgata.devtest.vegas, https://qa4-delanolasvegas.devtest.vegas, https://qa4-empirecitycasino.devtest.vegas, https://qa4-excalibur.devtest.vegas, https://qa4-goldstrike.devtest.vegas, https://qa4-luxor.devtest.vegas, https://qa4-mandalaybay.devtest.vegas, https://qa4-mgmgrand.devtest.vegas, https://qa4-mgmgranddetroit.devtest.vegas, https://qa4-mgmnationalharbor.devtest.vegas, https://qa4-mgmnorthfieldpark.devtest.vegas, https://qa4-mgmspringfield.devtest.vegas, https://qa4-mirage.devtest.vegas, https://qa4-newyorknewyork.devtest.vegas, https://qa4-nomadlasvegas.devtest.vegas, https://qa4-parkmgm.devtest.vegas, https://qa4-signaturemgmgrand.devtest.vegas, https://qa4-vdara.devtest.vegas, https://preprod.devtest.vegas, https://preprod-aria.devtest.vegas, https://preprod-beaurivage.devtest.vegas, https://preprod-bellagio.devtest.vegas, https://preprod-borgata.devtest.vegas, https://preprod-delanolasvegas.devtest.vegas, https://preprod-empirecitycasino.devtest.vegas, https://preprod-excalibur.devtest.vegas, https://preprod-goldstrike.devtest.vegas, https://preprod-luxor.devtest.vegas, https://preprod-mandalaybay.devtest.vegas, https://preprod-mgmgrand.devtest.vegas, https://preprod-mgmgranddetroit.devtest.vegas, https://preprod-mgmnationalharbor.devtest.vegas, https://preprod-mgmnorthfieldpark.devtest.vegas, https://preprod-mgmspringfield.devtest.vegas, https://preprod-mirage.devtest.vegas, https://preprod-newyorknewyork.devtest.vegas, https://preprod-nomadlasvegas.devtest.vegas, https://preprod-parkmgm.devtest.vegas, https://preprod-signaturemgmgrand.devtest.vegas, https://preprod-vdara.devtest.vegas, https://webmicrofepoc.z22.web.core.windows.net, https://etpauthuat.z22.web.core.windows.net, https://searchtool-uw-as-r.azurewebsites.net, https://qa4-backstage.devtest.vegas, https://preview-backstage.devtest.vegas, https://preprod-backstage.devtest.vegas, https://dev-backstage.devtest.vegas, https://uat-backstage.devtest.vegas, https://employeehubsaqaui.z22.web.core.windows.net, https://dev-smartq.mgmri.com, https://qa-smartq.mgmri.com, https://uat-smartq.mgmri.com, https://preprod-smartq.mgmri.com, https://preview-smartq.mgmri.com, https://pd-enclosing-uw-as-q2.azurewebsites.net"
+      }
+    ],
+    "name": "Access-Control-Allow-Origin"
+  },
+  {
+    "keyValueEntries": [
+      {
+        "name": "movableink",
+        "value": "{\"allow\": \"100\",\"interval\": \"1\",\"timeunit\": \"minute\"}"
+      }
+    ],
+    "name": "rate-limiting-quotas"
+  },
+  {
+    "keyValueEntries": [
+      {
+        "name": "set-backend-url-header",
+        "value": "trips-service-v1,  itinerary-service-v3, identity_dirctory_service, identity-directory-service"
+      }
+    ],
+    "name": "policy-opt-in"
+  },
+  {
+    "keyValueEntries": [
+      {
+        "name": "okta_client_id",
+        "value": "devops_loyalty_profile"
+      },
+      {
+        "name": "okta_grant_type",
+        "value": "client_credentials"
+      },
+      {
+        "name": "okta_scope",
+        "value": "rcx:api:public:read rcx:api:public:write"
+      },
+      {
+        "name": "okta_url_base",
+        "value": "identityapi-preprod.devtest.vegas"
+      },
+      {
+        "name": "okta_url_path",
+        "value": "identity/authorization/v1/mgmsvc/token"
+      }
+    ],
+    "name": "rcx-jwt-swap-config"
+  },
+  {
+    "keyValueEntries": [
+      {
+        "name": "okta_client_secret",
+        "value": "RCX_JWT_SWAP_CREDENTIALS_OKTA_CLIENT_SECRET_NONPROD"
+      },
+      {
+        "name": "x-mgm-rcx-jwt-swap-key",
+        "value": "RCX_JWT_SWAP_CREDENTIALS_X_MGM_RCX_JWT_SWAP_KEY_NONPROD"
+      }
+    ],
+    "name": "rcx-jwt-swap-credentials"
+  },
+  {
+    "keyValueEntries": [
+      {
+        "name": "guestservices_pks",
+        "value": "{\"validateHash\": true, \"hashes\": [\"w1RKTsSuRwC6FQGIHTBNygFyGhKM7kmotKuzaiY7C5w\", \"c7+fzgtAvSEzfj+CPT5F8ciUSEnGOgZpEXGA8oJc/hQ\"]}"
+      }
+    ],
+    "name": "mtls-config"
+  }
+]
