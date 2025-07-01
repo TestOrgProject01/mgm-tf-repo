@@ -43,18 +43,46 @@ jobs:
       run: |
         jf audit --format=table --extended-table=true --mvn=true --secrets=true --sast=true --sca=true --vuln=true --licenses=true --fail=false >> xray-audit-report.txt
    
-    - name: Scan
+    # - name: Scan
+    #   continue-on-error: true
+    #   run: |
+    #     jf scan . --extended-table=true  
+   
+    # - name: Job Summary
+    #   run: |
+    #     echo '```' >> $GITHUB_STEP_SUMMARY
+    #     cat xray-audit-report.txt >> $GITHUB_STEP_SUMMARY
+    #     echo '```' >> $GITHUB_STEP_SUMMARY
+    # - name: Upload Xray Audit Report
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: xray-audit-report
+    #     path: xray-audit-report.txt
+    - name: Scan and Save Output
       continue-on-error: true
       run: |
-        jf scan . --extended-table=true  
-   
+        jf scan . --extended-table=true | tee scan-report.txt
+
     - name: Job Summary
       run: |
+        echo '### Xray Audit Report' >> $GITHUB_STEP_SUMMARY
         echo '```' >> $GITHUB_STEP_SUMMARY
         cat xray-audit-report.txt >> $GITHUB_STEP_SUMMARY
         echo '```' >> $GITHUB_STEP_SUMMARY
+        echo '' >> $GITHUB_STEP_SUMMARY
+        echo '### Scan Report' >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        cat scan-report.txt >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+
     - name: Upload Xray Audit Report
       uses: actions/upload-artifact@v4
       with:
         name: xray-audit-report
         path: xray-audit-report.txt
+
+    - name: Upload Scan Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: scan-report
+        path: scan-report.txt
