@@ -1,0 +1,5 @@
+variables:
+  postmanSecretsAzureSubscription: 'Guest Services Dev SP'
+  postmanSecretsKeyVault: 'guestservicesprv-uw-kv-d'
+  postmanEnvironmentPath: '$(Build.SourcesDirectory)/validationChecks/ows_green.postman_environment.json'
+  temporaryWhitelistIpToKeyVault: false

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy revision="5" name="ows-name-proxy">
+    <Basepaths>/ows/name</Basepaths>
+    <ConfigurationVersion majorVersion="4" minorVersion="0"/>
+    <CreatedAt>1690507897010</CreatedAt>
+    <CreatedBy>ExpOS@MGMResorts.onmicrosoft.com</CreatedBy>
+    <Description>NameService</Description>
+    <DisplayName>NameService</DisplayName>
+    <LastModifiedAt>1697585884435</LastModifiedAt>
+    <LastModifiedBy>klineback@mgmresorts.com</LastModifiedBy>
+    <ManifestVersion>SHA-512:542d35a97f796ff2eb3d1383968538831d7c179ebbac78fc26dd45367d6ee282e06a2550a392275c61af751501bc12b3b8f49e218801b5eebe3b3744c7924085:us-west-2</ManifestVersion>
+    <Policies>
+        <Policy>AM-Ignore-Pathsuffix</Policy>
+        <Policy>Extract-Operation-Name</Policy>
+        <Policy>Invalid-SOAP</Policy>
+        <Policy>Return-WSDL</Policy>
+        <Policy>am-remove-auth-header</Policy>
+    </Policies>
+    <ProxyEndpoints>
+        <ProxyEndpoint>default</ProxyEndpoint>
+    </ProxyEndpoints>
+    <Resources/>
+    <Spec></Spec>
+    <TargetServers/>
+    <TargetEndpoints>
+        <TargetEndpoint>TargetEndpoint-dev</TargetEndpoint>
+        <TargetEndpoint>TargetEndpoint-green</TargetEndpoint>
+        <TargetEndpoint>TargetEndpoint-preprod</TargetEndpoint>
+        <TargetEndpoint>TargetEndpoint-prod</TargetEndpoint>
+        <TargetEndpoint>TargetEndpoint-qa</TargetEndpoint>
+        <TargetEndpoint>TargetEndpoint-qa4</TargetEndpoint>
+        <TargetEndpoint>default</TargetEndpoint>
+    </TargetEndpoints>
+</APIProxy>

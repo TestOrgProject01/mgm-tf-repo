@@ -1,0 +1,11 @@
+[
+  {
+    "keyValueEntries": [
+      {
+        "name": "ows_name____POST",
+        "value": "ows:post"
+      }
+    ],
+    "name": "required-scopes"
+  }
+]

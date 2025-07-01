@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+    <Description>NameService</Description>
+    <FaultRules/>
+    <PreFlow name="PreFlow">
+        <Request>
+            <Step>
+                <Name>am-remove-auth-header</Name>
+            </Step>
+            <Step>
+                <Name>Invalid-SOAP</Name>
+                <Condition>!(request.header.Content-Type ~~ "(text|application)\/(xml|([a-z]*\+xml))(;(\w)*=(\S*))?") and (request.verb != "GET")</Condition>
+            </Step>
+            <Step>
+                <Name>Extract-Operation-Name</Name>
+                <Condition>(request.verb != "GET")</Condition>
+            </Step>
+            <Step>
+                <Name>Invalid-SOAP</Name>
+                <Condition>((envelope != "Envelope") or (body != "Body") or (envelopeNamespace !="http://schemas.xmlsoap.org/soap/envelope/"))  and (request.verb != "GET")</Condition>
+            </Step>            
+        </Request>
+        <Response/>
+    </PreFlow>
+    <PostFlow name="PostFlow">
+        <Request/>
+        <Response/>
+    </PostFlow>
+    <Flows>
+<Flow name="HealthCheck">
+<Description>HealthCheck</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/v1/health") and (request.verb = "GET") and (request.queryparam.wsdl != "")</Condition>
+</Flow>
+<Flow name="NameLookup">
+<Description>NameLookup</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "NameLookupRequest")</Condition>
+</Flow>
+<Flow name="DeleteComment">
+<Description>DeleteComment</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "DeleteCommentRequest")</Condition>
+</Flow>
+<Flow name="FetchPhoneList">
+<Description>FetchPhoneList</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "FetchPhoneListRequest")</Condition>
+</Flow>
+<Flow name="FetchClaimsStatus">
+<Description>FetchClaimsStatus</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "FetchClaimsStatusRequest")</Condition>
+</Flow>
+<Flow name="DeleteEmail">
+<Description>DeleteEmail</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "DeleteEmailRequest")</Condition>
+</Flow>
+<Flow name="FetchEmailList">
+<Description>FetchEmailList</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "FetchEmailListRequest")</Condition>
+</Flow>
+<Flow name="InsertComment">
+<Description>InsertComment</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "InsertCommentRequest")</Condition>
+</Flow>
+<Flow name="FetchPrivacyOption">
+<Description>FetchPrivacyOption</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "FetchPrivacyOptionRequest")</Condition>
+</Flow>
+<Flow name="RegisterName">
+<Description>RegisterName</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "RegisterNameRequest")</Condition>
+</Flow>
+<Flow name="InsertEmail">
+<Description>InsertEmail</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "InsertEmailRequest")</Condition>
+</Flow>
+<Flow name="DeletePassport">
+<Description>DeletePassport</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "DeletePassportRequest")</Condition>
+</Flow>
+<Flow name="FetchProfileBenefits">
+<Description>FetchProfileBenefits</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "FetchProfileBenefitsRequest")</Condition>
+</Flow>
+<Flow name="DeletePreference">
+<Description>DeletePreference</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "DeletePreferenceRequest")</Condition>
+</Flow>
+<Flow name="TravelAgentLookup">
+<Description>TravelAgentLookup</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "TravelAgentLookupRequest")</Condition>
+</Flow>
+<Flow name="GetPassport">
+<Description>GetPassport</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "GetPassportRequest")</Condition>
+</Flow>
+<Flow name="InsertUpdatePrivacyOption">
+<Description>InsertUpdatePrivacyOption</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "InsertUpdatePrivacyOptionRequest")</Condition>
+</Flow>
+<Flow name="DeleteCreditCard">
+<Description>DeleteCreditCard</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "DeleteCreditCardRequest")</Condition>
+</Flow>
+<Flow name="InsertPreference">
+<Description>InsertPreference</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "InsertPreferenceRequest")</Condition>
+</Flow>
+<Flow name="DeleteAddress">
+<Description>DeleteAddress</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "DeleteAddressRequest")</Condition>
+</Flow>
+<Flow name="UpdateComment">
+<Description>UpdateComment</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "UpdateCommentRequest")</Condition>
+</Flow>
+<Flow name="FetchAddressList">
+<Description>FetchAddressList</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "FetchAddressListRequest")</Condition>
+</Flow>
+<Flow name="UpdatePassport">
+<Description>UpdatePassport</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "UpdatePassportRequest")</Condition>
+</Flow>
+<Flow name="FetchPreferenceList">
+<Description>FetchPreferenceList</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "FetchPreferenceListRequest")</Condition>
+</Flow>
+<Flow name="FetchCommentList">
+<Description>FetchCommentList</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "FetchCommentListRequest")</Condition>
+</Flow>
+<Flow name="DeletePrivacyOption">
+<Description>DeletePrivacyOption</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "DeletePrivacyOptionRequest")</Condition>
+</Flow>
+<Flow name="UpdateName">
+<Description>UpdateName</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "UpdateNameRequest")</Condition>
+</Flow>
+<Flow name="FetchGuestCardList">
+<Description>FetchGuestCardList</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "FetchGuestCardListRequest")</Condition>
+</Flow>
+<Flow name="DeleteDocument">
+<Description>DeleteDocument</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "DeleteDocumentRequest")</Condition>
+</Flow>
+<Flow name="DeleteGuestCard">
+<Description>DeleteGuestCard</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "DeleteGuestCardRequest")</Condition>
+</Flow>
+<Flow name="UpdateAddress">
+<Description>UpdateAddress</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "UpdateAddressRequest")</Condition>
+</Flow>
+<Flow name="InsertGuestCard">
+<Description>InsertGuestCard</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "InsertGuestCardRequest")</Condition>
+</Flow>
+<Flow name="InsertUpdateNameUDFs">
+<Description>InsertUpdateNameUDFs</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "InsertUpdateNameUDFsRequest")</Condition>
+</Flow>
+<Flow name="FetchNameUDFs">
+<Description>FetchNameUDFs</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "FetchNameUDFsRequest")</Condition>
+</Flow>
+<Flow name="DeletePhone">
+<Description>DeletePhone</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "DeletePhoneRequest")</Condition>
+</Flow>
+<Flow name="FetchCreditCardList">
+<Description>FetchCreditCardList</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "FetchCreditCardListRequest")</Condition>
+</Flow>
+<Flow name="InsertClaim">
+<Description>InsertClaim</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "InsertClaimRequest")</Condition>
+</Flow>
+<Flow name="FetchSubscription">
+<Description>FetchSubscription</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "FetchSubscriptionRequest")</Condition>
+</Flow>
+<Flow name="InsertAddress">
+<Description>InsertAddress</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "InsertAddressRequest")</Condition>
+</Flow>
+<Flow name="FetchProfile">
+<Description>FetchProfile</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "FetchProfileRequest")</Condition>
+</Flow>
+<Flow name="UpdateCreditCard">
+<Description>UpdateCreditCard</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "UpdateCreditCardRequest")</Condition>
+</Flow>
+<Flow name="UpdatePhone">
+<Description>UpdatePhone</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "UpdatePhoneRequest")</Condition>
+</Flow>
+<Flow name="FetchName">
+<Description>FetchName</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "FetchNameRequest")</Condition>
+</Flow>
+<Flow name="UpdateGuestCard">
+<Description>UpdateGuestCard</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "UpdateGuestCardRequest")</Condition>
+</Flow>
+<Flow name="FetchDocumentList">
+<Description>FetchDocumentList</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "FetchDocumentListRequest")</Condition>
+</Flow>
+<Flow name="AssociateBooker">
+<Description>AssociateBooker</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "AssociateBookerRequest")</Condition>
+</Flow>
+<Flow name="InsertCreditCard">
+<Description>InsertCreditCard</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "InsertCreditCardRequest")</Condition>
+</Flow>
+<Flow name="InsertUpdateDocument">
+<Description>InsertUpdateDocument</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "InsertUpdateDocumentRequest")</Condition>
+</Flow>
+<Flow name="UpdateEmail">
+<Description>UpdateEmail</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "UpdateEmailRequest")</Condition>
+</Flow>
+<Flow name="UpdateClaim">
+<Description>UpdateClaim</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "UpdateClaimRequest")</Condition>
+</Flow>
+<Flow name="InsertPhone">
+<Description>InsertPhone</Description>
+<Request/>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "POST") and (operation = "InsertPhoneRequest")</Condition>
+</Flow>
+<Flow name="Get WSDL">
+<Description>Unknown Resource</Description>
+<Request>
+<Step>
+<Name>Return-WSDL</Name>
+</Step>
+</Request>
+<Response/>
+<Condition>(proxy.pathsuffix MatchesPath "/") and (request.verb = "GET") and (request.queryparam.wsdl != "")</Condition>
+</Flow>
+<Flow name="unknown-resource">
+<Description>Unknown Resource</Description>
+<Request>
+<Step>
+<Name>Invalid-SOAP</Name>
+</Step>
+</Request>
+<Response/>
+<Condition/>
+</Flow>
+</Flows>
+    <HTTPProxyConnection>
+        <BasePath>/ows/name</BasePath>
+        <Properties/>
+    <VirtualHost>secure</VirtualHost>
+</HTTPProxyConnection>
+    <RouteRule name="Dev">
+        <Condition>(environment.name StartsWith "dev")</Condition>
+        <TargetEndpoint>TargetEndpoint-dev</TargetEndpoint>
+    </RouteRule>
+    <RouteRule name="PreProd">
+        <Condition>(environment.name StartsWith "preprod")</Condition>
+        <TargetEndpoint>TargetEndpoint-preprod</TargetEndpoint>
+    </RouteRule>
+    <RouteRule name="QA4">
+        <Condition>(environment.name StartsWith "qa4")</Condition>
+        <TargetEndpoint>TargetEndpoint-qa4</TargetEndpoint>
+    </RouteRule>
+    <RouteRule name="Green">
+        <Condition>(environment.name StartsWith "green")</Condition>
+        <TargetEndpoint>TargetEndpoint-green</TargetEndpoint>
+    </RouteRule>
+    <RouteRule name="Prod">
+        <Condition>(environment.name StartsWith "prod")</Condition>
+        <TargetEndpoint>TargetEndpoint-prod</TargetEndpoint>
+    </RouteRule>
+    <RouteRule name="default">
+        <TargetEndpoint>default</TargetEndpoint>
+    </RouteRule>
+</ProxyEndpoint>

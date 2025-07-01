@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Manifest name="manifest">
+    <Policies>
+        <VersionInfo resourceName="AM-Ignore-Pathsuffix" version="SHA-512:0b20977c602d418705103bfdf040cc385b8920fbb7485e4da6aca7a982f42fe0d7ce6582ebd0af8069ae11fe58adec17956be1c15f5b6299ff82347db8f75846"/>
+        <VersionInfo resourceName="Extract-Operation-Name" version="SHA-512:11bce24bc34858cf200a85af336a40674e3f0052d52a18f0368fa18c7c5a22362d6f333a325506d6a0a78cb85b1cecef6d8cf33a4f467e8d3cd5fe3771b91007"/>
+        <VersionInfo resourceName="Invalid-SOAP" version="SHA-512:bc7e13b820404362ccafc2bc11dc769de12b418c0c92f0db6dd656163c85c100c5371d758e3a5776918a9dc02ec9be79fe1949969df9a66e355485b4c15cc871"/>
+        <VersionInfo resourceName="Return-WSDL" version="SHA-512:908ef928adf03bcd6247ce7d38ab85f6612b856f1d9c05358d1608233961ea7e8d6d7898ee092da9d0bcedc5c0e0b62a91e8ee9bc64dfcc02b9c49c89a414cf7"/>
+        <VersionInfo resourceName="am-remove-auth-header" version="SHA-512:1e70d41b661ed738c1098dee365d124c45020d0678d7261199b271e29d121e187acef1169654a0102154f4edca933adb46fa4070457afe1b820c5ac80f974f26"/>
+    </Policies>
+    <ProxyEndpoints>
+        <VersionInfo resourceName="default" version="SHA-512:2fad388b79f646bdde6d58f07c07cfd656153bd05d2895742755eb27506e7b0fa24201fbf689886b86170f2b40914a1ef170d4bc0e1561cb4310ce526758848c"/>
+    </ProxyEndpoints>
+    <Resources/>
+    <SharedFlows/>
+    <TargetEndpoints>
+        <VersionInfo resourceName="TargetEndpoint-dev" version="SHA-512:ae9699d7a676f4f4f7683d6f99c9d12014cf23525e7a7b8ce219f7b0bf0fd3f6874733481260f20b8c9b4b17d3e075d2ebd5a42f6387efee41f7231464196f57"/>
+        <VersionInfo resourceName="TargetEndpoint-green" version="SHA-512:0fb6d4eaa461b3641ec77c0979a4a410c8327247761e6bc6be5c9c032de9791ebea5b27e582205e42eb78d4a47eeb4959a293ecc38b701c7ee648c3b5f506156"/>
+        <VersionInfo resourceName="TargetEndpoint-preprod" version="SHA-512:df2d3fa14557115c53ad600b6dcb457a0686609dcad1bd7473005ca3c8487eb7a9e0ee1ee41484d45778b16d79b74d1a84ce41e46f4b9012df6fb293b62e3cf8"/>
+        <VersionInfo resourceName="TargetEndpoint-prod" version="SHA-512:1497405e1e32e01e0ab2e4bc0fedc2d60b5a28d5c95d10001db5207e11848d10051483ad17bd01a42ebd3248319874b0deaccdccdb603547583037e2a1d3e4bb"/>
+        <VersionInfo resourceName="TargetEndpoint-qa" version="SHA-512:8b7ec2a9e95a8b9d4a8b612b0ccb5134c4505a264738cbba5376231085109f217bd89c53a035cfbc99a2a5b8a8d359f1095a8ca16dee0026512349b48c454040"/>
+        <VersionInfo resourceName="TargetEndpoint-qa4" version="SHA-512:32079d05f9a0a84a955fe681a35e02bace3dc796c3d218d35c6269ac0cc57489e463c09bac968fa048d740c06198db0d4f9eac155bdd44e93f5dd63db197465e"/>
+        <VersionInfo resourceName="default" version="SHA-512:c9434ec2d1dade0a59c2d77418007721afab6425585c46b0843a29554b1033b8a8ab65c73adafa128da377e9e0992a7f75d7e5f6ee6285349c0b0b68408f1d87"/>
+    </TargetEndpoints>
+</Manifest>

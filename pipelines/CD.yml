@@ -1,0 +1,53 @@
+name: Release-${{ parameters.environment }}$(rev:.r)
+
+parameters:
+- name: environment
+  displayName: Environment
+  default: dev
+  values:
+  - dev
+  - preprod
+  - qa4
+  - green
+  - prod
+
+pr: none
+
+resources:
+  repositories:
+  - repository: SharedTemplates
+    type: github
+    endpoint: MGMResorts
+    name: MGMResorts/guestservices-pipelines-shared
+  - repository: ApigeeApiGenerator
+    type: github
+    endpoint: MGMResorts
+    name: MGMResorts/apigee-api-generator
+    ref: v2/master
+  - repository: ApigeeXApiGenerator
+    type: github
+    endpoint: MGMResorts
+    name: MGMResorts/apigee-api-generator
+    ref: apigee-x
+  - repository: ApigeeDeploymentTool
+    type: github
+    endpoint: MGMResorts
+    name: MGMResorts/apigee-deployment-tool
+
+variables:
+- template: variables/${{ parameters.environment }}.yml
+
+extends:
+  template: templates/deploy-apigee-x-bundle.yml@SharedTemplates
+  parameters:
+    apiProxyName: 'ows-name-proxy'
+    environment: ${{ parameters.environment }}
+    bundleDirectory: 'apigee-ows-name/apigee/proxybundle'
+    postmanCollectionPath: '$(Build.SourcesDirectory)/validationChecks/ows_name_test_suite.postman_collection.json'
+    postmanEnvironmentPath: ${{ variables.postmanEnvironmentPath }}
+    postmanEnvironmentVariables: 'CLIENT_SECRET=$(OCRS--IdentityAuthClientSecret)'
+    testRunTitle: 'Smoke_Test_OWS_Name(${{ parameters.environment }})'
+    postmanSecretsAzureSubscription: ${{ variables.postmanSecretsAzureSubscription }}
+    postmanSecretsKeyVault: ${{ variables.postmanSecretsKeyVault }}
+    postmanSecretsKeys: 'OCRS--IdentityAuthClientSecret'
+    temporaryWhitelistIpToKeyVault: ${{ variables.temporaryWhitelistIpToKeyVault }}

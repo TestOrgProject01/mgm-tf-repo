@@ -1,0 +1,33 @@
+name: Apigee X deployment
+
+on: 
+  workflow_dispatch:
+    inputs:
+      organization:
+        required: true
+        default: "mgm-gcp-apigee-dev-38ed"
+        type: choice
+        options:
+          - mgm-gcp-apigee-dev-38ed
+          - mgm-gcp-apigee-prod-904e
+      environment:
+        required: true
+        default: "dev"
+        type: choice
+        options:
+          - dev
+          - green
+          - preprod
+          - prod
+          - qa4
+
+jobs:
+  deploy-to-apigee-x:
+    uses: mgmri-source/mgm-af-action-apigee-deployment/.github/workflows/apigeeXDeploymentWorkflow.yml@main
+    with:
+      apigee-x-organization: ${{ inputs.organization }}
+      apigee-x-environment: ${{ inputs.environment }}
+      custom-proxy-path: apigee/proxybundle
+      custom-proxy-pom-file-path: apigee/proxybundle/pom.xml
+    secrets:
+      apigee-gh-repos-pat: ${{ secrets.APIGEE_GH_REPOS_PAT }}
