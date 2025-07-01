@@ -1,0 +1,21 @@
+name: DEV Apigee X deployment
+on:
+  push:
+    branches:
+      - nonprod
+    paths:
+      - proxybundle/**
+      - .github/workflows/deploy-dev.yml
+
+jobs:
+  deploy-to-apigee-x:
+    uses: MGMResorts/mgm-af-action-apigee-deployment/.github/workflows/apigeeXDeploymentWorkflow.yml@0.0.18
+    with:
+      apigee-x-organization: mgm-gcp-apigee-dev-38ed
+      apigee-x-environment: dev-2
+      custom-proxy-path: proxybundle
+      custom-proxy-pom-file-path: proxybundle/pom.xml
+    secrets:
+      apigee-api-generator-deploy-key: ${{ secrets.APIGEE_API_GENERATOR_DEPLOY_KEY }}
+      apigee-deployment-tool-deploy-key: ${{ secrets.APIGEE_DEPLOYMENT_TOOL_DEPLOY_KEY }}
+      apigee-x-service-account-key: ${{ secrets.APIGEE_X_SERVICE_ACCOUNT_KEY_NONPROD }}
