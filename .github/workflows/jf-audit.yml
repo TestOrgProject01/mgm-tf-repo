@@ -44,6 +44,11 @@ jobs:
       run: |
         jf audit --format=table --extended-table=true --mvn=true --secrets=true --sast=true --sca=true --vuln=true --licenses=true --fail=false >> xray-audit-report.txt
    
+    - name: Scan
+      continue-on-error: true
+      run: |
+        jf scan . --extended-table=true  
+   
     - name: Job Summary
       run: |
         echo '```' >> $GITHUB_STEP_SUMMARY
