@@ -62,7 +62,7 @@ jobs:
     - name: Scan and Save Output
       continue-on-error: true
       run: |
-        jf scan . --extended-table=true | tee scan-report.txt
+        jf scan proxybundle/ --extended-table=true | tee scan-report.txt
 
     - name: Job Summary
       run: |
