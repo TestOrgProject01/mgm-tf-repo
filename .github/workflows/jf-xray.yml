@@ -1,4 +1,4 @@
-name: Jfrog Xray integration 
+name: Jfrog integration - Generic Repositories
 
 on:
   push:
@@ -20,7 +20,7 @@ permissions:
   issues: read
 
 jobs:
-  xray-audit-scan:
+  build:
     runs-on: ubuntu-latest
 
     steps:
