@@ -42,8 +42,11 @@ jobs:
     - name: Run JFrog Xray Audit and Save Output
       continue-on-error: true
       run: |
-        jf audit --format=table --extended-table=true >> xray-audit-report.txt
-   
+        jf audit --format=table --extended-table=true  --secrets=true --sast=true --sca=true --vuln=true --licenses=true --fail=false --vuln=true >> xray-audit-report.txt
+    - name: upload package
+      run: |
+        jf rt u "/**" "$RT_REPO_VIRTUAL/" --recursive=true
+        echo "JFrog upload completed."
     - name: Scan
       continue-on-error: true
       run: |
